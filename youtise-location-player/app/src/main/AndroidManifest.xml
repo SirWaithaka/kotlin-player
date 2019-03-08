@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.youtise_location_player">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.example.youtise_location_player">
 
     <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
+            android:name="android.hardware.touchscreen"
+            android:required="false"/>
     <uses-feature
-        android:name="android.software.leanback"
-        android:required="true" />
+            android:name="android.software.leanback"
+            android:required="true"/>
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:banner="@drawable/app_icon_your_company"
-            android:icon="@drawable/app_icon_your_company"
+            android:banner="@drawable/youtise_logo"
+            android:icon="@drawable/youtise_logo"
             android:label="@string/app_name"
-            android:logo="@drawable/app_icon_your_company"
-            android:screenOrientation="landscape">
+            android:supportsRtl="true"
+            android:theme="@style/Theme.Leanback"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+                android:name=".Drawer"
+                android:label="@string/title_activity_drawer">
+        </activity>
+        <activity
+                android:name=".Settings"
+                android:label="@string/title_activity_settings">
+        </activity>
+        <activity
+                android:name=".Locations"
+                android:label="@string/title_activity_locations">
+        </activity>
+        <activity
+                android:name=".Password"
+                android:label="@string/title_activity_password"
+                android:parentActivityName=".MainActivity"/>
+        <activity
+                android:name=".EmailActivity"
+                android:parentActivityName=".MainActivity"/>
+        <activity
+                android:name=".MainActivity"
+                android:label="@string/title_activity_main">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DetailsActivity" />
-        <activity android:name=".PlaybackActivity" />
-        <activity android:name=".BrowseErrorActivity" />
     </application>
 
 </manifest>
