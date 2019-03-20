@@ -1,5 +1,6 @@
 package com.example.playernavigation.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,6 +13,16 @@ import com.example.playernavigation.R
 
 class ImageFragment : Fragment() {
    private val TAG = "ImageFragment"
+
+   override fun onAttach(context: Context?) {
+      super.onAttach(context)
+      Log.d(TAG, "onAttach: image fragment")
+   }
+
+   override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+      Log.d(TAG, "onCreate: image fragment")
+   }
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       Log.d(TAG, "onCreateView: image fragment")
@@ -26,6 +37,12 @@ class ImageFragment : Fragment() {
    override fun onResume() {
       super.onResume()
       Log.d(TAG, "onResume: image fragment")
+
+      val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+      with (sharedPref.edit()) {
+         putString("MEDIA", "video")
+         apply()
+      }
 
       Handler().postDelayed({
          Log.d(TAG, "image timeout")
@@ -55,6 +72,6 @@ class ImageFragment : Fragment() {
 
    override fun onDetach() {
       super.onDetach()
-      Log.d(TAG, "onDestroy: image fragment")
+      Log.d(TAG, "onDetach: image fragment")
    }
 }

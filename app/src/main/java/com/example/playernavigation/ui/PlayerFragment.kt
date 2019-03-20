@@ -18,6 +18,7 @@ class PlayerFragment : Fragment() {
 
       Log.d(TAG, "fragment on attach method called")
    }
+
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       return inflater.inflate(R.layout.fragment_player, container, false)
    }
@@ -33,10 +34,14 @@ class PlayerFragment : Fragment() {
 
    override fun onResume() {
       super.onResume()
-      Handler().postDelayed({
-         Log.d(TAG, "Timeout")
-         this.findNavController().navigate(R.id.destination_image)
-      }, 10000)
+      val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+      val defaultValue = "image"
+      val highScore = sharedPref.getString("MEDIA", defaultValue)
+
+      when (highScore) {
+         "image" -> this.findNavController().navigate(R.id.destination_image)
+         "video" -> this.findNavController().navigate(R.id.destination_video)
+      }
    }
 
    override fun onPause() {
@@ -62,6 +67,6 @@ class PlayerFragment : Fragment() {
 
    override fun onDetach() {
       super.onDetach()
-      Log.d(TAG, "onDestroy: player fragment")
+      Log.d(TAG, "onDetach: player fragment")
    }
 }
