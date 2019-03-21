@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/destination_image"
-        android:name="com.example.playernavigation.ui.ImageFragment"
+        android:name="com.example.tvnavigation.ui.ImageFragment"
         android:label="Image"
         tools:layout="@layout/fragment_image" >
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/destination_video"
-        android:name="com.example.playernavigation.ui.VideoFragment"
+        android:name="com.example.tvnavigation.ui.VideoFragment"
         android:label="Video"
         tools:layout="@layout/fragment_video" >
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/destination_player"
-        android:name="com.example.playernavigation.ui.PlayerFragment"
+        android:name="com.example.tvnavigation.ui.PlayerFragment"
         android:label="Player"
         tools:layout="@layout/fragment_player" />
 </navigation>
