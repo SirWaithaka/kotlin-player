@@ -13,5 +13,5 @@ data class Location (
 ) {
 
    @PrimaryKey()
-   val uid: Int = 0
+   var uid: Int = 0
 }

@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.example.tvnavigation.R
 import com.example.tvnavigation.data.network.ConnectivityInterceptorImpl
 import com.example.tvnavigation.data.network.services.LocationsService
+import com.example.tvnavigation.data.repositories.LocationsDataSourceImpl
 import com.example.tvnavigation.internal.NoConnectivityException
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.coroutines.Dispatchers
@@ -33,17 +35,14 @@ class PlayerFragment : Fragment() {
       Log.d(TAG, "Fragment on activity created")
 
       val apiService = LocationsService(ConnectivityInterceptorImpl(this.context!!))
+      val locationsDataSource = LocationsDataSourceImpl(apiService)
+
+      locationsDataSource.downloadedLocations.observe(this, Observer {
+         player_textView.text = it.toString()
+      })
 
       GlobalScope.launch(Dispatchers.Main) {
-         try {
-            val locationsResponse = apiService.getLocationsByEmail("kennwaithaka@gmail.com").await()
-            player_textView.text = locationsResponse.toString()
-         } catch(e: Exception) {
-            when (e) {
-               is NoConnectivityException -> Log.d(TAG, "Player Fragment: No internet Connection")
-               else -> Log.d(TAG, "Player Fragment:", e)
-            }
-         }
+         locationsDataSource.fetchLocations("kennwaithaka@gmail.com")
       }
    }
 

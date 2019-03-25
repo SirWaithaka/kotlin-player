@@ -1,7 +1,7 @@
 package com.example.tvnavigation.data.network.services
 
 import com.example.tvnavigation.data.network.ConnectivityInterceptor
-import com.example.tvnavigation.data.network.response.LocationsResponse
+import com.example.tvnavigation.data.network.responses.LocationsResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
