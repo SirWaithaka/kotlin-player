@@ -1,9 +1,10 @@
-package com.example.tvnavigation
+package com.example.tvnavigation.ui
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.tvnavigation.R
 
 class MainActivity : AppCompatActivity() {
 

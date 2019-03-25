@@ -7,8 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
+import com.example.tvnavigation.data.network.ConnectivityInterceptorImpl
+import com.example.tvnavigation.data.network.services.LocationsService
+import com.example.tvnavigation.internal.NoConnectivityException
+import kotlinx.android.synthetic.main.fragment_player.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PlayerFragment : Fragment() {
    private val TAG = "PlayerFragment"
@@ -25,10 +31,25 @@ class PlayerFragment : Fragment() {
    override fun onActivityCreated(savedInstanceState: Bundle?) {
       super.onActivityCreated(savedInstanceState)
       Log.d(TAG, "Fragment on activity created")
+
+      val apiService = LocationsService(ConnectivityInterceptorImpl(this.context!!))
+
+      GlobalScope.launch(Dispatchers.Main) {
+         try {
+            val locationsResponse = apiService.getLocationsByEmail("kennwaithaka@gmail.com").await()
+            player_textView.text = locationsResponse.toString()
+         } catch(e: Exception) {
+            when (e) {
+               is NoConnectivityException -> Log.d(TAG, "Player Fragment: No internet Connection")
+               else -> Log.d(TAG, "Player Fragment:", e)
+            }
+         }
+      }
    }
 
    override fun onStart() {
       super.onStart()
+      Log.d(TAG, "onStart: Player Fragment onStart")
    }
 
    override fun onResume() {
@@ -37,10 +58,10 @@ class PlayerFragment : Fragment() {
       val defaultValue = "image"
       val highScore = sharedPref.getString("MEDIA", defaultValue)
 
-      when (highScore) {
-         "image" -> this.findNavController().navigate(R.id.destination_image)
-         "video" -> this.findNavController().navigate(R.id.destination_video)
-      }
+//      when (highScore) {
+//         "image" -> this.findNavController().navigate(R.id.destination_image)
+//         "video" -> this.findNavController().navigate(R.id.destination_video)
+//      }
    }
 
    override fun onPause() {
