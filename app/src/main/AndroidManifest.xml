@@ -20,14 +20,14 @@
             android:icon="@mipmap/ic_launcher"
             android:name=".YoutisePlayerApplication"
             android:supportsRtl="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:theme="@style/Theme.MaterialComponents.NoActionBar"
             android:permission=""
             tools:ignore="GoogleAppIndexingWarning,MissingTvBanner">
 
         <activity
                 android:name=".ui.MainActivity"
                 android:screenOrientation="landscape"
-                android:theme="@style/Theme.AppCompat.NoActionBar"
+                android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

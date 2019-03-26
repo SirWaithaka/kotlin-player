@@ -6,19 +6,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.tvnavigation.R
-import com.example.tvnavigation.data.network.ConnectivityInterceptorImpl
-import com.example.tvnavigation.data.network.services.LocationsService
-import com.example.tvnavigation.data.repository.datasources.LocationsDataSourceImpl
+import com.example.tvnavigation.ui.base.ScopedFragment
+import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
+import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
 import kotlinx.android.synthetic.main.fragment_player.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
 
-class PlayerFragment : Fragment() {
-   private val TAG = "PlayerFragment"
+const val TAG = "PlayerFragment"
+
+class PlayerFragment : ScopedFragment(), KodeinAware {
+
+   override val kodein: Kodein by kodein()
+   private val viewModelFactory: LocationsVMFactory by instance()
+   private lateinit var viewModel: LocationsViewModel
+
    override fun onAttach(context: Context?) {
       super.onAttach(context)
 
@@ -33,15 +41,14 @@ class PlayerFragment : Fragment() {
       super.onActivityCreated(savedInstanceState)
       Log.d(TAG, "Fragment on activity created")
 
-      val apiService = LocationsService(ConnectivityInterceptorImpl(this.context!!))
-      val locationsDataSource = LocationsDataSourceImpl(apiService)
+      viewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationsViewModel::class.java)
+      launch {
+         val locations = viewModel.locations.await()
+         locations.observe(this@PlayerFragment, Observer {
+            if (it == null) return@Observer
 
-      locationsDataSource.downloadedLocations.observe(this, Observer {
-         player_textView.text = it.toString()
-      })
-
-      GlobalScope.launch(Dispatchers.Main) {
-         locationsDataSource.fetchLocations("kennwaithaka@gmail.com")
+            player_textView.text = it.toString()
+         })
       }
    }
 
@@ -50,17 +57,17 @@ class PlayerFragment : Fragment() {
       Log.d(TAG, "onStart: Player Fragment onStart")
    }
 
-   override fun onResume() {
-      super.onResume()
-      val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
-      val defaultValue = "image"
-      val highScore = sharedPref.getString("MEDIA", defaultValue)
+//   override fun onResume() {
+//      super.onResume()
+//      val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+//      val defaultValue = "image"
+//      val highScore = sharedPref.getString("MEDIA", defaultValue)
 
 //      when (highScore) {
 //         "image" -> this.findNavController().navigate(R.id.destination_image)
 //         "video" -> this.findNavController().navigate(R.id.destination_video)
 //      }
-   }
+//   }
 
    override fun onPause() {
       super.onPause()
