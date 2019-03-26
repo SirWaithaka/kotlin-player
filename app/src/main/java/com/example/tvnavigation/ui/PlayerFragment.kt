@@ -11,8 +11,7 @@ import androidx.lifecycle.Observer
 import com.example.tvnavigation.R
 import com.example.tvnavigation.data.network.ConnectivityInterceptorImpl
 import com.example.tvnavigation.data.network.services.LocationsService
-import com.example.tvnavigation.data.repositories.LocationsDataSourceImpl
-import com.example.tvnavigation.internal.NoConnectivityException
+import com.example.tvnavigation.data.repository.datasources.LocationsDataSourceImpl
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

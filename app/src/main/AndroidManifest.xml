@@ -15,12 +15,14 @@
 
     <application
             android:allowBackup="true"
+            android:fullBackupContent="@xml/player_backup_rules"
             android:label="@string/app_name"
             android:icon="@mipmap/ic_launcher"
+            android:name=".YoutisePlayerApplication"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:permission=""
-            tools:ignore="MissingTvBanner">
+            tools:ignore="GoogleAppIndexingWarning,MissingTvBanner">
 
         <activity
                 android:name=".ui.MainActivity"

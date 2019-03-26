@@ -20,6 +20,14 @@ interface LocationsService {
    ): Deferred<LocationsResponse>
 
    companion object {
+
+      /**
+       * Dependency Injection - Pass in instance of interceptor which checks for internet connection
+       * status and handles all exceptions
+       *
+       * @param connectivityInterceptor
+       * @return LocationsService - Instance that calls api to get locations list
+       */
       operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): LocationsService {
          val okHttpClient = OkHttpClient.Builder()
                .addInterceptor(connectivityInterceptor)
