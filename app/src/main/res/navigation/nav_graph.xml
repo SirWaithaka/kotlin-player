@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    android:label="Image"
-    app:startDestination="@id/destination_player">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph"
+            android:label="Image"
+            app:startDestination="@id/locationsFragment">
 
     <fragment
-        android:id="@+id/destination_image"
-        android:name="com.example.tvnavigation.ui.ImageFragment"
-        android:label="Image"
-        tools:layout="@layout/fragment_image" >
+            android:id="@+id/destination_image"
+            android:name="com.example.tvnavigation.ui.fragments.ImageFragment"
+            android:label="Image"
+            tools:layout="@layout/fragment_image">
         <action
-            android:id="@+id/action_destination_image_to_destination_player"
-            app:popUpTo="@id/destination_player" />
+                android:id="@+id/action_destination_image_to_destination_player"
+                app:popUpTo="@id/destination_player"/>
     </fragment>
     <fragment
-        android:id="@+id/destination_video"
-        android:name="com.example.tvnavigation.ui.VideoFragment"
-        android:label="Video"
-        tools:layout="@layout/fragment_video" >
+            android:id="@+id/destination_video"
+            android:name="com.example.tvnavigation.ui.fragments.VideoFragment"
+            android:label="Video"
+            tools:layout="@layout/fragment_video">
         <action
-            android:id="@+id/action_destination_video_to_destination_player"
-            app:popUpTo="@id/destination_player" />
+                android:id="@+id/action_destination_video_to_destination_player"
+                app:popUpTo="@id/destination_player"/>
     </fragment>
     <fragment
-        android:id="@+id/destination_player"
-        android:name="com.example.tvnavigation.ui.PlayerFragment"
-        android:label="Player"
-        tools:layout="@layout/fragment_player" />
+            android:id="@+id/destination_player"
+            android:name="com.example.tvnavigation.ui.fragments.PlayerFragment"
+            android:label="Player"
+            tools:layout="@layout/fragment_player"/>
+    <fragment
+            android:id="@+id/locationsFragment"
+            android:name="com.example.tvnavigation.ui.fragments.LocationsFragment"
+            android:label="fragment_locations"
+            tools:layout="@layout/fragment_locations"/>
 </navigation>

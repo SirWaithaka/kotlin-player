@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player.db"
+val DATABASE_NAME = "youtise_player_v2.db"
 
 @Database(
       entities = [Location::class],

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TvNavigation</string>
+    <string name="password_hint">Enter OTP Code</string>
 </resources>

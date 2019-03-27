@@ -40,7 +40,7 @@ class LocationsRepositoryImpl(
    }
 
    private suspend fun initLocations() {
-      if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
+//      if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
          this.fetchLocations("kennwaithaka@gmail.com")
    }
 

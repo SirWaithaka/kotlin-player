@@ -7,11 +7,13 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "locations")
 data class Location (
-   @ColumnInfo(name = "place_id") val id: String,
+   @PrimaryKey
+   @ColumnInfo(name = "place_id")
+   val id: String,
    val placeName: String,
    val placePassword: String
 ) {
-
-   @PrimaryKey()
-   var uid: Int = 0
+   override fun toString(): String {
+      return placeName
+   }
 }
