@@ -20,13 +20,16 @@ class LocationsRepositoryImpl(
       private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
+   private lateinit var userEmail: String
+
    init {
       locationsDataSource.downloadedLocations.observeForever {
          persistFetchedLocationsList(it.locations)
       }
    }
 
-   override suspend fun getLocations(): LiveData<List<Location>> {
+   override suspend fun getLocations(email: String): List<Location> {
+      this.userEmail = email
       return withContext(Dispatchers.IO) {
          initLocations()
          return@withContext locationDao.getAllLocations()
@@ -40,8 +43,8 @@ class LocationsRepositoryImpl(
    }
 
    private suspend fun initLocations() {
-//      if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
-         this.fetchLocations("kennwaithaka@gmail.com")
+      if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
+         this.fetchLocations(userEmail)
    }
 
    private suspend fun fetchLocations(email: String) {

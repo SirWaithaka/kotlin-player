@@ -33,10 +33,4 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
       bind() from provider { LocationsVMFactory(instance()) }
    }
-
-/*   override fun onCreate() {
-      super.onCreate()
-
-
-   }*/
 }

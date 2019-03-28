@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,10 +11,11 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
-import com.example.tvnavigation.Samples
 
 class ImageFragment : Fragment() {
-   private val TAG = "ImageFragment"
+   companion object {
+      const val TAG = "ImageFragment"
+   }
 
    override fun onAttach(context: Context?) {
       super.onAttach(context)
@@ -36,7 +36,7 @@ class ImageFragment : Fragment() {
       super.onViewCreated(view, savedInstanceState)
       Log.d(TAG, "onViewCreated: image fragment")
 
-      val sample = Samples()
+//      val sample = Samples()
       val imageView = view.findViewById<ImageView>(R.id.image_view)
       imageView.setImageResource(R.drawable.hugs)
    }

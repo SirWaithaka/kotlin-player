@@ -19,8 +19,8 @@ interface LocationDao {
    fun insertLocations(locations: List<Location>)
 
    @Query("select * from locations where place_id = :id")
-   fun getLocation(id: String): LiveData<Location>
+   fun getLocation(id: String): Location
 
    @Query("select * from locations")
-   fun getAllLocations(): LiveData<List<Location>>
+   fun getAllLocations(): List<Location>
 }

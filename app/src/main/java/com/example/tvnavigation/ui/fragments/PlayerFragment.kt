@@ -13,7 +13,6 @@ import com.example.tvnavigation.ui.base.ScopedFragment
 import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
 import kotlinx.android.synthetic.main.fragment_player.*
-import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -42,14 +41,12 @@ class PlayerFragment : ScopedFragment(), KodeinAware {
       Log.d(TAG, "Fragment on activity created")
 
       viewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationsViewModel::class.java)
-      launch {
-         val locations = viewModel.locations.await()
-         locations.observe(this@PlayerFragment, Observer {
-            if (it == null) return@Observer
+      val locations = viewModel.locations
+      locations.observe(this@PlayerFragment, Observer {
+         if (it == null) return@Observer
 
-            player_textView.text = it.toString()
-         })
-      }
+         player_textView.text = it.toString()
+      })
    }
 
    override fun onStart() {

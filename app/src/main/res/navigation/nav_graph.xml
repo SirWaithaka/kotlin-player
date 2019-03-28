@@ -4,7 +4,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
             android:label="Image"
-            app:startDestination="@id/emailFragment">
+            app:startDestination="@id/destination_email">
 
     <fragment
             android:id="@+id/destination_image"
@@ -15,6 +15,7 @@
                 android:id="@+id/action_destination_image_to_destination_player"
                 app:popUpTo="@id/destination_player"/>
     </fragment>
+
     <fragment
             android:id="@+id/destination_video"
             android:name="com.example.tvnavigation.ui.fragments.VideoFragment"
@@ -22,18 +23,28 @@
             tools:layout="@layout/fragment_video">
         <action
                 android:id="@+id/action_destination_video_to_destination_player"
-                app:popUpTo="@id/destination_player"/>
+                app:popUpTo="@id/destination_player" />
     </fragment>
+
     <fragment
             android:id="@+id/destination_player"
             android:name="com.example.tvnavigation.ui.fragments.PlayerFragment"
             android:label="Player"
             tools:layout="@layout/fragment_player"/>
+
     <fragment
-            android:id="@+id/locationsFragment"
+            android:id="@+id/destination_locations"
             android:name="com.example.tvnavigation.ui.fragments.LocationsFragment"
             android:label="fragment_locations"
             tools:layout="@layout/fragment_locations"/>
-    <fragment android:id="@+id/emailFragment" android:name="com.example.tvnavigation.ui.fragments.EmailFragment"
-              android:label="fragment_email" tools:layout="@layout/fragment_email"/>
+
+    <fragment
+            android:id="@+id/destination_email"
+            android:name="com.example.tvnavigation.ui.fragments.EmailFragment"
+            android:label="fragment_email"
+            tools:layout="@layout/fragment_email">
+        <action
+                android:id="@+id/action_destination_email_to_destination_locations"
+                app:destination="@id/destination_locations"/>
+    </fragment>
 </navigation>
