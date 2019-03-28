@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TvNavigation</string>
     <string name="password_hint">Enter OTP Code</string>
+    <string name="location_hint">Select Location</string>
+    <string name="email_hint">Enter email address</string>
+    <string name="submit_email">Submit Email</string>
 </resources>

@@ -4,7 +4,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
             android:label="Image"
-            app:startDestination="@id/locationsFragment">
+            app:startDestination="@id/emailFragment">
 
     <fragment
             android:id="@+id/destination_image"
@@ -34,4 +34,6 @@
             android:name="com.example.tvnavigation.ui.fragments.LocationsFragment"
             android:label="fragment_locations"
             tools:layout="@layout/fragment_locations"/>
+    <fragment android:id="@+id/emailFragment" android:name="com.example.tvnavigation.ui.fragments.EmailFragment"
+              android:label="fragment_email" tools:layout="@layout/fragment_email"/>
 </navigation>

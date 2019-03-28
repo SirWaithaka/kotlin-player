@@ -59,6 +59,9 @@ class LocationsFragment: ScopedFragment(), KodeinAware {
             val adapter = ArrayAdapter<Location>(propContext!!, android.R.layout.simple_spinner_item, it)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             locationsSpinner.adapter = adapter
+
+//            val adapter = SpinnerAdapter(propContext!!, R.layout.view_spinner_menu_item, it)
+//            locationsSpinner.adapter = adapter
          })
       }
 

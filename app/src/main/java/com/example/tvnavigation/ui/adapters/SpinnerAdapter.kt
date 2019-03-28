@@ -10,9 +10,8 @@ import com.example.tvnavigation.data.db.entities.Location
 class SpinnerAdapter(
       context: Context,
       private val resource: Int,
-      textViewResourceId: Int,
       private var locationsList: List<Location>
-   ): ArrayAdapter<Location>(context, resource, textViewResourceId) {
+   ): ArrayAdapter<Location>(context, 0, locationsList) {
 
    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -29,6 +28,14 @@ class SpinnerAdapter(
     * @param convertView - passed into the fn as a reusable view
     */
    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+      return initView(position, convertView, parent)
+   }
+
+   override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+      return initView(position, convertView, parent)
+   }
+
+   private fun initView(position: Int, convertView: View?, parent: ViewGroup?): View {
       val view: View
       val viewHolder: LocationViewHolder
 
@@ -43,9 +50,8 @@ class SpinnerAdapter(
       }
 
       val currentItem = locationsList[position]
-
       viewHolder.locationName.text = currentItem.placeName
 
       return view
    }
-}
+ }

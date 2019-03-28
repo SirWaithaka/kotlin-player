@@ -7,7 +7,6 @@
 
     <TextView
             android:id="@+id/textView_spinner_menu_item"
-            android:text=""
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
