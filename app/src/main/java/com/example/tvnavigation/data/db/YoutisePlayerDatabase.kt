@@ -4,26 +4,39 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v2.db"
+val DATABASE_NAME = "youtise_player_v3.db"
 
 @Database(
-      entities = [Location::class],
-      version = 1 // version for the db
+      entities = [Location::class,Device::class],
+      version = 1, // version for the db
+      exportSchema = false
 )
 abstract class YoutisePlayerDatabase: RoomDatabase() {
+   /*
+      In the background Room will create an instance of the LocationDao
+      with all implementation. When this abstract fun is called it will
+      return an instance of the Dao
+      @return LocationDao
+    */
    abstract fun locationDao(): LocationDao
 
    companion object {
       @Volatile private var instance: YoutisePlayerDatabase? = null
       private var LOCK = Any()
 
+      // creates a singleton for the database, across multiple threads
       operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
          instance ?: buildDatabase(context).also { instance = it }
       }
 
+      /**
+       * Build persistent app database and return it
+       * @param context
+       */
       private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext, YoutisePlayerDatabase::class.java, DATABASE_NAME)
                   .build()

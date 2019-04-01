@@ -28,7 +28,7 @@ class EmailFragment : Fragment(), KodeinAware {
    private val viewModelFactory: LocationsVMFactory by instance()
 
    private lateinit var emailInput: TextInputEditText
-   lateinit var submitButton: MaterialButton
+   private lateinit var submitButton: MaterialButton
    private lateinit var viewModel: LocationsViewModel
 
    private val onEmailSubmitListener = View.OnClickListener {
@@ -48,6 +48,7 @@ class EmailFragment : Fragment(), KodeinAware {
       super.onResume()
 
       emailInput = view!!.findViewById(R.id.textInput_email)
+      // onTextChanged is a custom extension to TextInput
       emailInput.onTextChanged {
          val userEmail = it
          submitButton.isEnabled = userEmail.isValidEmail()

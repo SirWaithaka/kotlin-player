@@ -5,6 +5,7 @@ import com.example.tvnavigation.data.network.responses.LocationsResponse
 
 interface LocationsDataSource {
    val downloadedLocations: LiveData<LocationsResponse>
+   val httpErrorResponse: LiveData<String>
 
    suspend fun fetchLocations(email: String)
 }

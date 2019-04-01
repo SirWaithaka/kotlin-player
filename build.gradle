@@ -20,7 +20,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        // dependency for using suspending fns in Retrofit coroutine, remove when
+        // retrofit2 reaches stable version 2.5.1
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 

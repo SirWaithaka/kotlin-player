@@ -2,8 +2,10 @@ package com.example.tvnavigation
 
 import android.app.Application
 import com.example.tvnavigation.data.db.YoutisePlayerDatabase
-import com.example.tvnavigation.data.network.ConnectivityInterceptor
-import com.example.tvnavigation.data.network.ConnectivityInterceptorImpl
+import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
+import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
+import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptorImpl
+import com.example.tvnavigation.data.network.interceptors.ServerResponseInterceptor
 import com.example.tvnavigation.data.network.services.LocationsService
 import com.example.tvnavigation.data.repository.LocationsRepository
 import com.example.tvnavigation.data.repository.LocationsRepositoryImpl
@@ -24,10 +26,18 @@ class YoutisePlayerApplication: Application(), KodeinAware {
 
       /**
        * the instance fn provides the application context to all constructors
+       * Defines the singletons accessible throughout the application context
        */
+      // create instance of database and pass application context
       bind() from singleton { YoutisePlayerDatabase(instance()) }
       bind() from singleton { instance<YoutisePlayerDatabase>().locationDao() }
-      bind<ConnectivityInterceptor>() with singleton { ConnectivityInterceptorImpl(instance()) }
+      bind<NetworkConnectionInterceptor>() with singleton {
+         // create instance and pass application context
+         NetworkConnectionInterceptorImpl(instance())
+      }
+      bind<ServerResponseInterceptor>() with singleton {
+         HttpErrorInterceptor()
+      }
       bind() from singleton { LocationsService(instance()) }
       bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance()) }
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }

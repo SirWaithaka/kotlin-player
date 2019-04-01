@@ -1,23 +1,30 @@
 package com.example.tvnavigation.data.network.services
 
-import com.example.tvnavigation.data.network.ConnectivityInterceptor
+import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
+import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
+import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
 import com.example.tvnavigation.data.network.responses.LocationsResponse
-import kotlinx.coroutines.Deferred
-import retrofit2.http.GET
-import retrofit2.http.Path
-
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Field
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface LocationsService {
 
    // Example - /api/location/kennwaithaka@gmail.com
    @GET("location/{email}")
-   fun getLocationsByEmail(
+   suspend fun getLocationsByEmail(
       @Path("email") email : String
-   ): Deferred<LocationsResponse>
+   ): LocationsResponse
+
+   @POST("location/login")
+   suspend fun authenticateLocation(
+      @Field("id") id : String,
+      @Field("password") password: String
+   ): AdvertisementsResponse
 
    companion object {
 
@@ -25,18 +32,21 @@ interface LocationsService {
        * Dependency Injection - Pass in instance of interceptor which checks for internet connection
        * status and handles all exceptions
        *
-       * @param connectivityInterceptor
+       * @param networkConnectionInterceptor
        * @return LocationsService - Instance that calls api to get locations list
        */
-      operator fun invoke(connectivityInterceptor: ConnectivityInterceptor): LocationsService {
+      operator fun invoke(
+            networkConnectionInterceptor: NetworkConnectionInterceptor
+      ): LocationsService {
+         val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
-               .addInterceptor(connectivityInterceptor)
+               .addInterceptor(networkConnectionInterceptor)
+               .addInterceptor(httpErrorInterceptor)
                .build()
 
          return Retrofit.Builder()
                .client(okHttpClient)
                .baseUrl("https://youtise-location-dev.herokuapp.com/api/")
-               .addCallAdapterFactory(CoroutineCallAdapterFactory())
                .addConverterFactory(GsonConverterFactory.create())
                .build()
                .create(LocationsService::class.java)

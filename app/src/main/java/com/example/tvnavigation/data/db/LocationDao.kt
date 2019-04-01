@@ -1,12 +1,11 @@
 package com.example.tvnavigation.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
-
 
 /**
  * Defines the data access functions for the locations entity
@@ -23,4 +22,10 @@ interface LocationDao {
 
    @Query("select * from locations")
    fun getAllLocations(): List<Location>
+
+   @Query("select * from device where registeredEmail = :email")
+   fun getRegisteredEmail(email: String): Device
+
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
+   fun insertDeviceInfo(info: Device)
 }
