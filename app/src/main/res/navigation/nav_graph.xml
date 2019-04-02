@@ -36,7 +36,10 @@
             android:id="@+id/destination_locations"
             android:name="com.example.tvnavigation.ui.fragments.LocationsFragment"
             android:label="fragment_locations"
-            tools:layout="@layout/fragment_locations"/>
+            tools:layout="@layout/fragment_locations">
+        <action android:id="@+id/action_destination_locations_to_destination_player"
+                app:destination="@id/destination_player"/>
+    </fragment>
 
     <fragment
             android:id="@+id/destination_email"

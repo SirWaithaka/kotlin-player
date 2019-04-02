@@ -1,15 +1,14 @@
 package com.example.tvnavigation.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
 /**
  * Defines the data access functions for the locations entity
  * Entails the get and update functions for the locations tuples
+ *
+ * Will handle db logic for all tables in the app
  */
 @Dao
 interface LocationDao {
@@ -23,9 +22,12 @@ interface LocationDao {
    @Query("select * from locations")
    fun getAllLocations(): List<Location>
 
-   @Query("select * from device where registeredEmail = :email")
-   fun getRegisteredEmail(email: String): Device
+   // Operations on the Device table
+   @Query("select * from device")
+   fun getDeviceInfo(): Device
 
+   // upsert fn - Update and Insert
    @Insert(onConflict = OnConflictStrategy.REPLACE)
-   fun insertDeviceInfo(info: Device)
+   fun upsertDeviceInfo(updatedDevice: Device)
+
 }

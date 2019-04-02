@@ -7,8 +7,9 @@ const val REGISTERED_USER_ID = 0
 
 @Entity(tableName = "device")
 data class Device (
-   val registeredEmail: String,
-   val serialNumber: String
+   var registeredEmail: String,
+   var serialNumber: String,
+   var authToken: String
 ) {
 
    @PrimaryKey(autoGenerate = false)

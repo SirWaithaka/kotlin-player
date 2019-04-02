@@ -8,7 +8,7 @@ import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v3.db"
+val DATABASE_NAME = "youtise_player_v4.db"
 
 @Database(
       entities = [Location::class,Device::class],

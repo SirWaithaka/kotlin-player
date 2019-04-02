@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.internal.onTextChanged
@@ -29,6 +30,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
 
    override val kodein: Kodein by kodein()
    private val viewModelFactory: LocationsVMFactory by instance()
+   private var hasSelectedLocation: Boolean = false
    private lateinit var viewModel: LocationsViewModel
 
    // select drop down for locations
@@ -48,7 +50,6 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
    override fun onActivityCreated(savedInstanceState: Bundle?) {
       super.onActivityCreated(savedInstanceState)
 
-      Log.d(TAG, "LocationsFragment: onActivityCreated")
       viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(LocationsViewModel::class.java)
       adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, ArrayList<Location>())
       locationsSpinner = view!!.findViewById(R.id.spinner_locations)
@@ -60,22 +61,24 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
 
    override fun onResume() {
       super.onResume()
-      Log.d(TAG, "LocationsFragment: onResume")
       val locationsLiveData = viewModel.mLocations
       locationsLiveData.observe(this, Observer {
-         viewModel.locationFragmentCalling()
          if (it == null) {
             Log.d(TAG, "No data returned")
             return@Observer
          }
-
          Log.d(TAG, "Returned: $it")
          adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
          locationsSpinner.adapter = adapter
       })
+      viewModel.isAuthenticated.observe(this, Observer {
+         if (it) {
+            this.findNavController().navigate(R.id.destination_player)
+         }
+      })
       passwordInput.onTextChanged {
          viewModel.setInputPassword(it)
-         loginButton.isEnabled = it.isNotEmpty()
+         loginButton.isEnabled = it.isNotEmpty() && hasSelectedLocation
       }
       mButton_login.setOnClickListener(onCredentialsSubmitListener)
    }
@@ -83,6 +86,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
    inner class SpinnerItemSelectedListener: AdapterView.OnItemSelectedListener {
       override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
          val location = parent.selectedItem as Location
+         hasSelectedLocation = true
          viewModel.setSelectedLocation(location)
       }
 

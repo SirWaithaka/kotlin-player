@@ -6,9 +6,11 @@ import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
 import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
 import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptorImpl
 import com.example.tvnavigation.data.network.interceptors.ServerResponseInterceptor
-import com.example.tvnavigation.data.network.services.LocationsService
+import com.example.tvnavigation.data.network.services.PlayerService
 import com.example.tvnavigation.data.repository.LocationsRepository
 import com.example.tvnavigation.data.repository.LocationsRepositoryImpl
+import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSource
+import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSourceImpl
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSourceImpl
 import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
@@ -38,9 +40,10 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<ServerResponseInterceptor>() with singleton {
          HttpErrorInterceptor()
       }
-      bind() from singleton { LocationsService(instance()) }
+      bind() from singleton { PlayerService(instance()) }
       bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance()) }
-      bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
+      bind<AdvertsNetworkDataSource>() with singleton { AdvertsNetworkDataSourceImpl(instance()) }
+      bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance(), instance()) }
       bind() from provider { LocationsVMFactory(instance()) }
    }
 }
