@@ -7,12 +7,9 @@ package com.example.tvnavigation.data.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.tvnavigation.data.db.LocationDao
-import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
-import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSource
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,8 +19,7 @@ import java.time.ZonedDateTime
 
 class LocationsRepositoryImpl(
       private val locationDao: LocationDao,
-      private val locationsDataSource: LocationsDataSource,
-      private val advertsNetworkDataSource: AdvertsNetworkDataSource
+      private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
    private lateinit var userEmail: String
@@ -51,7 +47,9 @@ class LocationsRepositoryImpl(
       locationsDataSource.authToken.observeForever {
          persistFetchedToken(it)
          Log.d(TAG, "Token: $it")
-         isAuthenticated = true
+      }
+      locationsDataSource.isAuthenticated.observeForever {
+         isAuthenticated = it
       }
       httpErrorResponse = locationsDataSource.httpErrorResponse
    }
@@ -76,11 +74,6 @@ class LocationsRepositoryImpl(
       }
    }
 
-   override suspend fun getCurrentAds(): List<Advert> {
-
-      return listOf()
-   }
-
    override suspend fun authenticate(id: String, password: String) {
       Log.d(TAG, "Passed in credentials: $id : $password")
       locationsDataSource.authenticate(id, password)
@@ -98,6 +91,7 @@ class LocationsRepositoryImpl(
          val device = locationDao.getDeviceInfo()
          device.authToken = authToken
          locationDao.upsertDeviceInfo(device)
+         isAuthenticated = true
       }
    }
 

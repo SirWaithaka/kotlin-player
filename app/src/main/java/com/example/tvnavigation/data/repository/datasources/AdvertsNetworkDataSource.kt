@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
 
 interface AdvertsNetworkDataSource {
-   val downloadedLocations: LiveData<AdvertisementsResponse>
+   val downloadedAdverts: LiveData<AdvertisementsResponse>
    val httpErrorResponse: LiveData<String>
 
    suspend fun fetchCurrentAds()

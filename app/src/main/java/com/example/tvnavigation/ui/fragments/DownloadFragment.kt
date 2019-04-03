@@ -7,16 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.tvnavigation.R
 
-
-class PlayerFragment : Fragment() {
-   private val  TAG = "PlayerFragment"
+class DownloadFragment: Fragment() {
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-      return inflater.inflate(R.layout.fragment_player, container, false)
-   }
-
-   override fun onResume() {
-      super.onResume()
-
+      return inflater.inflate(R.layout.fragment_download, container, false)
    }
 }

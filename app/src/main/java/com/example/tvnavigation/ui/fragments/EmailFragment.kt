@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
 import com.example.tvnavigation.internal.isValidEmail
 import com.example.tvnavigation.internal.onTextChanged
-import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
+import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.kodein.di.Kodein
@@ -25,7 +25,7 @@ class EmailFragment : Fragment(), KodeinAware {
    }
 
    override val kodein: Kodein by kodein()
-   private val viewModelFactory: LocationsVMFactory by instance()
+   private val viewModelFactory: ViewModelFactory by instance()
 
    private lateinit var emailInput: TextInputEditText
    private lateinit var submitButton: MaterialButton

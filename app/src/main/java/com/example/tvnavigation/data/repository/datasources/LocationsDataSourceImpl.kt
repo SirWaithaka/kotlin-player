@@ -1,6 +1,5 @@
 package com.example.tvnavigation.data.repository.datasources
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tvnavigation.data.network.responses.LocationsResponse
@@ -23,6 +22,9 @@ class LocationsDataSourceImpl(
    private val _authToken = MutableLiveData<String>()
    override val authToken: LiveData<String>
          get() = _authToken
+   private val _isAuthenticated = MutableLiveData<Boolean>()
+   override val isAuthenticated: LiveData<Boolean>
+      get() = _isAuthenticated
 
 
    override suspend fun fetchLocations(email: String) {
@@ -38,6 +40,7 @@ class LocationsDataSourceImpl(
       try {
          val fetchedToken = playerApiService.authenticateUser(id, password)
          _authToken.postValue(fetchedToken.token)
+         _isAuthenticated.postValue(true)
       } catch (e: Exception) {
          handleExceptions(e)
       }

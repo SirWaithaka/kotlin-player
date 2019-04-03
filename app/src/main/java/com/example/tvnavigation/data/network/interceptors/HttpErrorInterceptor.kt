@@ -1,6 +1,5 @@
 package com.example.tvnavigation.data.network.interceptors
 
-import android.util.Log
 import com.example.tvnavigation.internal.ClientErrorException
 import com.example.tvnavigation.internal.ServerErrorException
 import com.google.gson.Gson

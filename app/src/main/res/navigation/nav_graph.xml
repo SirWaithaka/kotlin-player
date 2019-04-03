@@ -4,41 +4,43 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
             android:label="Image"
-            app:startDestination="@id/destination_email">
+            app:startDestination="@id/destination_home">
 
     <fragment
             android:id="@+id/destination_image"
             android:name="com.example.tvnavigation.ui.fragments.ImageFragment"
             android:label="Image"
-            tools:layout="@layout/fragment_image">
-        <action
-                android:id="@+id/action_destination_image_to_destination_player"
-                app:popUpTo="@id/destination_player"/>
-    </fragment>
+            tools:layout="@layout/fragment_image"/>
 
     <fragment
             android:id="@+id/destination_video"
             android:name="com.example.tvnavigation.ui.fragments.VideoFragment"
             android:label="Video"
-            tools:layout="@layout/fragment_video">
-        <action
-                android:id="@+id/action_destination_video_to_destination_player"
-                app:popUpTo="@id/destination_player" />
-    </fragment>
+            tools:layout="@layout/fragment_video"/>
 
     <fragment
             android:id="@+id/destination_player"
             android:name="com.example.tvnavigation.ui.fragments.PlayerFragment"
             android:label="Player"
-            tools:layout="@layout/fragment_player"/>
+            tools:layout="@layout/fragment_player">
+        <action
+                android:id="@+id/action_destination_player_to_destination_video"
+                app:destination="@id/destination_video"/>
+        <action
+                android:id="@+id/action_destination_player_to_destination_image"
+                app:destination="@id/destination_image"/>
+    </fragment>
 
     <fragment
             android:id="@+id/destination_locations"
             android:name="com.example.tvnavigation.ui.fragments.LocationsFragment"
             android:label="fragment_locations"
             tools:layout="@layout/fragment_locations">
-        <action android:id="@+id/action_destination_locations_to_destination_player"
-                app:destination="@id/destination_player"/>
+        <action
+                android:id="@+id/action_back_to_home"
+                app:destination="@id/destination_home"
+                app:popUpTo="@id/destination_home"
+                app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -49,5 +51,22 @@
         <action
                 android:id="@+id/action_destination_email_to_destination_locations"
                 app:destination="@id/destination_locations"/>
+    </fragment>
+    <fragment android:id="@+id/destination_downloader"
+              android:name="com.example.tvnavigation.ui.fragments.DownloadFragment"
+              android:label="fragment_download" tools:layout="@layout/fragment_download">
+        <action android:id="@+id/action_destination_downloader_to_destination_player"
+                app:destination="@id/destination_player"/>
+    </fragment>
+    <fragment android:id="@+id/destination_home"
+              android:name="com.example.tvnavigation.ui.fragments.HomeFragment"
+              android:label="fragment_home"
+              tools:layout="@layout/fragment_home">
+        <action
+                android:id="@+id/action_destination_home_to_destination_email"
+                app:destination="@id/destination_email"/>
+        <action
+                android:id="@+id/action_destination_home_to_destination_downloader"
+                app:destination="@id/destination_downloader"/>
     </fragment>
 </navigation>

@@ -1,5 +1,7 @@
 package com.example.tvnavigation.data.network.services
 
+import com.example.tvnavigation.data.network.interceptors.AuthenticationInterceptor
+import com.example.tvnavigation.data.network.interceptors.ClientRequestInterceptor
 import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
 import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
 import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
@@ -26,9 +28,7 @@ interface PlayerService {
    ): LoginResponse
 
    @GET("location/adverts")
-   suspend fun fetchCurrentAdverts(
-
-   ): AdvertisementsResponse
+   suspend fun fetchCurrentAdverts(): AdvertisementsResponse
 
    companion object {
 
@@ -40,11 +40,13 @@ interface PlayerService {
        * @return LocationsService - Instance that calls api to get locations list
        */
       operator fun invoke(
-            networkConnectionInterceptor: NetworkConnectionInterceptor
+            networkConnectionInterceptor: ClientRequestInterceptor,
+            authenticationInterceptor: AuthenticationInterceptor
       ): PlayerService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
                .addInterceptor(networkConnectionInterceptor)
+               .authenticator(authenticationInterceptor)
                .addInterceptor(httpErrorInterceptor)
                .build()
 

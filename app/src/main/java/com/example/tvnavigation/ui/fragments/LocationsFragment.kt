@@ -15,8 +15,8 @@ import com.example.tvnavigation.R
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.internal.onTextChanged
 import com.example.tvnavigation.ui.base.ScopedFragment
-import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
+import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_locations.*
@@ -29,7 +29,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
    private val TAG = "LocationsFragment"
 
    override val kodein: Kodein by kodein()
-   private val viewModelFactory: LocationsVMFactory by instance()
+   private val viewModelFactory: ViewModelFactory by instance()
    private var hasSelectedLocation: Boolean = false
    private lateinit var viewModel: LocationsViewModel
 
@@ -61,7 +61,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
 
    override fun onResume() {
       super.onResume()
-      val locationsLiveData = viewModel.mLocations
+      val locationsLiveData = viewModel.locations
       locationsLiveData.observe(this, Observer {
          if (it == null) {
             Log.d(TAG, "No data returned")
@@ -73,7 +73,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
       })
       viewModel.isAuthenticated.observe(this, Observer {
          if (it) {
-            this.findNavController().navigate(R.id.destination_player)
+            this.findNavController().navigate(R.id.action_back_to_home)
          }
       })
       passwordInput.onTextChanged {

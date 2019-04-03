@@ -22,7 +22,7 @@ class LocationsViewModel(
    private val job = Job()
    private lateinit var mSelectedLocation: Location
    private lateinit var mPassword: String
-   var mLocations = MutableLiveData<List<Location>>()
+   private var mLocations = MutableLiveData<List<Location>>()
    val locations: LiveData<List<Location>>
          get() = mLocations
    override val coroutineContext: CoroutineContext
@@ -33,6 +33,9 @@ class LocationsViewModel(
    val isAuthenticated: LiveData<Boolean>
          get() = mIsAuthenticated
 
+   init {
+       mIsAuthenticated.postValue(false)
+   }
    fun validateEmail(userEmail: String) {
       var fetchedLocations: List<Location>
       launch {
@@ -50,7 +53,6 @@ class LocationsViewModel(
       mPassword = password
    }
    fun validateCredentials() {
-      var fetchedToken: LoginResponse
       launch {
          locationsRepository.authenticate(mSelectedLocation.id, mPassword)
          mIsAuthenticated.postValue(locationsRepository.getAuthenticationStatus())

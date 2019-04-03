@@ -4,14 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v4.db"
+val DATABASE_NAME = "youtise_player_v5.db"
 
 @Database(
-      entities = [Location::class,Device::class],
+      entities = [Location::class,Device::class,Advert::class],
       version = 1, // version for the db
       exportSchema = false
 )
@@ -23,6 +24,7 @@ abstract class YoutisePlayerDatabase: RoomDatabase() {
       @return LocationDao
     */
    abstract fun locationDao(): LocationDao
+   abstract fun advertDao(): AdvertDao
 
    companion object {
       @Volatile private var instance: YoutisePlayerDatabase? = null

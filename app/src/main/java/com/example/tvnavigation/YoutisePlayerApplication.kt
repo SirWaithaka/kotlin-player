@@ -2,18 +2,17 @@ package com.example.tvnavigation
 
 import android.app.Application
 import com.example.tvnavigation.data.db.YoutisePlayerDatabase
-import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
-import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
-import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptorImpl
-import com.example.tvnavigation.data.network.interceptors.ServerResponseInterceptor
+import com.example.tvnavigation.data.network.interceptors.*
 import com.example.tvnavigation.data.network.services.PlayerService
+import com.example.tvnavigation.data.repository.AdvertsRepository
+import com.example.tvnavigation.data.repository.AdvertsRepositoryImpl
 import com.example.tvnavigation.data.repository.LocationsRepository
 import com.example.tvnavigation.data.repository.LocationsRepositoryImpl
 import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSource
 import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSourceImpl
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSourceImpl
-import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
+import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -33,17 +32,20 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       // create instance of database and pass application context
       bind() from singleton { YoutisePlayerDatabase(instance()) }
       bind() from singleton { instance<YoutisePlayerDatabase>().locationDao() }
-      bind<NetworkConnectionInterceptor>() with singleton {
+      bind() from singleton { instance<YoutisePlayerDatabase>().advertDao() }
+      bind<ClientRequestInterceptor>() with singleton {
          // create instance and pass application context
-         NetworkConnectionInterceptorImpl(instance())
+         NetworkConnectionInterceptor(instance())
       }
+      bind() from singleton { AuthenticationInterceptor(instance()) }
       bind<ServerResponseInterceptor>() with singleton {
          HttpErrorInterceptor()
       }
-      bind() from singleton { PlayerService(instance()) }
+      bind() from singleton { PlayerService(instance(), instance()) }
       bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance()) }
       bind<AdvertsNetworkDataSource>() with singleton { AdvertsNetworkDataSourceImpl(instance()) }
-      bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance(), instance()) }
-      bind() from provider { LocationsVMFactory(instance()) }
+      bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
+      bind<AdvertsRepository>() with singleton { AdvertsRepositoryImpl(instance(), instance())}
+      bind() from provider { ViewModelFactory(instance(), instance()) }
    }
 }

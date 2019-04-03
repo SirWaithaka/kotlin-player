@@ -1,6 +1,7 @@
 package com.example.tvnavigation.data.db
 
 import androidx.room.*
+import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
@@ -29,5 +30,4 @@ interface LocationDao {
    // upsert fn - Update and Insert
    @Insert(onConflict = OnConflictStrategy.REPLACE)
    fun upsertDeviceInfo(updatedDevice: Device)
-
 }

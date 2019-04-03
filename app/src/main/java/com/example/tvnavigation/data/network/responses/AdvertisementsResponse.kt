@@ -1,7 +1,7 @@
 package com.example.tvnavigation.data.network.responses
 
-import com.example.tvnavigation.data.interfaces.AdvertInterface
+import com.example.tvnavigation.data.db.entities.Advert
 
 data class AdvertisementsResponse(
-   val adverts: List<AdvertInterface>
+   val adverts: List<Advert>
 )

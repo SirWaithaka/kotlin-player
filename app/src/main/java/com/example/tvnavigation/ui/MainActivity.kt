@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.tvnavigation.R
-import com.example.tvnavigation.ui.viewmodels.LocationsVMFactory
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
+import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.tapadoo.alerter.Alerter
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
    private val TAG = "PlayerMainActivity"
 
    override val kodein: Kodein by kodein()
-   private val viewModelFactory: LocationsVMFactory by instance()
+   private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: LocationsViewModel
 
    override fun onCreate(savedInstanceState: Bundle?) {

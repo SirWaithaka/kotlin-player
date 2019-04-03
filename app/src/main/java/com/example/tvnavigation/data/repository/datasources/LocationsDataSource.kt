@@ -7,6 +7,7 @@ interface LocationsDataSource {
    val downloadedLocations: LiveData<LocationsResponse>
    val httpErrorResponse: LiveData<String>
    val authToken: LiveData<String>
+   val isAuthenticated: LiveData<Boolean>
 
    suspend fun fetchLocations(email: String)
    suspend fun authenticate(id: String, password: String)

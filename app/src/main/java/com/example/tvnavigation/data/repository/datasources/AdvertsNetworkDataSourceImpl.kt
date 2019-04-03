@@ -12,9 +12,9 @@ class AdvertsNetworkDataSourceImpl(
       private val playerApiService: PlayerService
 ) : AdvertsNetworkDataSource {
 
-   private  val _downloadedLocations = MutableLiveData<AdvertisementsResponse>()
-   override val downloadedLocations: LiveData<AdvertisementsResponse>
-      get() = _downloadedLocations
+   private  val _downloadedAdverts = MutableLiveData<AdvertisementsResponse>()
+   override val downloadedAdverts: LiveData<AdvertisementsResponse>
+      get() = _downloadedAdverts
 
    private  val _httpErrorResponse = MutableLiveData<String>()
    override val httpErrorResponse: LiveData<String>
@@ -23,7 +23,7 @@ class AdvertsNetworkDataSourceImpl(
    override suspend fun fetchCurrentAds() {
       try {
          val fetchedLocations = playerApiService.fetchCurrentAdverts()
-         _downloadedLocations.postValue(fetchedLocations)
+         _downloadedAdverts.postValue(fetchedLocations)
       } catch (e: Exception) {
          when (e) {
             is NoConnectivityException -> _httpErrorResponse.postValue("No internet Connection")
