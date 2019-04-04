@@ -9,7 +9,7 @@ import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v5.db"
+val DATABASE_NAME = "youtise_player_v7.18.db"
 
 @Database(
       entities = [Location::class,Device::class,Advert::class],
@@ -25,6 +25,7 @@ abstract class YoutisePlayerDatabase: RoomDatabase() {
     */
    abstract fun locationDao(): LocationDao
    abstract fun advertDao(): AdvertDao
+   abstract fun deviceDao(): DeviceDao
 
    companion object {
       @Volatile private var instance: YoutisePlayerDatabase? = null

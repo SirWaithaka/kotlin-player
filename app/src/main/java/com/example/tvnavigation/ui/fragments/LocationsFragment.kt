@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.internal.onTextChanged
-import com.example.tvnavigation.ui.base.ScopedFragment
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.google.android.material.button.MaterialButton
@@ -25,7 +25,8 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
-class LocationsFragment : ScopedFragment(), KodeinAware {
+class LocationsFragment : Fragment(), KodeinAware {
+
    private val TAG = "LocationsFragment"
 
    override val kodein: Kodein by kodein()
@@ -71,7 +72,7 @@ class LocationsFragment : ScopedFragment(), KodeinAware {
          adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
          locationsSpinner.adapter = adapter
       })
-      viewModel.isAuthenticated.observe(this, Observer {
+      viewModel.hasAuthenticated.observe(this, Observer {
          if (it) {
             this.findNavController().navigate(R.id.action_back_to_home)
          }

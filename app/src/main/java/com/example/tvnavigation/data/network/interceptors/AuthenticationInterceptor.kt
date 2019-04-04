@@ -1,6 +1,6 @@
 package com.example.tvnavigation.data.network.interceptors
 
-import com.example.tvnavigation.data.db.LocationDao
+import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -8,11 +8,11 @@ import okhttp3.Response
 import okhttp3.Route
 
 class AuthenticationInterceptor(
-      private val locationDao: LocationDao
+      private val deviceDao: DeviceDao
 ): Authenticator {
 
    private var authenticationToken = ""
-   private val device: Device by lazy { locationDao.getDeviceInfo() }
+   private val device: Device by lazy { deviceDao.getDeviceInfo() }
 
    /**
     * TODO("Add functionality to refresh token")

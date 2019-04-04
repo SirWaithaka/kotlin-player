@@ -4,10 +4,7 @@ import android.app.Application
 import com.example.tvnavigation.data.db.YoutisePlayerDatabase
 import com.example.tvnavigation.data.network.interceptors.*
 import com.example.tvnavigation.data.network.services.PlayerService
-import com.example.tvnavigation.data.repository.AdvertsRepository
-import com.example.tvnavigation.data.repository.AdvertsRepositoryImpl
-import com.example.tvnavigation.data.repository.LocationsRepository
-import com.example.tvnavigation.data.repository.LocationsRepositoryImpl
+import com.example.tvnavigation.data.repository.*
 import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSource
 import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSourceImpl
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -33,6 +30,7 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind() from singleton { YoutisePlayerDatabase(instance()) }
       bind() from singleton { instance<YoutisePlayerDatabase>().locationDao() }
       bind() from singleton { instance<YoutisePlayerDatabase>().advertDao() }
+      bind() from singleton { instance<YoutisePlayerDatabase>().deviceDao() }
       bind<ClientRequestInterceptor>() with singleton {
          // create instance and pass application context
          NetworkConnectionInterceptor(instance())
@@ -46,6 +44,7 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<AdvertsNetworkDataSource>() with singleton { AdvertsNetworkDataSourceImpl(instance()) }
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
       bind<AdvertsRepository>() with singleton { AdvertsRepositoryImpl(instance(), instance())}
-      bind() from provider { ViewModelFactory(instance(), instance()) }
+      bind<DeviceRepository>() with singleton { DeviceRepositoryImpl(instance(), instance()) }
+      bind() from provider { ViewModelFactory(instance(), instance(), instance()) }
    }
 }

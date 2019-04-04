@@ -23,11 +23,4 @@ interface LocationDao {
    @Query("select * from locations")
    fun getAllLocations(): List<Location>
 
-   // Operations on the Device table
-   @Query("select * from device")
-   fun getDeviceInfo(): Device
-
-   // upsert fn - Update and Insert
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
-   fun upsertDeviceInfo(updatedDevice: Device)
 }

@@ -13,6 +13,7 @@ import com.example.tvnavigation.ui.base.ScopedFragment
 import com.example.tvnavigation.ui.viewmodels.AdvertsViewModel
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
+import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -39,19 +40,26 @@ class HomeFragment: ScopedFragment(), KodeinAware {
    override fun onResume() {
       super.onResume()
       Log.d(TAG, "HomeFragment: onResume")
-      adViewModel.hasDownloadedAdverts.observe(this, Observer {
-         if (it) this.findNavController().navigate(R.id.destination_downloader)
-         else this.findNavController().navigate(R.id.destination_player)
-      })
-
-      locViewModel.isAuthenticated.observe(this, Observer {
-         Log.d(TAG, "Home Observer: $it")
-         if (it) this.findNavController().navigate(R.id.destination_downloader)
-         else this.findNavController().navigate(R.id.destination_email)
-      })
+//      adViewModel.hasDownloadedAdverts.observe(this, Observer {
+//         if (it) this.findNavController().navigate(R.id.destination_downloader)
+//         else this.findNavController().navigate(R.id.destination_player)
+//      })
+//
+//      locViewModel.isAuthenticated.observe(this, Observer {
+//         Log.d(TAG, "Home Observer: $it")
+//         if (it) this.findNavController().navigate(R.id.destination_downloader)
+//         else this.findNavController().navigate(R.id.destination_email)
+//      })
    }
    override fun onStart() {
       super.onStart()
-      Log.d(TAG, "onStart: Player Fragment onStart")
+
+      // behind the scenes check if app already is authenticated
+      launch {
+         val hasAuthenticated = locViewModel.getAuthenticationStatus()
+         locViewModel.setAuthenticationStatus(hasAuthenticated)
+         if (hasAuthenticated) this@HomeFragment.findNavController().navigate(R.id.destination_downloader)
+         else this@HomeFragment.findNavController().navigate(R.id.destination_email)
+      }
    }
 }

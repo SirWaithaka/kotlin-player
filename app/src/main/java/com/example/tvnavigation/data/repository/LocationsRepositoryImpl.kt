@@ -8,7 +8,6 @@ package com.example.tvnavigation.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.tvnavigation.data.db.LocationDao
-import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
 import kotlinx.coroutines.Dispatchers
@@ -44,13 +43,6 @@ class LocationsRepositoryImpl(
       locationsDataSource.downloadedLocations.observeForever {
          persistFetchedLocationsList(it.locations)
       }
-      locationsDataSource.authToken.observeForever {
-         persistFetchedToken(it)
-         Log.d(TAG, "Token: $it")
-      }
-      locationsDataSource.isAuthenticated.observeForever {
-         isAuthenticated = it
-      }
       httpErrorResponse = locationsDataSource.httpErrorResponse
    }
 
@@ -63,13 +55,14 @@ class LocationsRepositoryImpl(
       return isAuthenticated
    }
 
+   /**
+    * TODO("Fix bug: Locations get returned empty before
+    * @persistFetchedLocations has done its thing")
+    */
    override suspend fun getLocations(email: String): List<Location> {
       this.userEmail = email
       return withContext(Dispatchers.IO) {
          initLocations()
-         val device = locationDao.getDeviceInfo()
-         if (!device.registeredEmail.equals(email, ignoreCase = false))
-            return@withContext listOf<Location>()
          return@withContext locationDao.getAllLocations()
       }
    }
@@ -86,18 +79,7 @@ class LocationsRepositoryImpl(
       }
    }
 
-   private fun persistFetchedToken(authToken: String) {
-      GlobalScope.launch(Dispatchers.IO) {
-         val device = locationDao.getDeviceInfo()
-         device.authToken = authToken
-         locationDao.upsertDeviceInfo(device)
-         isAuthenticated = true
-      }
-   }
-
    private suspend fun initLocations() {
-      val device = Device(userEmail, "0", "")
-      locationDao.upsertDeviceInfo(device)
       if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
          this.fetchLocations(userEmail)
    }
