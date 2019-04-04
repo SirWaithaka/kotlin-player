@@ -22,7 +22,6 @@ class LocationsRepositoryImpl(
 ) : LocationsRepository {
 
    private lateinit var userEmail: String
-   private var httpErrorResponse: LiveData<String>
    private var isAuthenticated: Boolean = false
 
    /**
@@ -43,11 +42,6 @@ class LocationsRepositoryImpl(
       locationsDataSource.downloadedLocations.observeForever {
          persistFetchedLocationsList(it.locations)
       }
-      httpErrorResponse = locationsDataSource.httpErrorResponse
-   }
-
-   override fun getHttpErrorResponses(): LiveData<String> {
-      return this.httpErrorResponse
    }
 
    override fun getAuthenticationStatus(): Boolean {

@@ -1,19 +1,20 @@
 package com.example.tvnavigation.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.tvnavigation.data.db.entities.Advert
 
-
+/**
+ * Operations on the adverts table
+ */
 @Dao
 interface AdvertDao {
 
    @Query("select * from adverts")
    fun retrieveAdverts(): List<Advert>
 
-   // operations on the adverts table
    @Insert(onConflict = OnConflictStrategy.IGNORE)
-   fun upsertAdverts(adverts: List<Advert>)
+   fun upsertAdverts(adverts: List<Advert>): List<Long>
+
+   @Delete
+   fun deleteAdverts(adverts: List<Advert>)
 }

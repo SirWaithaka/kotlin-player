@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.tvnavigation.R
-import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
+import com.example.tvnavigation.ui.viewmodels.ErrorsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.tapadoo.alerter.Alerter
 import org.kodein.di.Kodein
@@ -20,14 +20,14 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
-   private lateinit var viewModel: LocationsViewModel
+   private lateinit var viewModel: ErrorsViewModel
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
       Log.d(TAG, "Activity on create here")
 
-      viewModel = ViewModelProviders.of(this, viewModelFactory).get(LocationsViewModel::class.java)
+      viewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
    }
 
    override fun onResume() {

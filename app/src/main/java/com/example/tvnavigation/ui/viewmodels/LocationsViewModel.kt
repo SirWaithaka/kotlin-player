@@ -25,7 +25,6 @@ class LocationsViewModel(
    override val coroutineContext: CoroutineContext
          get() = job + Dispatchers.IO
 
-   val httpErrorResponse: LiveData<String> = locationsRepository.getHttpErrorResponses()
    private val mHasAuthenticated = MutableLiveData<Boolean>()
    val hasAuthenticated: LiveData<Boolean>
          get() = mHasAuthenticated

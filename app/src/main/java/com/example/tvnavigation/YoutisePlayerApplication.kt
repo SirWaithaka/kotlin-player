@@ -2,6 +2,7 @@ package com.example.tvnavigation
 
 import android.app.Application
 import com.example.tvnavigation.data.db.YoutisePlayerDatabase
+import com.example.tvnavigation.data.network.ErrorsHandler
 import com.example.tvnavigation.data.network.interceptors.*
 import com.example.tvnavigation.data.network.services.PlayerService
 import com.example.tvnavigation.data.repository.*
@@ -45,6 +46,7 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
       bind<AdvertsRepository>() with singleton { AdvertsRepositoryImpl(instance(), instance())}
       bind<DeviceRepository>() with singleton { DeviceRepositoryImpl(instance(), instance()) }
-      bind() from provider { ViewModelFactory(instance(), instance(), instance()) }
+      bind() from singleton { ErrorsHandler(instance(), instance()) }
+      bind() from provider { ViewModelFactory(instance(), instance(), instance(), instance()) }
    }
 }
