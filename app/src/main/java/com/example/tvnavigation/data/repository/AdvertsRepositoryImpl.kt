@@ -17,18 +17,25 @@ class AdvertsRepositoryImpl(
 
    private val TAG = "AdvertsRepository"
    private var listener: AdvertsRepository.AdvertsFetchedListener? = null
+   private var retrievedAdverts = listOf<Advert>()
 
    init {
        advertsNetworkDataSource.downloadedAdverts.observeForever {
-          Log.d(TAG, "Ads: $it")
+          logResponse(it.adverts)
           this.listener?.onAdvertsFetched(it.adverts)
           persistFetchedAdverts(it.adverts)
        }
    }
 
+   private fun logResponse(adverts: List<Advert>) {
+      for (advert in adverts) {
+         Log.d(TAG, "advert: ${advert.adName}")
+      }
+   }
    override suspend fun retrieveAdverts(): List<Advert> {
       return withContext(Dispatchers.IO) {
-         return@withContext advertDao.retrieveAdverts()
+         retrievedAdverts = advertDao.retrieveAdverts()
+         return@withContext retrievedAdverts
       }
    }
 
@@ -42,19 +49,18 @@ class AdvertsRepositoryImpl(
       TODO("not implemented")
    }
 
-//   suspend fun getAdverts(): List<Advert> {
-//      return retrieveAdverts()
-//   }
-
    override suspend fun fetchAdverts() {
       advertsNetworkDataSource.fetchCurrentAds()
    }
 
    private fun persistFetchedAdverts(fetchedAdverts: List<Advert>) {
       GlobalScope.launch {
-         val result = advertDao.upsertAdverts(fetchedAdverts)
-         Log.d(TAG, "Upsert result: ${result.toString()}")
-         this@AdvertsRepositoryImpl.listener?.onAdvertsPersisted(true)
+         val toPersist = fetchedAdverts.minus(retrievedAdverts)
+         if (toPersist.isNotEmpty()) {
+            val result = advertDao.upsertAdverts(fetchedAdverts)
+            Log.d(TAG, "Upsert result: $result")
+            this@AdvertsRepositoryImpl.listener?.onAdvertsPersisted(true)
+         }
       }
    }
 

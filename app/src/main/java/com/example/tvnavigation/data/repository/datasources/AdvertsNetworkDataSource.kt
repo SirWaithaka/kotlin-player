@@ -8,4 +8,5 @@ interface AdvertsNetworkDataSource {
    val httpErrorResponse: LiveData<String>
 
    suspend fun fetchCurrentAds()
+   suspend fun downloadMedia()
 }

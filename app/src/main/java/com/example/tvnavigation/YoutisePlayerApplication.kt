@@ -18,6 +18,10 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
+import com.downloader.PRDownloader
+import com.downloader.PRDownloaderConfig
+
+
 
 class YoutisePlayerApplication: Application(), KodeinAware {
    override val kodein: Kodein = Kodein.lazy {
@@ -48,5 +52,14 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<DeviceRepository>() with singleton { DeviceRepositoryImpl(instance(), instance()) }
       bind() from singleton { ErrorsHandler(instance(), instance()) }
       bind() from provider { ViewModelFactory(instance(), instance(), instance(), instance()) }
+   }
+
+   override fun onCreate() {
+      super.onCreate()
+
+      val config = PRDownloaderConfig.newBuilder()
+         .setDatabaseEnabled(true)
+         .build()
+      PRDownloader.initialize(this, config)
    }
 }

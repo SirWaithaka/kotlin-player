@@ -8,6 +8,7 @@ import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
 import com.example.tvnavigation.data.network.responses.LocationsResponse
 import com.example.tvnavigation.data.network.responses.LoginResponse
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -26,6 +27,12 @@ interface PlayerService {
       @Field("id") id: String,
       @Field("password") password: String
    ): LoginResponse
+
+   @Streaming
+   @GET
+   suspend fun downloadMediaStream(
+      @Url url: String
+   ): ResponseBody
 
    @GET("location/adverts")
    suspend fun fetchCurrentAdverts(): AdvertisementsResponse

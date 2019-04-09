@@ -4,18 +4,21 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.db.entities.Device
+import com.example.tvnavigation.data.db.entities.ListToString
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v7.18.db"
+val DATABASE_NAME = "youtise_player_v8.1.db"
 
 @Database(
       entities = [Location::class,Device::class,Advert::class],
       version = 1, // version for the db
       exportSchema = false
 )
+@TypeConverters(ListToString::class)
 abstract class YoutisePlayerDatabase: RoomDatabase() {
    /*
       In the background Room will create an instance of the LocationDao

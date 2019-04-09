@@ -97,4 +97,8 @@ dependencies {
 
     // ALERTER
     implementation 'com.tapadoo.android:alerter:4.0.1'
+
+    // DOWNLOAD OF FILES
+    // implementation "com.tonyodev.fetch2:fetch2:3.0.3"
+    implementation 'com.mindorks.android:prdownloader:0.5.0'
 }

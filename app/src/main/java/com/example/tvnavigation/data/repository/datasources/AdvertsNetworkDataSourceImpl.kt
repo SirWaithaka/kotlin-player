@@ -25,12 +25,24 @@ class AdvertsNetworkDataSourceImpl(
          val fetchedLocations = playerApiService.fetchCurrentAdverts()
          _downloadedAdverts.postValue(fetchedLocations)
       } catch (e: Exception) {
-         when (e) {
-            is NoConnectivityException -> _httpErrorResponse.postValue("No internet Connection")
-            is ClientErrorException -> _httpErrorResponse.postValue(e.message)
-            is ServerErrorException -> _httpErrorResponse.postValue(e.message)
-            else -> _httpErrorResponse.postValue(e.message)
-         }
+         handleExceptions(e)
+      }
+   }
+
+   override suspend fun downloadMedia() {
+      try {
+
+      } catch (e: Exception) {
+         handleExceptions(e)
+      }
+   }
+
+   private fun handleExceptions(e: Exception) {
+      when (e) {
+         is NoConnectivityException -> _httpErrorResponse.postValue("No internet Connection")
+         is ClientErrorException -> _httpErrorResponse.postValue(e.message)
+         is ServerErrorException -> _httpErrorResponse.postValue(e.message)
+         else -> _httpErrorResponse.postValue(e.message)
       }
    }
 }
