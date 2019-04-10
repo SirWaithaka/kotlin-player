@@ -22,7 +22,7 @@ class HttpErrorInterceptor: ServerResponseInterceptor {
          return response
 
       val jsonErrorResponse = response.body()!!.string()
-      val errorResponse = gson.fromJson(jsonErrorResponse, ErrorResponse::class.java)
+      val errorResponse by lazy { gson.fromJson(jsonErrorResponse, ErrorResponse::class.java) }
       when (response.code()) {
          // Handle Unauthorized
          401 -> throw ClientErrorException(errorResponse.message)
@@ -34,8 +34,10 @@ class HttpErrorInterceptor: ServerResponseInterceptor {
          405 -> throw ClientErrorException(errorResponse.message)
          // Handle Internal Server Error
          500 -> throw ServerErrorException(errorResponse.message)
-         // Catch unhandled error
-         else -> throw ServerErrorException(errorResponse.message)
+         // Handle Server Unavailable
+         503 -> throw ServerErrorException("Server Unavailable")
+         // Catch unhandled Exception
+         else -> throw ServerErrorException("Unknown Error!")
       }
    }
 }

@@ -21,8 +21,10 @@ class LocationsRepositoryImpl(
       private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
+   private val TAG = "LocationRepository"
    private lateinit var userEmail: String
    private var isAuthenticated: Boolean = false
+   private var listener: LocationsRepository.LocationsFetchedListener? = null
 
    /**
     * Described is the process of getting data from the api and storing it to db
@@ -40,6 +42,7 @@ class LocationsRepositoryImpl(
     */
    init {
       locationsDataSource.downloadedLocations.observeForever {
+         this.listener?.onLocationsFetched(it.locations)
          persistFetchedLocationsList(it.locations)
       }
    }
@@ -49,15 +52,19 @@ class LocationsRepositoryImpl(
       return isAuthenticated
    }
 
-   /**
-    * TODO("Fix bug: Locations get returned empty before
-    * @persistFetchedLocations has done its thing")
-    */
-   override suspend fun getLocations(email: String): List<Location> {
-      this.userEmail = email
+   override suspend fun getLocations(): List<Location> {
       return withContext(Dispatchers.IO) {
-         initLocations()
          return@withContext locationDao.getAllLocations()
+      }
+   }
+
+   override suspend fun getLocationsByEmail(email: String) {
+      this.userEmail = email
+      val retrievedLocations = getLocations()
+      if (retrievedLocations.isNotEmpty())
+         listener?.onLocationsFetched(retrievedLocations)
+      else {
+         initLocations()
       }
    }
 
@@ -88,7 +95,7 @@ class LocationsRepositoryImpl(
       return lastTimeFetched.isBefore(thirtyMinutesAgo)
    }
 
-   companion object {
-       const val TAG = "LocationRepository"
+   override fun setOnLocationsFetchedListener(listener: LocationsRepository.LocationsFetchedListener) {
+      this.listener = listener
    }
 }

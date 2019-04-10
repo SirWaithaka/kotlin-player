@@ -36,14 +36,16 @@ class LocationsViewModel(
             mHasAuthenticated.postValue(status)
          }
       })
+      locationsRepository.setOnLocationsFetchedListener(object: LocationsRepository.LocationsFetchedListener {
+         override fun onLocationsFetched(locations: List<Location>) {
+            mLocations.postValue(locations)
+         }
+      })
    }
 
    fun validateEmail(userEmail: String) {
-      var fetchedLocations: List<Location>
       launch {
-         fetchedLocations = locationsRepository.getLocations(userEmail)
-         Log.d("ViewModel", "Fetched Locations: $fetchedLocations")
-         mLocations.postValue(fetchedLocations)
+         locationsRepository.getLocationsByEmail(userEmail)
       }
    }
    fun setSelectedLocation(selectedLocation: Location) {
@@ -61,7 +63,6 @@ class LocationsViewModel(
             )
          }
       }
-      Log.d("ViewModel", "Not Blocking")
    }
 
    fun setAuthenticationStatus(authStatus: Boolean) {
