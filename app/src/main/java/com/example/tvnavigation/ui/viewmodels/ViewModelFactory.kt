@@ -6,6 +6,7 @@ import com.example.tvnavigation.data.network.ErrorsHandler
 import com.example.tvnavigation.data.repository.AdvertsRepository
 import com.example.tvnavigation.data.repository.DeviceRepository
 import com.example.tvnavigation.data.repository.LocationsRepository
+import java.lang.IllegalArgumentException
 
 class ViewModelFactory(
       private val locationsRepository: LocationsRepository,
@@ -17,9 +18,11 @@ class ViewModelFactory(
    @Suppress("UNCHECKED_CAST")
    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
       return when (modelClass) {
-          LocationsViewModel::class.java -> LocationsViewModel(locationsRepository, deviceRepository) as T
-          ErrorsViewModel::class.java -> ErrorsViewModel(errorsHandler) as T
-          else -> AdvertsViewModel(advertsRepository) as T
+         LocationsViewModel::class.java -> LocationsViewModel(locationsRepository, deviceRepository) as T
+         ErrorsViewModel::class.java -> ErrorsViewModel(errorsHandler) as T
+         PlayerViewModel::class.java -> PlayerViewModel() as T
+         AdvertsViewModel::class.java -> AdvertsViewModel(advertsRepository) as T
+         else -> throw IllegalArgumentException("Unknown ViewModel: ${modelClass.simpleName}")
       }
    }
 }
