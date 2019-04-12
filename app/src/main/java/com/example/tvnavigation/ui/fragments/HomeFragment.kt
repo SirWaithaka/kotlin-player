@@ -18,7 +18,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 class HomeFragment: ScopedFragment(), KodeinAware {
-   // private val TAG = "HomeFragment"
+//   private val TAG = "HomeFragment"
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var adViewModel: AdvertsViewModel
@@ -38,6 +38,10 @@ class HomeFragment: ScopedFragment(), KodeinAware {
    override fun onStart() {
       super.onStart()
 
+//      if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+//      }
+
+
       // behind the scenes check if app already is authenticated
       launch {
          val hasAuthenticated = locViewModel.getAuthenticationStatus()
@@ -45,5 +49,11 @@ class HomeFragment: ScopedFragment(), KodeinAware {
          if (hasAuthenticated) this@HomeFragment.findNavController().navigate(R.id.destination_downloader)
          else this@HomeFragment.findNavController().navigate(R.id.destination_email)
       }
+   }
+
+   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+      TODO("Implement Requesting permissions for INTERNET; WRITE_EXTERNAL_STORAGE; READ_PHONE_STATE")
    }
 }
