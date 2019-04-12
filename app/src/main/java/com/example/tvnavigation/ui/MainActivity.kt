@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,7 +15,7 @@ import org.kodein.di.generic.instance
 
 class MainActivity : AppCompatActivity(), KodeinAware {
 
-   private val TAG = "PlayerMainActivity"
+//   private val TAG = "PlayerMainActivity"
 
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
@@ -25,14 +24,11 @@ class MainActivity : AppCompatActivity(), KodeinAware {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
-      Log.d(TAG, "Activity on create here")
-
       viewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
    }
 
    override fun onResume() {
       super.onResume()
-      Log.d(TAG, "Resume state called")
       viewModel.httpErrorResponse.observe(this, Observer {
          Alerter.create(this)
             .setTitle("Something Wrong!")

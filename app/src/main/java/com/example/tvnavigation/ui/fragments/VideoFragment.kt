@@ -24,11 +24,15 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class VideoFragment : Fragment(), KodeinAware {
    private val TAG = "VideoFragment"
 
    override val kodein: Kodein by kodein()
+   private val zonedId = ZoneId.systemDefault()
 
    private lateinit var player: SimpleExoPlayer
    private lateinit var playerView: PlayerView
@@ -46,12 +50,11 @@ class VideoFragment : Fragment(), KodeinAware {
 
       playerView = view!!.findViewById(R.id.video_view)
       viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PlayerViewModel::class.java)
-      mediaPath = Uri.parse(viewModel.getMediaToPlay())
+      mediaPath = Uri.parse(viewModel.getMediaToPlayPath())
    }
 
    override fun onStart() {
       super.onStart()
-      Log.d(TAG, "onStart: video fragment")
 
       player = ExoPlayerFactory.newSimpleInstance(this.context, DefaultTrackSelector())
 
@@ -63,22 +66,13 @@ class VideoFragment : Fragment(), KodeinAware {
 
       player.addListener(PlayBackStateChanged(this))
       player.playWhenReady = true
-   }
 
-   override fun onResume() {
-      super.onResume()
-      Log.d(TAG, "onResume: video fragment")
-
-   }
-
-   override fun onPause() {
-      super.onPause()
-      Log.d(TAG, "onPause: video fragment")
+      val startTime = ZonedDateTime.ofInstant(Instant.now(), zonedId)
+      viewModel.setStartTime(startTime)
    }
 
    override fun onStop() {
       super.onStop()
-      Log.d(TAG, "onStop: video fragment")
 
       playerView.player = null
       player.release()
@@ -88,8 +82,9 @@ class VideoFragment : Fragment(), KodeinAware {
       override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
          when (playbackState) {
             Player.STATE_ENDED -> {
-               Log.d(TAG, "video has finished playing")
-
+               // video has finished playing
+               viewModel.setStopTime(now = ZonedDateTime.ofInstant(Instant.now(), zonedId))
+               viewModel.mediaHasPlayedEvent()
                fragment.findNavController().popBackStack()
             }
             else -> super.onPlayerStateChanged(playWhenReady, playbackState)

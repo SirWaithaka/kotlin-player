@@ -2,7 +2,7 @@ package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
 import android.util.Log
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.downloader.Error
@@ -30,12 +30,9 @@ class AdvertsViewModel(
       .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
       .toString()
 
-   private val mDownloadedCount = MutableLiveData<Int>()
-   val downloadedCount: LiveData<Int>
-         get() = mDownloadedCount
-   private val mHasDownloaded = MutableLiveData<Boolean>()
-   val hasDownloaded: LiveData<Boolean>
-         get() = mHasDownloaded
+   private val _downloadProgress = MutableLiveData<Int>()
+   private val _hasDownloaded = MutableLiveData<Boolean>()
+   private val _downloadedCount = MutableLiveData<Int>()
 
    init {
       advertsRepository.setAdvertsFetchedListener(object: AdvertsRepository.AdvertsFetchedListener {
@@ -44,9 +41,7 @@ class AdvertsViewModel(
             compareAdverts(adverts, retrievedAdverts)
          }
 
-         override fun onAdvertsPersisted(status: Boolean) {
-
-         }
+         override fun onAdvertsPersisted(status: Boolean) = Unit
       })
    }
 
@@ -58,10 +53,10 @@ class AdvertsViewModel(
       val toDelete = retrievedAdverts.minus(fetchedAdverts)
       if (toDownload.isNotEmpty()) {
          downloadAdverts(toDownload)
-      } else {
-         Log.d(TAG, "No new Adverts to Download")
          setPlayableAdverts(fetchedAdverts)
-         mHasDownloaded.value = true
+      } else {
+         setPlayableAdverts(fetchedAdverts)
+         _hasDownloaded.value = true
       }
 
       if (toDelete.isNotEmpty())
@@ -74,32 +69,32 @@ class AdvertsViewModel(
 
    private fun downloadAdverts(adverts: List<Advert>) {
       var count = 0
+      var totalProgress = 0
       for (ad in adverts) {
          val fileName = ad.mediaKey.split("/")[1]
-         Log.d(TAG, "file name: $fileName")
-         Log.d(TAG, "file name: ${ad.mediaURL}")
 
          PRDownloader.download(ad.mediaURL, mediaPath, fileName)
             .build()
-            .setOnStartOrResumeListener {
-
-            }
             .setOnProgressListener { progress ->
                val progressPercent: Long = progress.currentBytes * 100 / progress.totalBytes
 
                if ((progressPercent % 20.toLong()) == 0.toLong()) {
-                  count += 20
-                  mDownloadedCount.value = count
-                  Log.d(TAG, "Download progress: $progressPercent")
+                  totalProgress += 1
+                  _downloadProgress.postValue(totalProgress)
                }
             }
             .start(object : OnDownloadListener {
                override fun onDownloadComplete() {
-                  Log.d(TAG, "Download complete: $fileName")
+//                  Log.d(TAG, "Download complete: $fileName")
+
+                  count += 1
+                  _downloadedCount.postValue(count)
+                  if (count == adverts.size)
+                     _hasDownloaded.postValue(true)
                }
 
                override fun onError(error: Error?) {
-                  Log.d(TAG, "Error occured: ${error?.isConnectionError}")
+//                  Log.d(TAG, "Error occured: ${error?.isConnectionError}")
                }
             })
       }
@@ -108,12 +103,28 @@ class AdvertsViewModel(
    fun getPlayableAdverts(): List<Advert> {
       return playableAdverts
    }
+
    fun setPlayableAdverts(toPlay: List<Advert>) {
       playableAdverts = toPlay
    }
 
    fun getAdvertsSize(): Int {
       return advertsCount
+   }
+
+   fun getDownloadInfo(): MediatorLiveData<MergedData> {
+      val downloadInfo = MediatorLiveData<MergedData>()
+      downloadInfo.addSource(_downloadProgress) {
+         downloadInfo.value = MergedData.CountInfo(it)
+      }
+      downloadInfo.addSource(_hasDownloaded) {
+         downloadInfo.value = MergedData.DownloadedInfo(it)
+      }
+      downloadInfo.addSource(_downloadedCount) {
+         downloadInfo.value = MergedData.DownloadedCount(it)
+      }
+
+      return downloadInfo
    }
 
    suspend fun getAdverts(): List<Advert> {
@@ -126,7 +137,12 @@ class AdvertsViewModel(
    }
 
    fun isStale(): Boolean {
-      return (currentTime.hour - startOfDay.hour) > 6
+      return (currentTime.hour - startOfDay.hour) > 23
    }
 
+   sealed class MergedData {
+      data class CountInfo(val count: Int): MergedData()
+      data class DownloadedInfo(val hasDownloaded: Boolean): MergedData()
+      data class DownloadedCount(val count: Int): MergedData()
+   }
 }

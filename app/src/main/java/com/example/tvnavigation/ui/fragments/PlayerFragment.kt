@@ -35,13 +35,14 @@ class PlayerFragment : Fragment(), KodeinAware {
       adViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(AdvertsViewModel::class.java)
       playerViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PlayerViewModel::class.java)
 
-      val mediaToPlay = playableMedia[playerViewModel.getIndexOfMediaToPlay()]
-      playerViewModel.setMediaToPlay(mediaToPlay)
+      playerViewModel.initStack(playableMedia)
 
-      if (playerViewModel.getIndexOfMediaToPlay() == playableMedia.size -1)
-         playerViewModel.setIndexOfMediaToPlay(0)
-      else
-         playerViewModel.setIndexOfMediaToPlay(playerViewModel.getIndexOfMediaToPlay() +1)
+      if (playerViewModel.isMediaStackEmpty()) {
+         playerViewModel.initStack(playableMedia)
+      }
+
+      val mediaToPlay = playerViewModel.getMediaToPlay()
+      playerViewModel.setMediaToPlay(mediaToPlay)
 
       when(mediaToPlay.mediaType.toLowerCase()) {
          "video" -> findNavController().navigate(R.id.destination_video)

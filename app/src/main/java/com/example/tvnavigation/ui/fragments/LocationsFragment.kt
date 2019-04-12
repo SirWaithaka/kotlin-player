@@ -65,10 +65,10 @@ class LocationsFragment : Fragment(), KodeinAware {
       val locationsLiveData = viewModel.locations
       locationsLiveData.observe(this, Observer {
          if (it == null) {
-            Log.d(TAG, "No data returned")
+//            Log.d(TAG, "No data returned")
             return@Observer
          }
-         Log.d(TAG, "Returned: $it")
+//         Log.d(TAG, "Returned: $it")
          adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
          locationsSpinner.adapter = adapter
       })
@@ -92,7 +92,7 @@ class LocationsFragment : Fragment(), KodeinAware {
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {
-         Log.d(TAG, "Spinner: Nothing selected")
+//         Log.d(TAG, "Spinner: Nothing selected")
       }
    }
 }

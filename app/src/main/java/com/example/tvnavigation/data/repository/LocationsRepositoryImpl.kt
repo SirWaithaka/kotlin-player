@@ -5,8 +5,6 @@ package com.example.tvnavigation.data.repository
  * It implements the DAOs and the DataSource handlers.
  */
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import com.example.tvnavigation.data.db.LocationDao
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -21,7 +19,7 @@ class LocationsRepositoryImpl(
       private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
-   private val TAG = "LocationRepository"
+//   private val TAG = "LocationRepository"
    private lateinit var userEmail: String
    private var isAuthenticated: Boolean = false
    private var listener: LocationsRepository.LocationsFetchedListener? = null
@@ -48,7 +46,6 @@ class LocationsRepositoryImpl(
    }
 
    override fun getAuthenticationStatus(): Boolean {
-      Log.d(TAG, "Auth Status called with value: $isAuthenticated")
       return isAuthenticated
    }
 
@@ -69,13 +66,11 @@ class LocationsRepositoryImpl(
    }
 
    override suspend fun authenticate(id: String, password: String) {
-      Log.d(TAG, "Passed in credentials: $id : $password")
       locationsDataSource.authenticate(id, password)
    }
 
    private fun persistFetchedLocationsList(fetchedLocationsList: List<Location>) {
       GlobalScope.launch(Dispatchers.IO) {
-         Log.d(TAG  , "Persist Location called")
          locationDao.insertLocations(fetchedLocationsList)
       }
    }
@@ -86,7 +81,6 @@ class LocationsRepositoryImpl(
    }
 
    private suspend fun fetchLocations(email: String) {
-      Log.d(TAG, "DAO called $email")
       locationsDataSource.fetchLocations(email)
    }
 

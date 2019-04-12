@@ -20,7 +20,7 @@ class ViewModelFactory(
       return when (modelClass) {
          LocationsViewModel::class.java -> LocationsViewModel(locationsRepository, deviceRepository) as T
          ErrorsViewModel::class.java -> ErrorsViewModel(errorsHandler) as T
-         PlayerViewModel::class.java -> PlayerViewModel() as T
+         PlayerViewModel::class.java -> PlayerViewModel(advertsRepository) as T
          AdvertsViewModel::class.java -> AdvertsViewModel(advertsRepository) as T
          else -> throw IllegalArgumentException("Unknown ViewModel: ${modelClass.simpleName}")
       }

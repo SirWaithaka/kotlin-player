@@ -11,7 +11,7 @@ import com.example.tvnavigation.data.db.entities.ListToString
 import com.example.tvnavigation.data.db.entities.Location
 
 
-val DATABASE_NAME = "youtise_player_v8.4.db"
+val DATABASE_NAME = "youtise_player_v9.6.db"
 
 @Database(
       entities = [Location::class,Device::class,Advert::class],

@@ -2,6 +2,7 @@ package com.example.tvnavigation.data.repository.datasources
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.tvnavigation.data.network.AdvertLog
 import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
 import com.example.tvnavigation.data.network.services.PlayerService
 import com.example.tvnavigation.internal.ClientErrorException
@@ -29,9 +30,14 @@ class AdvertsNetworkDataSourceImpl(
       }
    }
 
-   override suspend fun downloadMedia() {
+   override suspend fun postAdvertLog(log: AdvertLog) {
       try {
-
+          playerApiService.onAdvertChange(
+             id = log.id,
+             startTime = log.start,
+             endTime = log.end,
+             result = log.result
+          )
       } catch (e: Exception) {
          handleExceptions(e)
       }

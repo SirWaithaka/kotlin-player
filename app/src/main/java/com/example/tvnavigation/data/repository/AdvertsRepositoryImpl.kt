@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.tvnavigation.data.db.AdvertDao
 import com.example.tvnavigation.data.db.entities.Advert
+import com.example.tvnavigation.data.network.AdvertLog
 import com.example.tvnavigation.data.repository.datasources.AdvertsNetworkDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,17 +22,16 @@ class AdvertsRepositoryImpl(
 
    init {
        advertsNetworkDataSource.downloadedAdverts.observeForever {
-          logResponse(it.adverts)
+//          logResponse(it.adverts)
           this.listener?.onAdvertsFetched(it.adverts)
           persistFetchedAdverts(it.adverts)
        }
    }
 
-   private fun logResponse(adverts: List<Advert>) {
-      for (advert in adverts) {
-         Log.d(TAG, "advert: ${advert.adName}")
-      }
+   override suspend fun postAdvertLog(log: AdvertLog) {
+      advertsNetworkDataSource.postAdvertLog(log)
    }
+
    override suspend fun retrieveAdverts(): List<Advert> {
       return withContext(Dispatchers.IO) {
          retrievedAdverts = advertDao.retrieveAdverts()
@@ -58,7 +58,7 @@ class AdvertsRepositoryImpl(
          val toPersist = fetchedAdverts.minus(retrievedAdverts)
          if (toPersist.isNotEmpty()) {
             val result = advertDao.upsertAdverts(fetchedAdverts)
-            Log.d(TAG, "Upsert result: $result")
+//            Log.d(TAG, "Upsert result: $result")
             this@AdvertsRepositoryImpl.listener?.onAdvertsPersisted(true)
          }
       }

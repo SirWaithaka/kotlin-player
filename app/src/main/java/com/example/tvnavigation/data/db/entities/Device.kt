@@ -16,4 +16,5 @@ data class Device (
    var uid: Int = REGISTERED_USER_ID
    var authStatus: Boolean = false
    var initialised: Boolean = false
+   var locationId: String = ""
 }

@@ -37,6 +37,16 @@ interface PlayerService {
    @GET("location/adverts")
    suspend fun fetchCurrentAdverts(): AdvertisementsResponse
 
+   @FormUrlEncoded
+   @POST("analytics/create-adlog")
+   suspend fun onAdvertChange(
+      @Field("adId") id: String,
+      @Field("playTime") startTime: String,
+      @Field("stopTime") endTime: String,
+      @Field("duration") result: String
+//      @Field("duration") duration: String
+   )
+
    companion object {
 
       /**
@@ -60,6 +70,7 @@ interface PlayerService {
          return Retrofit.Builder()
                .client(okHttpClient)
                .baseUrl("https://youtise-location-dev.herokuapp.com/api/")
+//               .baseUrl("http://13976f07.ngrok.io/api/")
                .addConverterFactory(GsonConverterFactory.create())
                .build()
                .create(PlayerService::class.java)

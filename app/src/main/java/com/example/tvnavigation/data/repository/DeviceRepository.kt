@@ -8,5 +8,6 @@ interface DeviceRepository {
    }
    fun setOnAuthStatusChangedListener(authenticationStatusListener: AuthenticationStatusListener)
 
+   fun setLocationId(id: String)
    suspend fun getDeviceInfo(): Device
 }

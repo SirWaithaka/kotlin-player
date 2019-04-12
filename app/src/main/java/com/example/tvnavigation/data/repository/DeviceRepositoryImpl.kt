@@ -15,13 +15,13 @@ class DeviceRepositoryImpl(
 ) : DeviceRepository {
 
    private val TAG = "DeviceRepository"
+   private var locationId: String = ""
    private var listener: DeviceRepository.AuthenticationStatusListener? = null
 
 
    init {
       locationsDataSource.authToken.observeForever {
          persistFetchedToken(it)
-         Log.d(TAG, "Token: $it")
       }
    }
 
@@ -31,10 +31,14 @@ class DeviceRepositoryImpl(
          device.authToken = authToken
          device.authStatus = true
          device.initialised = true
+         device.locationId = locationId
          deviceDao.upsertDeviceInfo(device)
          listener?.onStatusChanged(true)
-         Log.d(TAG, "Still persisting")
       }
+   }
+
+   override fun setLocationId(id: String) {
+      locationId = id
    }
 
    override suspend fun getDeviceInfo(): Device {

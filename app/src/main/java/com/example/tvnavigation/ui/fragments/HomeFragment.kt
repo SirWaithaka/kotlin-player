@@ -1,11 +1,9 @@
 package com.example.tvnavigation.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
@@ -20,7 +18,7 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 class HomeFragment: ScopedFragment(), KodeinAware {
-   private val TAG = "HomeFragment"
+   // private val TAG = "HomeFragment"
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var adViewModel: AdvertsViewModel
@@ -37,20 +35,6 @@ class HomeFragment: ScopedFragment(), KodeinAware {
       locViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(LocationsViewModel::class.java)
    }
 
-   override fun onResume() {
-      super.onResume()
-      Log.d(TAG, "HomeFragment: onResume")
-//      adViewModel.hasDownloadedAdverts.observe(this, Observer {
-//         if (it) this.findNavController().navigate(R.id.destination_downloader)
-//         else this.findNavController().navigate(R.id.destination_player)
-//      })
-//
-//      locViewModel.isAuthenticated.observe(this, Observer {
-//         Log.d(TAG, "Home Observer: $it")
-//         if (it) this.findNavController().navigate(R.id.destination_downloader)
-//         else this.findNavController().navigate(R.id.destination_email)
-//      })
-   }
    override fun onStart() {
       super.onStart()
 

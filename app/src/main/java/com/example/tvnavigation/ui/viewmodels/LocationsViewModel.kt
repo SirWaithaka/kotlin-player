@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.data.repository.DeviceRepository
-import com.example.tvnavigation.data.repository.DeviceRepositoryImpl
 import com.example.tvnavigation.data.repository.LocationsRepository
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -32,7 +31,6 @@ class LocationsViewModel(
    init {
       deviceRepository.setOnAuthStatusChangedListener(object: DeviceRepository.AuthenticationStatusListener {
          override fun onStatusChanged(status: Boolean) {
-            Log.d("ViewModel", "Listener status: $status")
             mHasAuthenticated.postValue(status)
          }
       })
@@ -57,6 +55,7 @@ class LocationsViewModel(
    fun validateCredentials() {
       launch {
          withContext(Dispatchers.Default) {
+            deviceRepository.setLocationId(mSelectedLocation.id)
             locationsRepository.authenticate(
                mSelectedLocation.id,
                mPassword
