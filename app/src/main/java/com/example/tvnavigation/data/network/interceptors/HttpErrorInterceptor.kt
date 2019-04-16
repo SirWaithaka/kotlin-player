@@ -1,6 +1,5 @@
 package com.example.tvnavigation.data.network.interceptors
 
-import android.util.Log
 import com.example.tvnavigation.internal.ClientErrorException
 import com.example.tvnavigation.internal.ServerErrorException
 import com.google.gson.Gson
@@ -24,7 +23,7 @@ class HttpErrorInterceptor: ServerResponseInterceptor {
 
       val jsonErrorResponse = response.body()!!.string()
       val errorResponse by lazy { gson.fromJson(jsonErrorResponse, ErrorResponse::class.java) }
-      Log.d("HttpError", jsonErrorResponse)
+//      Log.d("HttpError", jsonErrorResponse)
       when (response.code()) {
          // Handle Unauthorized
          401 -> throw ClientErrorException(errorResponse.message)

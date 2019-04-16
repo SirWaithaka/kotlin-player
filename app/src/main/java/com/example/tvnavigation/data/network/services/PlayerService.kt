@@ -3,36 +3,11 @@ package com.example.tvnavigation.data.network.services
 import com.example.tvnavigation.data.network.interceptors.AuthenticationInterceptor
 import com.example.tvnavigation.data.network.interceptors.ClientRequestInterceptor
 import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
-import com.example.tvnavigation.data.network.interceptors.NetworkConnectionInterceptor
 import com.example.tvnavigation.data.network.responses.AdvertisementsResponse
-import com.example.tvnavigation.data.network.responses.LocationsResponse
-import com.example.tvnavigation.data.network.responses.LoginResponse
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface PlayerService {
-
-   // Example - /api/location/kennwaithaka@gmail.com
-   @GET("location/{email}")
-   suspend fun getLocationsByEmail(
-      @Path("email") email : String
-   ): LocationsResponse
-
-   @FormUrlEncoded
-   @POST("location/login")
-   suspend fun authenticateUser(
-      @Field("id") id: String,
-      @Field("password") password: String
-   ): LoginResponse
-
-   @Streaming
-   @GET
-   suspend fun downloadMediaStream(
-      @Url url: String
-   ): ResponseBody
 
    @GET("location/adverts")
    suspend fun fetchCurrentAdverts(): AdvertisementsResponse
@@ -45,6 +20,12 @@ interface PlayerService {
       @Field("stopTime") endTime: String,
       @Field("duration") result: String
 //      @Field("duration") duration: String
+   )
+
+   @FormUrlEncoded
+   @POST("location/ad-changed")
+   suspend fun invokePopCapture(
+      @Field("advertId") id: String
    )
 
    companion object {
@@ -63,17 +44,17 @@ interface PlayerService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
                .addInterceptor(networkConnectionInterceptor)
+               .addInterceptor(authenticationInterceptor)
                .authenticator(authenticationInterceptor)
                .addInterceptor(httpErrorInterceptor)
                .build()
 
-         return Retrofit.Builder()
-               .client(okHttpClient)
-               .baseUrl("https://youtise-location-dev.herokuapp.com/api/")
-//               .baseUrl("http://13976f07.ngrok.io/api/")
-               .addConverterFactory(GsonConverterFactory.create())
-               .build()
-               .create(PlayerService::class.java)
+         val retrofit = RetrofitProviderFactory.instance()
+
+         return retrofit.newBuilder()
+            .client(okHttpClient)
+            .build()
+            .create(PlayerService::class.java)
       }
    }
 }

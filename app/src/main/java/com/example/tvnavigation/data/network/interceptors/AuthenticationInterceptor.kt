@@ -2,30 +2,33 @@ package com.example.tvnavigation.data.network.interceptors
 
 import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
-import com.example.tvnavigation.data.network.responses.LoginResponse
+import com.example.tvnavigation.data.network.services.AuthorizationService
 import kotlinx.coroutines.*
-import okhttp3.Authenticator
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.Route
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import okhttp3.*
 
 
 class AuthenticationInterceptor(
-      private val deviceDao: DeviceDao
-): Authenticator {
+      private val deviceDao: DeviceDao,
+      private val authorizationService: AuthorizationService
+): Authenticator, Interceptor {
 
-   private var baseUrl = "https://youtise-location-dev.herokuapp.com/api/"
    private var requestCount = 0
    private var authenticationToken = ""
    private val device: Device by lazy { deviceDao.getDeviceInfo() }
 
+   override fun intercept(chain: Interceptor.Chain): Response {
+      val original = chain.request()
+      original.header("Authorization") ?: return chain.proceed(original
+         .newBuilder()
+         .header("Authorization", "Bearer ${device.authToken}")
+         .build()
+      )
+      return chain.proceed(original)
+   }
+
    /**
-    * This function just intercepts request that are unauthorized
+    * This function just intercepts responses from the server and
+    * checks the requests that are unauthorized
     * It retrieves the authtoken from the db and adds it to the header
     *
     * TODO("Add functionality to refresh token")
@@ -35,9 +38,10 @@ class AuthenticationInterceptor(
       if (response.code() == 401) {
          if (requestCount == 6) {
             runBlocking {
-               authenticationToken = requestToken(device.locationId)
+               authenticationToken = requestToken(device.locationId, device.serialNumber)
             }
             persistToken(authenticationToken)
+            requestCount = 0
          }
          requestCount += 1
          authenticationToken = device.authToken
@@ -57,35 +61,8 @@ class AuthenticationInterceptor(
       }
    }
 
-   private suspend fun requestToken(id: String, otpCode: Int =1234): String {
-      val service: AuthorizationService = RetrofitAuthenticator.getInstance(baseUrl)
-      val response = service.authenticateUserAsync(id, otpCode.toString())
+   private suspend fun requestToken(id: String, serial: String, otpCode: Int = 1234): String {
+      val response = authorizationService.authenticateUser(id, serial, otpCode.toString())
       return response.token
    }
-
-   object RetrofitAuthenticator {
-
-      private var service: AuthorizationService? = null
-
-      fun getInstance(baseUrl: String): AuthorizationService {
-         if (service == null) {
-            service = Retrofit.Builder()
-               .baseUrl(baseUrl)
-               .addConverterFactory(GsonConverterFactory.create())
-               .build()
-               .create(AuthorizationService::class.java)
-         }
-         return service!!
-      }
-   }
-
-   interface AuthorizationService {
-      @FormUrlEncoded
-      @POST("location/login")
-      suspend fun authenticateUserAsync(
-         @Field("id") id: String,
-         @Field("password") password: String
-      ): LoginResponse
-   }
-
 }

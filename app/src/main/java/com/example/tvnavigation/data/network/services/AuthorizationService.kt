@@ -1,18 +1,23 @@
 package com.example.tvnavigation.data.network.services
 
+import com.example.tvnavigation.data.network.interceptors.AuthenticationInterceptor
 import com.example.tvnavigation.data.network.interceptors.ClientRequestInterceptor
 import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
-import com.example.tvnavigation.data.network.responses.LocationsResponse
+import com.example.tvnavigation.data.network.responses.LoginResponse
 import okhttp3.OkHttpClient
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
 
-interface LocationsService {
+interface AuthorizationService {
 
-   // Example - /api/location/kennwaithaka@gmail.com
-   @GET("location/{email}")
-   suspend fun getLocationsByEmail(
-      @Path("email") email: String
-   ): LocationsResponse
+   @FormUrlEncoded
+   @POST("location/login")
+   suspend fun authenticateUser(
+      @Field("id") id: String,
+      @Field("serialNumber") serial: String,
+      @Field("password") password: String
+   ): LoginResponse
 
    companion object {
 
@@ -21,11 +26,11 @@ interface LocationsService {
        * status and handles all exceptions
        *
        * @param networkConnectionInterceptor
-       * @return LocationsService - Instance that calls api to get locations list
+       * @return AuthorizationService - Instance that calls api to get locations list
        */
       operator fun invoke(
          networkConnectionInterceptor: ClientRequestInterceptor
-      ) : LocationsService {
+      ): AuthorizationService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(networkConnectionInterceptor)
@@ -37,7 +42,8 @@ interface LocationsService {
          return retrofit.newBuilder()
             .client(okHttpClient)
             .build()
-            .create(LocationsService::class.java)
+            .create(AuthorizationService::class.java)
       }
    }
+
 }

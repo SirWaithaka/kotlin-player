@@ -20,8 +20,8 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
-
-
+import com.example.tvnavigation.data.network.services.AuthorizationService
+import com.example.tvnavigation.data.network.services.LocationsService
 
 class YoutisePlayerApplication: Application(), KodeinAware {
    override val kodein: Kodein = Kodein.lazy {
@@ -40,12 +40,14 @@ class YoutisePlayerApplication: Application(), KodeinAware {
          // create instance and pass application context
          NetworkConnectionInterceptor(instance())
       }
-      bind() from singleton { AuthenticationInterceptor(instance()) }
+      bind() from singleton { AuthenticationInterceptor(instance(), instance()) }
       bind<ServerResponseInterceptor>() with singleton {
          HttpErrorInterceptor()
       }
+      bind() from singleton { LocationsService(instance()) }
+      bind() from singleton { AuthorizationService(instance()) }
       bind() from singleton { PlayerService(instance(), instance()) }
-      bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance()) }
+      bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance(), instance()) }
       bind<AdvertsNetworkDataSource>() with singleton { AdvertsNetworkDataSourceImpl(instance()) }
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }
       bind<AdvertsRepository>() with singleton { AdvertsRepositoryImpl(instance(), instance())}
