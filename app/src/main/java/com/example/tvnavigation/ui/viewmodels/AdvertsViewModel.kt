@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -108,10 +107,6 @@ class AdvertsViewModel(
       playableAdverts = toPlay
    }
 
-   fun getAdvertsSize(): Int {
-      return advertsCount
-   }
-
    fun getDownloadInfo(): MediatorLiveData<MergedData> {
       val downloadInfo = MediatorLiveData<MergedData>()
       downloadInfo.addSource(_downloadProgress) {
@@ -137,7 +132,7 @@ class AdvertsViewModel(
    }
 
    fun isStale(): Boolean {
-      return (currentTime.hour - startOfDay.hour) > 23
+      return (currentTime.hour - startOfDay.hour) > 14
    }
 
    sealed class MergedData {

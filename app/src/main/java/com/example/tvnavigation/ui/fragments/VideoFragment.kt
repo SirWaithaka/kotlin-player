@@ -51,6 +51,8 @@ class VideoFragment : Fragment(), KodeinAware {
       playerView = view!!.findViewById(R.id.video_view)
       viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PlayerViewModel::class.java)
       mediaPath = Uri.parse(viewModel.getMediaToPlayPath())
+
+      viewModel.mediaAboutToPlayEvent()
    }
 
    override fun onStart() {

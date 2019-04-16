@@ -1,9 +1,13 @@
 package com.example.tvnavigation.ui.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.tvnavigation.R
@@ -23,6 +27,11 @@ class HomeFragment: ScopedFragment(), KodeinAware {
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var adViewModel: AdvertsViewModel
    private lateinit var locViewModel: LocationsViewModel
+   private val appPermissions = listOf(
+      Manifest.permission.WRITE_EXTERNAL_STORAGE,
+      Manifest.permission.READ_PHONE_STATE
+   )
+   private val permissionsRequestCode: Int = 1240
 
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,10 +47,35 @@ class HomeFragment: ScopedFragment(), KodeinAware {
    override fun onStart() {
       super.onStart()
 
-//      if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-//      }
+      if(checkAndRequestPermissions(activity!!)) {
+         launchApp()
+      }
+   }
 
+   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+      if (requestCode == permissionsRequestCode) {
+         val deniedPermissions = hashMapOf<String, Int>()
+         var deniedCount = 0
 
+         // Gather permission grant result
+         for ((index, result) in grantResults.withIndex()) {
+            // Add permissions which are only denied
+            if (result == PackageManager.PERMISSION_DENIED) {
+               deniedPermissions[permissions[index]] = result
+               deniedCount += 1
+            }
+         }
+
+         // Check if all permissions were granted
+         if (deniedCount == 0)
+            launchApp()
+         else {
+            TODO("Implement Logic When app is denied permissions")
+         }
+      }
+   }
+
+   private fun launchApp() {
       // behind the scenes check if app already is authenticated
       launch {
          val hasAuthenticated = locViewModel.getAuthenticationStatus()
@@ -51,9 +85,20 @@ class HomeFragment: ScopedFragment(), KodeinAware {
       }
    }
 
-   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-      super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+   private fun checkAndRequestPermissions(activity: FragmentActivity): Boolean {
+      val listOfPermissionsNeeded = mutableListOf<String>()
 
-      TODO("Implement Requesting permissions for INTERNET; WRITE_EXTERNAL_STORAGE; READ_PHONE_STATE")
+      // check which permissions are granted
+      for(perm in appPermissions) {
+         if (ContextCompat.checkSelfPermission(activity, perm) != PackageManager.PERMISSION_GRANTED)
+            listOfPermissionsNeeded.add(perm)
+      }
+
+      // ask for non-granted permissions
+      if(listOfPermissionsNeeded.isNotEmpty()) {
+         requestPermissions(listOfPermissionsNeeded.toTypedArray(), permissionsRequestCode)
+         return false
+      }
+      return true
    }
 }

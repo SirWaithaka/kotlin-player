@@ -43,6 +43,12 @@ class PlayerViewModel(
       mediaToPlayPath = "$mediaPath/$fileName"
    }
 
+   fun mediaAboutToPlayEvent() {
+      launch {
+         advertsRepository.invokePopCapture(mediaToPlay.id)
+      }
+   }
+
    fun mediaHasPlayedEvent() {
       launch {
          val log = AdvertLog(
