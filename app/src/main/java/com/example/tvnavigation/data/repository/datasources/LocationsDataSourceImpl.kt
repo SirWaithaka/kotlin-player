@@ -3,14 +3,16 @@ package com.example.tvnavigation.data.repository.datasources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tvnavigation.data.network.responses.LocationsResponse
-import com.example.tvnavigation.data.network.services.PlayerService
+import com.example.tvnavigation.data.network.services.AuthorizationService
+import com.example.tvnavigation.data.network.services.LocationsService
 import com.example.tvnavigation.internal.ClientErrorException
 import com.example.tvnavigation.internal.NoConnectivityException
 import com.example.tvnavigation.internal.ServerErrorException
 import java.lang.Exception
 
 class LocationsDataSourceImpl(
-      private val playerApiService: PlayerService
+      private val locationsService: LocationsService,
+      private val authorizationService: AuthorizationService
 ) : LocationsDataSource {
 
    private val _downloadedLocations = MutableLiveData<LocationsResponse>()
@@ -29,16 +31,16 @@ class LocationsDataSourceImpl(
 
    override suspend fun fetchLocations(email: String) {
       try {
-         val fetchedLocations = playerApiService.getLocationsByEmail(email)
+         val fetchedLocations = locationsService.getLocationsByEmail(email)
          _downloadedLocations.postValue(fetchedLocations)
       } catch (e: Exception) {
          handleExceptions(e)
       }
    }
 
-   override suspend fun authenticate(id: String, password: String) {
+   override suspend fun authenticate(id: String, serialNumber: String, password: String) {
       try {
-         val fetchedToken = playerApiService.authenticateUser(id, password)
+         val fetchedToken = authorizationService.authenticateUser(id, serialNumber, password)
          _authToken.postValue(fetchedToken.token)
          _isAuthenticated.postValue(true)
       } catch (e: Exception) {

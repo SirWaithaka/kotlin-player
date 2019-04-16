@@ -10,4 +10,5 @@ interface AdvertsNetworkDataSource {
 
    suspend fun fetchCurrentAds()
    suspend fun postAdvertLog(log: AdvertLog)
+   suspend fun invokePopCapture(advertId: String)
 }

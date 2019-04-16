@@ -1,6 +1,6 @@
 package com.example.tvnavigation.data.repository
 
-import android.util.Log
+import android.os.Build
 import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -17,7 +17,13 @@ class DeviceRepositoryImpl(
    private val TAG = "DeviceRepository"
    private var locationId: String = ""
    private var listener: DeviceRepository.AuthenticationStatusListener? = null
-
+   private val serialNumber by lazy {
+      try {
+         return@lazy Build.getSerial()
+      } catch (e: SecurityException) {
+         return@lazy ""
+      }
+   }
 
    init {
       locationsDataSource.authToken.observeForever {
@@ -32,6 +38,7 @@ class DeviceRepositoryImpl(
          device.authStatus = true
          device.initialised = true
          device.locationId = locationId
+         device.serialNumber = serialNumber
          deviceDao.upsertDeviceInfo(device)
          listener?.onStatusChanged(true)
       }
@@ -43,14 +50,16 @@ class DeviceRepositoryImpl(
 
    override suspend fun getDeviceInfo(): Device {
       return withContext(Dispatchers.IO) {
-         var device = deviceDao.getDeviceInfo()
+         // Get Device info
+         // On initial startup, could be null
+         var device: Device? = deviceDao.getDeviceInfo()
          if (device == null) {
-            device = Device("", "", "")
-            deviceDao.upsertDeviceInfo(device)
-            return@withContext deviceDao.getDeviceInfo()
+              device = Device("", serialNumber, "")
+              deviceDao.upsertDeviceInfo(device)
+              return@withContext deviceDao.getDeviceInfo()
          }
          return@withContext device
-      }
+      }!!
    }
 
    override fun setOnAuthStatusChangedListener(authenticationStatusListener: DeviceRepository.AuthenticationStatusListener) {

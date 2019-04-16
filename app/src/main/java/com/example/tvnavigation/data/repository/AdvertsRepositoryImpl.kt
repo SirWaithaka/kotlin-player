@@ -32,6 +32,10 @@ class AdvertsRepositoryImpl(
       advertsNetworkDataSource.postAdvertLog(log)
    }
 
+   override suspend fun invokePopCapture(advertId: String) {
+      advertsNetworkDataSource.invokePopCapture(advertId)
+   }
+
    override suspend fun retrieveAdverts(): List<Advert> {
       return withContext(Dispatchers.IO) {
          retrievedAdverts = advertDao.retrieveAdverts()

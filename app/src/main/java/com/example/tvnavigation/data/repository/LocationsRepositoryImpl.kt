@@ -5,6 +5,7 @@ package com.example.tvnavigation.data.repository
  * It implements the DAOs and the DataSource handlers.
  */
 
+import android.os.Build
 import com.example.tvnavigation.data.db.LocationDao
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -23,6 +24,13 @@ class LocationsRepositoryImpl(
    private lateinit var userEmail: String
    private var isAuthenticated: Boolean = false
    private var listener: LocationsRepository.LocationsFetchedListener? = null
+   private val serialNumber by lazy {
+      try {
+         return@lazy Build.getSerial()
+      } catch (e: SecurityException) {
+         return@lazy ""
+      }
+   }
 
    /**
     * Described is the process of getting data from the api and storing it to db
@@ -66,7 +74,7 @@ class LocationsRepositoryImpl(
    }
 
    override suspend fun authenticate(id: String, password: String) {
-      locationsDataSource.authenticate(id, password)
+      locationsDataSource.authenticate(id, serialNumber, password)
    }
 
    private fun persistFetchedLocationsList(fetchedLocationsList: List<Location>) {

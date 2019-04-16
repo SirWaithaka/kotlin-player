@@ -10,5 +10,5 @@ interface LocationsDataSource {
    val isAuthenticated: LiveData<Boolean>
 
    suspend fun fetchLocations(email: String)
-   suspend fun authenticate(id: String, password: String)
+   suspend fun authenticate(id: String, serialNumber: String, password: String)
 }

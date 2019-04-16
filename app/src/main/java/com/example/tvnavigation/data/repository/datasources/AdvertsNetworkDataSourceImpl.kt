@@ -10,14 +10,14 @@ import com.example.tvnavigation.internal.NoConnectivityException
 import com.example.tvnavigation.internal.ServerErrorException
 
 class AdvertsNetworkDataSourceImpl(
-      private val playerApiService: PlayerService
+   private val playerApiService: PlayerService
 ) : AdvertsNetworkDataSource {
 
-   private  val _downloadedAdverts = MutableLiveData<AdvertisementsResponse>()
+   private val _downloadedAdverts = MutableLiveData<AdvertisementsResponse>()
    override val downloadedAdverts: LiveData<AdvertisementsResponse>
       get() = _downloadedAdverts
 
-   private  val _httpErrorResponse = MutableLiveData<String>()
+   private val _httpErrorResponse = MutableLiveData<String>()
    override val httpErrorResponse: LiveData<String>
       get() = _httpErrorResponse
 
@@ -32,12 +32,20 @@ class AdvertsNetworkDataSourceImpl(
 
    override suspend fun postAdvertLog(log: AdvertLog) {
       try {
-          playerApiService.onAdvertChange(
-             id = log.id,
-             startTime = log.start,
-             endTime = log.end,
-             result = log.result
-          )
+         playerApiService.onAdvertChange(
+            id = log.id,
+            startTime = log.start,
+            endTime = log.end,
+            result = log.result
+         )
+      } catch (e: Exception) {
+         handleExceptions(e)
+      }
+   }
+
+   override suspend fun invokePopCapture(advertId: String) {
+      try {
+         playerApiService.invokePopCapture(advertId)
       } catch (e: Exception) {
          handleExceptions(e)
       }
