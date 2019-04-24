@@ -2,6 +2,8 @@ package com.example.tvnavigation.data.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
+import java.time.ZonedDateTime
 
 const val REGISTERED_USER_ID = 0
 
@@ -17,4 +19,21 @@ data class Device (
    var authStatus: Boolean = false
    var initialised: Boolean = false
    var locationId: String = ""
+   var lastUpdated: ZonedDateTime? = null
+}
+
+class DateTimeToString {
+
+   @TypeConverter
+   fun toString(date: ZonedDateTime?): String {
+      if (date != null) return date.toString()
+      return ""
+   }
+
+   @TypeConverter
+   fun toDateTime(string: String): ZonedDateTime? {
+      if (string.isNotEmpty())
+         return ZonedDateTime.parse(string)
+      return null
+   }
 }

@@ -30,8 +30,6 @@ class AuthenticationInterceptor(
     * This function just intercepts responses from the server and
     * checks the requests that are unauthorized
     * It retrieves the authtoken from the db and adds it to the header
-    *
-    * TODO("Add functionality to refresh token")
     */
    override fun authenticate(route: Route?, response: Response): Request? {
       // check if response code is 401
@@ -54,6 +52,10 @@ class AuthenticationInterceptor(
       return null
    }
 
+   /*
+    * Launches a coroutine that calls the Device Dao and updates
+    * the record with the new token
+    */
    private fun persistToken(token: String) {
       GlobalScope.launch(Dispatchers.IO) {
          device.authToken = token
@@ -61,6 +63,11 @@ class AuthenticationInterceptor(
       }
    }
 
+   /*
+    * Mundane implementation of refresh token functionality
+    * Calls the authorizationService </api/login> gives it the required params
+    * And gets a token from the endpoint
+    */
    private suspend fun requestToken(id: String, serial: String, otpCode: Int = 1234): String {
       val response = authorizationService.authenticateUser(id, serial, otpCode.toString())
       return response.token

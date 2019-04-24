@@ -1,6 +1,5 @@
 package com.example.tvnavigation.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.tvnavigation.data.db.AdvertDao
 import com.example.tvnavigation.data.db.entities.Advert

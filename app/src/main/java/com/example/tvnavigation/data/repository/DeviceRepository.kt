@@ -1,6 +1,7 @@
 package com.example.tvnavigation.data.repository
 
 import com.example.tvnavigation.data.db.entities.Device
+import java.time.ZonedDateTime
 
 interface DeviceRepository {
    interface AuthenticationStatusListener {
@@ -10,4 +11,5 @@ interface DeviceRepository {
 
    fun setLocationId(id: String)
    suspend fun getDeviceInfo(): Device
+   fun setLastUpdated(date: ZonedDateTime)
 }

@@ -21,7 +21,7 @@ class ViewModelFactory(
          LocationsViewModel::class.java -> LocationsViewModel(locationsRepository, deviceRepository) as T
          ErrorsViewModel::class.java -> ErrorsViewModel(errorsHandler) as T
          PlayerViewModel::class.java -> PlayerViewModel(advertsRepository) as T
-         AdvertsViewModel::class.java -> AdvertsViewModel(advertsRepository) as T
+         AdvertsViewModel::class.java -> AdvertsViewModel(advertsRepository, deviceRepository) as T
          else -> throw IllegalArgumentException("Unknown ViewModel: ${modelClass.simpleName}")
       }
    }

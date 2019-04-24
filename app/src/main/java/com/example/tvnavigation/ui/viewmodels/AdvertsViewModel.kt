@@ -1,6 +1,7 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,19 +10,22 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.repository.AdvertsRepository
+import com.example.tvnavigation.data.repository.DeviceRepository
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class AdvertsViewModel(
-   private val advertsRepository: AdvertsRepository
-): ViewModel() {
+   private val advertsRepository: AdvertsRepository,
+   private val deviceRepository: DeviceRepository
+) : ViewModel() {
 
    private val TAG = "AdvertsViewModel"
+   private val minimumStaleThreshold = 23
    private val zonedId = ZoneId.systemDefault()
-   private val currentTime = ZonedDateTime.ofInstant(Instant.now(), zonedId)
-   private val startOfDay = ZonedDateTime.ofInstant(Instant.now(), zonedId).toLocalDate().atStartOfDay(zonedId)
-
+   //   private val startOfDay = ZonedDateTime.ofInstant(Instant.now(), zonedId).toLocalDate().atStartOfDay(zonedId)
+   private val currentTime: ZonedDateTime
+      get() = ZonedDateTime.ofInstant(Instant.now(), zonedId)
    private var advertsCount = 0
    private var retrievedAdverts = listOf<Advert>()
    private var playableAdverts = listOf<Advert>()
@@ -34,7 +38,7 @@ class AdvertsViewModel(
    private val _downloadedCount = MutableLiveData<Int>()
 
    init {
-      advertsRepository.setAdvertsFetchedListener(object: AdvertsRepository.AdvertsFetchedListener {
+      advertsRepository.setAdvertsFetchedListener(object : AdvertsRepository.AdvertsFetchedListener {
          override fun onAdvertsFetched(adverts: List<Advert>) {
             advertsCount = adverts.size
             compareAdverts(adverts, retrievedAdverts)
@@ -44,9 +48,12 @@ class AdvertsViewModel(
       })
    }
 
-   // compare incoming adverts
-   // check if we have new adverts incoming
-   // check if we have old adverts in retrieved
+   /*
+    * Compares list of adverts fetched from api with
+    * list of adverts stored in the local database
+    * check if we have new adverts incoming
+    * check if we have old adverts in retrieved
+    */
    private fun compareAdverts(fetchedAdverts: List<Advert>, retrievedAdverts: List<Advert>) {
       val toDownload = fetchedAdverts.minus(retrievedAdverts)
       val toDelete = retrievedAdverts.minus(fetchedAdverts)
@@ -84,12 +91,13 @@ class AdvertsViewModel(
             }
             .start(object : OnDownloadListener {
                override fun onDownloadComplete() {
-//                  Log.d(TAG, "Download complete: $fileName")
 
                   count += 1
                   _downloadedCount.postValue(count)
-                  if (count == adverts.size)
+                  if (count == adverts.size) {
+                     deviceRepository.setLastUpdated(currentTime)
                      _hasDownloaded.postValue(true)
+                  }
                }
 
                override fun onError(error: Error?) {
@@ -131,13 +139,18 @@ class AdvertsViewModel(
       advertsRepository.fetchAdverts()
    }
 
-   fun isStale(): Boolean {
-      return (currentTime.hour - startOfDay.hour) > 14
+   suspend fun isStale(): Boolean {
+      val lastUpdatedTime = deviceRepository.getDeviceInfo().lastUpdated
+      var surpassedStaleThreshold = true
+      if (lastUpdatedTime != null)
+         surpassedStaleThreshold = (lastUpdatedTime.hour - currentTime.hour) > minimumStaleThreshold
+//      return (currentTime.hour - startOfDay.hour) >  || lastUpdatedTime == null
+      return surpassedStaleThreshold || lastUpdatedTime == null
    }
 
    sealed class MergedData {
-      data class CountInfo(val count: Int): MergedData()
-      data class DownloadedInfo(val hasDownloaded: Boolean): MergedData()
-      data class DownloadedCount(val count: Int): MergedData()
+      data class CountInfo(val count: Int) : MergedData()
+      data class DownloadedInfo(val hasDownloaded: Boolean) : MergedData()
+      data class DownloadedCount(val count: Int) : MergedData()
    }
 }

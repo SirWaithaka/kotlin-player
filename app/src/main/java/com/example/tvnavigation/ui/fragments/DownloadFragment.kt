@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -30,7 +29,6 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
    private lateinit var textView: TextView
    private lateinit var downloadCountTextView: TextView
    private lateinit var progressBar: ProgressBar
-   private var advertsCount = 0
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       return inflater.inflate(R.layout.fragment_download, container, false)
@@ -49,6 +47,7 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
       launch {
          val adverts = viewModel.getAdverts()
          if (adverts.isEmpty() || viewModel.isStale()) {
+            Log.d(TAG, "Stale: ${viewModel.isStale()}")
             viewModel.fetchAdverts()
             textView.text = getString(R.string.downloading)
          } else {
@@ -69,7 +68,7 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
             is AdvertsViewModel.MergedData.CountInfo -> {
             }
             is AdvertsViewModel.MergedData.DownloadedCount -> {
-               downloadCountTextView.text = "Downloaded ${it.count}"
+               downloadCountTextView.text = getString(R.string.download_progress_count, it.count)
             }
          }
       })
