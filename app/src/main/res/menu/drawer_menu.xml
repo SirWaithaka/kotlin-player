@@ -4,6 +4,10 @@
     <group
         android:checkableBehavior="single">
 
+        <item android:id="@+id/nav_player"
+              android:icon="@drawable/ic_media_player"
+              android:title="@string/player" />
+
         <item android:id="@+id/nav_advert_playlist"
               android:icon="@drawable/ic_advert_playlist"
               android:title="@string/view_adverts" />
@@ -11,14 +15,6 @@
         <item android:id="@+id/nav_settings"
               android:icon="@drawable/ic_settings"
               android:title="@string/settings" />
-
-        <item android:id="@+id/nav_refresh"
-              android:icon="@drawable/ic_restore"
-              android:title="@string/restore" />
-
-        <item android:id="@+id/nav_factory_reset"
-              android:icon="@drawable/ic_factory_reset"
-              android:title="@string/factory_reset" />
     </group>
 
     <!--<item android:title="@string/others">-->
