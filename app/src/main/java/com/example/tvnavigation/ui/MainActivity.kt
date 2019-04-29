@@ -1,10 +1,13 @@
 package com.example.tvnavigation.ui
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.tvnavigation.R
@@ -12,6 +15,7 @@ import com.example.tvnavigation.ui.viewmodels.ErrorsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.google.android.material.navigation.NavigationView
 import com.tapadoo.alerter.Alerter
+import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -25,15 +29,17 @@ class MainActivity : AppCompatActivity(), KodeinAware {
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: ErrorsViewModel
    private lateinit var drawerNavView: NavigationView
+   private val navController by lazy { findNavController(R.id.nav_host_fragment) }
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
       viewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
+
+      // setup Drawer Layout with NavigationController
       drawerNavView = findViewById(R.id.nav_view)
-      drawerNavView.setNavigationItemSelectedListener(DrawerNavActionListener)
-      val navController = findNavController(R.id.nav_host_fragment)
-      findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
+      drawerNavView.setupWithNavController(navController)
+      drawerNavView.setNavigationItemSelectedListener(DrawerNavActionListener())
    }
 
    override fun onResume() {
@@ -43,19 +49,35 @@ class MainActivity : AppCompatActivity(), KodeinAware {
             .setTitle("Something Wrong!")
             .setText(it)
             .setDuration(10000)
-            .setBackgroundColorRes(R.color.material_deep_teal_200)
+            .setBackgroundColorRes(R.color.app_accent)
             .show()
       })
    }
 
-   private object DrawerNavActionListener: NavigationView.OnNavigationItemSelectedListener {
+   override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+
+      if (keyCode != KeyEvent.KEYCODE_DPAD_UP) return super.onKeyUp(keyCode, event)
+      if (!drawer_layout.isDrawerOpen(GravityCompat.START)) drawer_layout.openDrawer(GravityCompat.START)
+      return true
+   }
+
+   override fun onBackPressed() {
+      if (!drawer_layout.isDrawerOpen(GravityCompat.START)) super.onBackPressed()
+      drawer_layout.closeDrawer(GravityCompat.START)
+   }
+
+   override fun onSupportNavigateUp() =
+      Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp() ||
+      super.onSupportNavigateUp()
+
+   private inner class DrawerNavActionListener: NavigationView.OnNavigationItemSelectedListener {
       override fun onNavigationItemSelected(item: MenuItem): Boolean {
          when(item.itemId) {
-            R.id.nav_advert_playlist -> ""
-            R.id.nav_refresh -> ""
-            R.id.nav_settings -> ""
-            R.id.nav_factory_reset -> ""
+            R.id.nav_advert_playlist -> navController.navigate(R.id.destination_playlist)
+            R.id.nav_player -> navController.navigate(R.id.destination_home)
+            R.id.nav_settings -> navController.navigate(R.id.destination_settings)
          }
+         drawer_layout.closeDrawer(GravityCompat.START)
          return true
       }
    }
