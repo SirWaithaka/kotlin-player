@@ -7,6 +7,7 @@ object RetrofitProviderFactory {
 
    private var retrofit: Retrofit? = null
    private const val BASE_URL = "https://youtise-location-dev.herokuapp.com/api/"
+//   private const val BASE_URL = "http://aea411d0.ngrok.io/api/"
    fun instance(): Retrofit {
 
       if (retrofit == null) {

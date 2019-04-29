@@ -1,7 +1,6 @@
 package com.example.tvnavigation.data.repository
 
 import android.os.Build
-import android.util.Log
 import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -16,7 +15,7 @@ class DeviceRepositoryImpl(
       locationsDataSource: LocationsDataSource
 ) : DeviceRepository {
 
-   private val TAG = "DeviceRepository"
+//   private val TAG = "DeviceRepository"
    private lateinit var device: Device
    private var locationId: String = ""
    private var listener: DeviceRepository.AuthenticationStatusListener? = null
@@ -71,7 +70,6 @@ class DeviceRepositoryImpl(
          }
 
          device = init
-         Log.d(TAG, "Auth status: ${device.authStatus}")
          return@withContext device
       }
    }

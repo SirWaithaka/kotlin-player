@@ -1,8 +1,6 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
-import android.text.format.DateUtils
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.network.AdvertLog
@@ -57,7 +55,6 @@ class PlayerViewModel(
             result = "SUCCEED",
             id = mediaToPlay.id
          )
-         Log.d("PlayerViewModel", mediaToPlay.adName)
          advertsRepository.postAdvertLog(log)
       }
    }

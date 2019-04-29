@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,7 @@ class AdvertsViewModel(
    private val deviceRepository: DeviceRepository
 ) : ViewModel() {
 
-   private val TAG = "AdvertsViewModel"
+//   private val TAG = "AdvertsViewModel"
    private val minimumStaleThreshold = 23
    private val zonedId = ZoneId.systemDefault()
    //   private val startOfDay = ZonedDateTime.ofInstant(Instant.now(), zonedId).toLocalDate().atStartOfDay(zonedId)

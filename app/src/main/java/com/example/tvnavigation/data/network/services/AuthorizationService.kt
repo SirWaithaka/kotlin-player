@@ -1,6 +1,5 @@
 package com.example.tvnavigation.data.network.services
 
-import com.example.tvnavigation.data.network.interceptors.AuthenticationInterceptor
 import com.example.tvnavigation.data.network.interceptors.ClientRequestInterceptor
 import com.example.tvnavigation.data.network.interceptors.HttpErrorInterceptor
 import com.example.tvnavigation.data.network.responses.LoginResponse

@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ import org.kodein.di.generic.instance
 
 class DownloadFragment: ScopedFragment(), KodeinAware {
 
-   private val TAG = "DownloadFragment"
+//   private val TAG = "DownloadFragment"
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: AdvertsViewModel
@@ -47,7 +46,6 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
       launch {
          val adverts = viewModel.getAdverts()
          if (adverts.isEmpty() || viewModel.isStale()) {
-            Log.d(TAG, "Stale: ${viewModel.isStale()}")
             viewModel.fetchAdverts()
             textView.text = getString(R.string.downloading)
          } else {
