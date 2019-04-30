@@ -22,7 +22,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class ImageFragment : Fragment(), KodeinAware {
-   private val TAG = "ImageFragment"
+//   private val TAG = "ImageFragment"
 
    private val zonedId = ZoneId.systemDefault()
    override val kodein: Kodein by kodein()

@@ -17,10 +17,15 @@
               android:title="@string/settings" />
     </group>
 
-    <!--<item android:title="@string/others">-->
-        <!--<menu>-->
-            <!--<item android:id="@+id/nav_uuid"-->
-                  <!--android:title="@string/unique_id" />-->
-        <!--</menu>-->
-    <!--</item>-->
+    <item android:title="@string/actions">
+        <menu>
+            <item android:id="@+id/nav_refresh"
+                  android:icon="@drawable/ic_refresh"
+                  android:title="@string/refresh" />
+            <item android:id="@+id/nav_logout"
+                  android:icon="@drawable/ic_factory_reset"
+                  android:tooltipText="@string/logout_hint"
+                  android:title="@string/logout" />
+        </menu>
+    </item>
 </menu>

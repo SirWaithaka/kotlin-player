@@ -25,10 +25,10 @@
             tools:layout="@layout/fragment_player">
         <action
                 android:id="@+id/action_destination_player_to_destination_video"
-                app:destination="@id/destination_video"/>
+                app:destination="@+id/destination_video"/>
         <action
                 android:id="@+id/action_destination_player_to_destination_image"
-                app:destination="@id/destination_image"/>
+                app:destination="@+id/destination_image"/>
     </fragment>
 
     <fragment
