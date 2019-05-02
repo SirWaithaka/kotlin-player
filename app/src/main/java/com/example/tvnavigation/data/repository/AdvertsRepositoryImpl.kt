@@ -34,24 +34,21 @@ class AdvertsRepositoryImpl(
       advertsNetworkDataSource.invokePopCapture(advertId)
    }
 
-   override suspend fun retrieveAdverts(): List<Advert> {
-      return withContext(Dispatchers.IO) {
-         return@withContext if (retrievedAdverts.isNotEmpty()) retrievedAdverts
-         else {
-            retrievedAdverts = advertDao.retrieveAdverts()
-            retrievedAdverts
-         }
+   override suspend fun retrieveAdverts(): List<Advert> =
+      withContext(Dispatchers.IO) {
+         return@withContext advertDao.retrieveAdverts()
       }
-   }
 
-   override suspend fun updateAdverts(adverts: List<Advert>) {
+   override suspend fun updateAdverts(adverts: List<Advert>) =
       withContext(Dispatchers.IO) {
          advertDao.upsertAdverts(adverts)
+         return@withContext
       }
-   }
 
-   override suspend fun resetAdverts() =
-      advertDao.deleteAdverts()
+   override suspend fun resetAdverts(): Int =
+      withContext(Dispatchers.IO) {
+         return@withContext advertDao.deleteAdverts()
+      }
 
    override fun getHttpErrorResponses(): LiveData<String> {
       TODO("not implemented")

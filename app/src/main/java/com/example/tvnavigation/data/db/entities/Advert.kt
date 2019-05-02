@@ -13,7 +13,10 @@ data class Advert(
    val mediaKey: String,
    val thumbnailUrl: String,
    val timeOfDay: List<String>
-)
+) {
+   val fileName: String
+      get() = mediaKey.split("/")[1]
+}
 
 class ListToString {
 

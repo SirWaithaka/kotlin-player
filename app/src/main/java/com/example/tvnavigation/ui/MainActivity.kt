@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
       when(resourceId) {
          R.id.nav_refresh -> {
-
+            settingsViewModel.invalidateAdverts()
+            navController.navigate(R.id.destination_downloader)
          }
          R.id.nav_logout -> {
             settingsViewModel.invalidateSession()

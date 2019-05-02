@@ -1,56 +1,65 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.repository.AdvertsRepository
 import com.example.tvnavigation.data.repository.DeviceRepository
+import com.example.tvnavigation.internal.SingleEvent
+import com.example.tvnavigation.internal.getLocalMediaPath
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import kotlin.text.StringBuilder
 
 class AdvertsViewModel(
    private val advertsRepository: AdvertsRepository,
    private val deviceRepository: DeviceRepository
-) : ViewModel() {
+) : ScopedViewModel() {
 
-   //   private val TAG = "AdvertsViewModel"
+//   private val TAG = "AdvertsViewModel"
    private val minimumStaleThreshold = 23
    private val zonedId = ZoneId.systemDefault()
-   //   private val startOfDay = ZonedDateTime.ofInstant(Instant.now(), zonedId).toLocalDate().atStartOfDay(zonedId)
    private val currentTime: ZonedDateTime
       get() = ZonedDateTime.ofInstant(Instant.now(), zonedId)
    private var advertsCount = 0
-   private var retrievedAdverts = listOf<Advert>()
    private var playableAdverts = listOf<Advert>()
    private val mediaPath = Environment
       .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
       .toString()
 
    private val _downloadProgress = MutableLiveData<Int>()
-   private val _hasDownloaded = MutableLiveData<Boolean>()
+   private val _hasDownloaded = MutableLiveData<SingleEvent<Boolean>>()
    private val _downloadedCount = MutableLiveData<Int>()
 
    private val toDownloadKey = "TO_DOWNLOAD"
    private val toDeleteKey = "TO_DELETE"
 
+   private val retrievedAdverts: List<Advert>
+      get() = runBlocking {
+         withContext(super.coroutineContext) {
+            return@withContext getAdverts()
+         }
+      }
+
    init {
       advertsRepository.setAdvertsFetchedListener(object : AdvertsRepository.AdvertsFetchedListener {
          override fun onAdvertsFetched(adverts: List<Advert>) {
             advertsCount = adverts.size
+
             val sortedAdvertHashMap = compareAdverts(adverts, retrievedAdverts)
             val toDownload: List<Advert>  = sortedAdvertHashMap[toDownloadKey]!!
 
             if (toDownload.isNotEmpty())
                downloadAdverts(toDownload)
-            else
-               _hasDownloaded.value = true
+//          else
+//               _hasDownloaded.value = true
             setPlayableAdverts(adverts)
 
             deleteStaleAdverts(sortedAdvertHashMap[toDeleteKey]!!)
@@ -83,9 +92,7 @@ class AdvertsViewModel(
       if (staleAdverts.isNotEmpty()) {
          val filePaths = mutableListOf<String>()
          for (staleAd in staleAdverts) {
-            val stringBuilder = StringBuilder(mediaPath)
-            val path = stringBuilder.append(staleAd.mediaKey.split("/")[1]).toString()
-            filePaths.add(path)
+            filePaths.add(staleAd.getLocalMediaPath())
          }
       }
    }
@@ -94,9 +101,8 @@ class AdvertsViewModel(
       var count = 0
       var totalProgress = 0
       for (ad in adverts) {
-         val fileName = ad.mediaKey.split("/")[1]
 
-         PRDownloader.download(ad.mediaURL, mediaPath, fileName)
+         PRDownloader.download(ad.mediaURL, mediaPath, ad.fileName)
             .build()
             .setOnProgressListener { progress ->
                val progressPercent: Long = progress.currentBytes * 100 / progress.totalBytes
@@ -113,7 +119,7 @@ class AdvertsViewModel(
                   _downloadedCount.postValue(count)
                   if (count == adverts.size) {
                      deviceRepository.setLastUpdated(currentTime)
-                     _hasDownloaded.postValue(true)
+                     _hasDownloaded.postValue(SingleEvent(true))
                   }
                }
 
@@ -138,7 +144,7 @@ class AdvertsViewModel(
          downloadInfo.value = MergedData.CountInfo(it)
       }
       downloadInfo.addSource(_hasDownloaded) {
-         downloadInfo.value = MergedData.DownloadedInfo(it)
+         downloadInfo.value = MergedData.DownloadedInfo(it.getContent())
       }
       downloadInfo.addSource(_downloadedCount) {
          downloadInfo.value = MergedData.DownloadedCount(it)
@@ -148,8 +154,7 @@ class AdvertsViewModel(
    }
 
    suspend fun getAdverts(): List<Advert> {
-      retrievedAdverts = advertsRepository.retrieveAdverts()
-      return retrievedAdverts
+      return advertsRepository.retrieveAdverts()
    }
 
    suspend fun fetchAdverts() {
@@ -167,7 +172,7 @@ class AdvertsViewModel(
 
    sealed class MergedData {
       data class CountInfo(val count: Int) : MergedData()
-      data class DownloadedInfo(val hasDownloaded: Boolean) : MergedData()
+      data class DownloadedInfo(val hasDownloaded: Boolean?) : MergedData()
       data class DownloadedCount(val count: Int) : MergedData()
    }
 }

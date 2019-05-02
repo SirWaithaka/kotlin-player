@@ -57,7 +57,9 @@ class DeviceRepositoryImpl(
    }
 
    override suspend fun resetDevice() =
-      deviceDao.deleteDeviceInfo()
+      withContext(Dispatchers.IO) {
+         return@withContext deviceDao.deleteDeviceInfo()
+      }
 
    override suspend fun getDeviceInfo(): Device {
       return withContext(Dispatchers.IO) {

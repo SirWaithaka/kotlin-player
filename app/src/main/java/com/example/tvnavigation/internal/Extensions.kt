@@ -1,9 +1,11 @@
 package com.example.tvnavigation.internal
 
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.EditText
+import com.example.tvnavigation.data.db.entities.Advert
 
 // STRING EXTENSIONS
 fun String.isValidEmail(): Boolean {
@@ -19,4 +21,13 @@ fun EditText.onTextChanged(onTextChanged: (String) -> Unit) {
       }
       override fun afterTextChanged(s: Editable) { }
    })
+}
+
+fun Advert.getLocalMediaPath(): String {
+   val mediaPath = Environment
+      .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+      .toString()
+
+   val stringBuilder = StringBuilder(mediaPath)
+   return stringBuilder.append(this.fileName).toString()
 }
