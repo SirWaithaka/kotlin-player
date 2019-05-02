@@ -15,13 +15,12 @@ class AdvertsRepositoryImpl(
       private val advertsNetworkDataSource: AdvertsNetworkDataSource
 ) : AdvertsRepository {
 
-   private val TAG = "AdvertsRepository"
+//   private val TAG = "AdvertsRepository"
    private var listener: AdvertsRepository.AdvertsFetchedListener? = null
    private var retrievedAdverts = listOf<Advert>()
 
    init {
        advertsNetworkDataSource.downloadedAdverts.observeForever {
-//          logResponse(it.adverts)
           this.listener?.onAdvertsFetched(it.adverts)
           persistFetchedAdverts(it.adverts)
        }
@@ -37,8 +36,11 @@ class AdvertsRepositoryImpl(
 
    override suspend fun retrieveAdverts(): List<Advert> {
       return withContext(Dispatchers.IO) {
-         retrievedAdverts = advertDao.retrieveAdverts()
-         return@withContext retrievedAdverts
+         return@withContext if (retrievedAdverts.isNotEmpty()) retrievedAdverts
+         else {
+            retrievedAdverts = advertDao.retrieveAdverts()
+            retrievedAdverts
+         }
       }
    }
 
@@ -47,6 +49,9 @@ class AdvertsRepositoryImpl(
          advertDao.upsertAdverts(adverts)
       }
    }
+
+   override suspend fun resetAdverts() =
+      advertDao.deleteAdverts()
 
    override fun getHttpErrorResponses(): LiveData<String> {
       TODO("not implemented")
@@ -60,8 +65,7 @@ class AdvertsRepositoryImpl(
       GlobalScope.launch {
          val toPersist = fetchedAdverts.minus(retrievedAdverts)
          if (toPersist.isNotEmpty()) {
-            val result = advertDao.upsertAdverts(fetchedAdverts)
-//            Log.d(TAG, "Upsert result: $result")
+            advertDao.upsertAdverts(fetchedAdverts)
             this@AdvertsRepositoryImpl.listener?.onAdvertsPersisted(true)
          }
       }

@@ -13,13 +13,14 @@ import com.example.tvnavigation.data.repository.DeviceRepository
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.text.StringBuilder
 
 class AdvertsViewModel(
    private val advertsRepository: AdvertsRepository,
    private val deviceRepository: DeviceRepository
 ) : ViewModel() {
 
-//   private val TAG = "AdvertsViewModel"
+   //   private val TAG = "AdvertsViewModel"
    private val minimumStaleThreshold = 23
    private val zonedId = ZoneId.systemDefault()
    //   private val startOfDay = ZonedDateTime.ofInstant(Instant.now(), zonedId).toLocalDate().atStartOfDay(zonedId)
@@ -36,11 +37,23 @@ class AdvertsViewModel(
    private val _hasDownloaded = MutableLiveData<Boolean>()
    private val _downloadedCount = MutableLiveData<Int>()
 
+   private val toDownloadKey = "TO_DOWNLOAD"
+   private val toDeleteKey = "TO_DELETE"
+
    init {
       advertsRepository.setAdvertsFetchedListener(object : AdvertsRepository.AdvertsFetchedListener {
          override fun onAdvertsFetched(adverts: List<Advert>) {
             advertsCount = adverts.size
-            compareAdverts(adverts, retrievedAdverts)
+            val sortedAdvertHashMap = compareAdverts(adverts, retrievedAdverts)
+            val toDownload: List<Advert>  = sortedAdvertHashMap[toDownloadKey]!!
+
+            if (toDownload.isNotEmpty())
+               downloadAdverts(toDownload)
+            else
+               _hasDownloaded.value = true
+            setPlayableAdverts(adverts)
+
+            deleteStaleAdverts(sortedAdvertHashMap[toDeleteKey]!!)
          }
 
          override fun onAdvertsPersisted(status: Boolean) = Unit
@@ -53,23 +66,28 @@ class AdvertsViewModel(
     * check if we have new adverts incoming
     * check if we have old adverts in retrieved
     */
-   private fun compareAdverts(fetchedAdverts: List<Advert>, retrievedAdverts: List<Advert>) {
+   private fun compareAdverts(
+      fetchedAdverts: List<Advert>,
+      retrievedAdverts: List<Advert>
+   ): HashMap<String, List<Advert>> {
       val toDownload = fetchedAdverts.minus(retrievedAdverts)
       val toDelete = retrievedAdverts.minus(fetchedAdverts)
-      if (toDownload.isNotEmpty()) {
-         downloadAdverts(toDownload)
-         setPlayableAdverts(fetchedAdverts)
-      } else {
-         setPlayableAdverts(fetchedAdverts)
-         _hasDownloaded.value = true
-      }
 
-      if (toDelete.isNotEmpty())
-         deleteStaleAdverts(toDelete)
+      return hashMapOf(
+         Pair(toDeleteKey, toDelete),
+         Pair(toDownloadKey, toDownload)
+      )
    }
 
    private fun deleteStaleAdverts(staleAdverts: List<Advert>) {
-
+      if (staleAdverts.isNotEmpty()) {
+         val filePaths = mutableListOf<String>()
+         for (staleAd in staleAdverts) {
+            val stringBuilder = StringBuilder(mediaPath)
+            val path = stringBuilder.append(staleAd.mediaKey.split("/")[1]).toString()
+            filePaths.add(path)
+         }
+      }
    }
 
    private fun downloadAdverts(adverts: List<Advert>) {

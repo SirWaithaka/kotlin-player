@@ -6,7 +6,7 @@
         android:layout_height="176dp"
         android:gravity="bottom"
         android:padding="16dp"
-        android:background="@color/selected_background"
+        android:background="@color/app_background"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
@@ -18,13 +18,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
-            android:text="@string/company_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/app_primary_text_color"
+            android:text="@string/company_name" />
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="2dp"
             android:text="@string/company_email"
+            android:textColor="@color/app_primary_text_color"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 </LinearLayout>

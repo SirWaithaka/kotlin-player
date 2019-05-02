@@ -49,13 +49,15 @@ class DeviceRepositoryImpl(
    override fun setLocationId(id: String) {
       locationId = id
    }
-
    override fun setLastUpdated(date: ZonedDateTime) {
       GlobalScope.launch(Dispatchers.IO) {
          device.lastUpdated = date
          deviceDao.upsertDeviceInfo(device)
       }
    }
+
+   override suspend fun resetDevice() =
+      deviceDao.deleteDeviceInfo()
 
    override suspend fun getDeviceInfo(): Device {
       return withContext(Dispatchers.IO) {

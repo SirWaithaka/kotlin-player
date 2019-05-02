@@ -3,8 +3,11 @@
     <color name="background_gradient_end">#DDDDDD</color>
     <color name="fastlane_background">#0096a6</color>
     <color name="search_opaque">#ffaa3f</color>
-    <color name="selected_background">#ffaa3f</color>
     <color name="default_background">#3d3d3d</color>
     <color name="video_player_background">#222222</color>
-    <color name="app_accent">#388E3C</color>
+    <color name="app_background">#4CAF50</color>
+    <color name="app_accent">#00C853</color>
+    <color name="app_accent_text_dark">#1B5E20</color>
+    <color name="app_primary_text_color">#212121</color>
+    <color name="app_secondary_text_color">#757575</color>
 </resources>

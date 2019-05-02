@@ -1,9 +1,6 @@
 package com.example.tvnavigation.data.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.tvnavigation.data.db.entities.Device
 
 
@@ -14,10 +11,13 @@ import com.example.tvnavigation.data.db.entities.Device
 interface DeviceDao {
 
    // Operations on the Device table
-   @Query("select * from device")
+   @Query("SELECT * FROM device")
    fun getDeviceInfo(): Device
 
    // upsert fn - Update and Insert
    @Insert(onConflict = OnConflictStrategy.REPLACE)
    fun upsertDeviceInfo(updatedDevice: Device)
+
+   @Query("DELETE FROM device WHERE uid = 0")
+   fun deleteDeviceInfo(): Int
 }

@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.tvnavigation.R
 import com.example.tvnavigation.ui.viewmodels.ErrorsViewModel
+import com.example.tvnavigation.ui.viewmodels.SettingsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
 import com.google.android.material.navigation.NavigationView
 import com.tapadoo.alerter.Alerter
@@ -27,14 +28,16 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
-   private lateinit var viewModel: ErrorsViewModel
+   private lateinit var errorsViewModel: ErrorsViewModel
+   private lateinit var settingsViewModel: SettingsViewModel
    private lateinit var drawerNavView: NavigationView
    private val navController by lazy { findNavController(R.id.nav_host_fragment) }
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
-      viewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
+      errorsViewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
+      settingsViewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingsViewModel::class.java)
 
       // setup Drawer Layout with NavigationController
       drawerNavView = findViewById(R.id.nav_view)
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity(), KodeinAware {
 
    override fun onResume() {
       super.onResume()
-      viewModel.httpErrorResponse.observe(this, Observer {
+      errorsViewModel.httpErrorResponse.observe(this, Observer {
          Alerter.create(this)
             .setTitle("Something Wrong!")
             .setText(it)
@@ -70,12 +73,26 @@ class MainActivity : AppCompatActivity(), KodeinAware {
       Navigation.findNavController(this, R.id.nav_host_fragment).navigateUp() ||
       super.onSupportNavigateUp()
 
+   private fun handleDrawerActions(resourceId: Int) {
+
+      when(resourceId) {
+         R.id.nav_refresh -> {
+
+         }
+         R.id.nav_logout -> {
+            settingsViewModel.invalidateSession()
+            navController.navigate(R.id.destination_home)
+         }
+      }
+   }
+
    private inner class DrawerNavActionListener: NavigationView.OnNavigationItemSelectedListener {
       override fun onNavigationItemSelected(item: MenuItem): Boolean {
          when(item.itemId) {
             R.id.nav_advert_playlist -> navController.navigate(R.id.destination_playlist)
             R.id.nav_player -> navController.navigate(R.id.destination_home)
             R.id.nav_settings -> navController.navigate(R.id.destination_settings)
+            else -> handleDrawerActions(item.itemId)
          }
          drawer_layout.closeDrawer(GravityCompat.START)
          return true

@@ -15,6 +15,6 @@ interface AdvertDao {
    @Insert(onConflict = OnConflictStrategy.IGNORE)
    fun upsertAdverts(adverts: List<Advert>): List<Long>
 
-   @Delete
-   fun deleteAdverts(adverts: List<Advert>)
+   @Query("DELETE FROM adverts")
+   fun deleteAdverts(): Int
 }

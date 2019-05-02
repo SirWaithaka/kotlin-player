@@ -10,6 +10,7 @@ interface AdvertsRepository {
    suspend fun updateAdverts(adverts: List<Advert>)
    suspend fun postAdvertLog(log: AdvertLog)
    suspend fun invokePopCapture(advertId: String)
+   suspend fun resetAdverts(): Int
 
    fun getHttpErrorResponses(): LiveData<String>
 

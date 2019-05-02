@@ -8,8 +8,9 @@ interface DeviceRepository {
       fun onStatusChanged(status: Boolean)
    }
    fun setOnAuthStatusChangedListener(authenticationStatusListener: AuthenticationStatusListener)
-
-   fun setLocationId(id: String)
-   suspend fun getDeviceInfo(): Device
    fun setLastUpdated(date: ZonedDateTime)
+   fun setLocationId(id: String)
+
+   suspend fun getDeviceInfo(): Device
+   suspend fun resetDevice(): Int
 }
