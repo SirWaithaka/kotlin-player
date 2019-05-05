@@ -14,7 +14,6 @@ class SettingsViewModel(
 
    private var currentPlaylist = listOf<MediaInformation>()
 
-
    private fun deleteLocalMedia(mediaList: List<MediaInformation>) {
       for (media in mediaList) {
          val file = File(media.mediaLocalPath)
@@ -26,9 +25,9 @@ class SettingsViewModel(
       withContext(super.coroutineContext) {
          val device = deviceRepository.getDeviceInfo()
          return@withContext PlayerInformation(
-            device.registeredEmail,
-            device.locationId,
-            device.serialNumber
+            device.locationEmail,
+            device.playerId,
+            device.locationName
          )
       }
    }
@@ -57,9 +56,9 @@ class SettingsViewModel(
    }
 
    fun invalidateSession() = runBlocking {
-      val resetDeferred = async { deviceRepository.resetDevice() }
+      val resetDeferred = async { deviceRepository.getDeviceModel().clear() }
       val resetAdDeferred = async { advertsRepository.resetAdverts() }
-      val deleteMedia = async { deleteLocalMedia(currentPlaylist) }
+      val deleteMedia = async { deleteLocalMedia(getCurrentPlaylist()) }
 
       resetAdDeferred.await()
       resetDeferred.await()
@@ -68,10 +67,9 @@ class SettingsViewModel(
 
    fun invalidateAdverts() = runBlocking {
       val resetAdDeferred = async { advertsRepository.resetAdverts() }
-      val deleteMedia = async { deleteLocalMedia(currentPlaylist) }
+      deleteLocalMedia(getCurrentPlaylist())
 
       resetAdDeferred.await()
-      deleteMedia.await()
    }
 
    data class MediaInformation(
@@ -83,7 +81,7 @@ class SettingsViewModel(
 
    data class PlayerInformation (
       val email: String,
-      val locationId: String,
+      val playerId: String,
       val locationName: String
    )
 }

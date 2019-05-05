@@ -9,7 +9,7 @@ const val REGISTERED_USER_ID = 0
 
 @Entity(tableName = "device")
 data class Device (
-   var registeredEmail: String = "",
+   var locationEmail: String = "",
    var serialNumber: String = "",
    var authToken: String = ""
 ) {
@@ -17,9 +17,10 @@ data class Device (
    @PrimaryKey(autoGenerate = false)
    var uid: Int = REGISTERED_USER_ID
    var authStatus: Boolean = false
-   var initialised: Boolean = false
    var locationId: String = ""
-   var lastUpdated: ZonedDateTime? = null
+   var locationName: String = ""
+   var playerId: String = ""
+   var lastDownloadDate: ZonedDateTime? = null
 }
 
 class DateTimeToString {

@@ -6,14 +6,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.tvnavigation.data.db.entities.*
+import com.example.tvnavigation.data.db.views.DeviceView
 
 
-const val DATABASE_NAME = "youtise_player_v10.9.db"
+const val DATABASE_NAME = "youtise_player_v10.16.db"
 
 @Database(
       entities = [Location::class,Device::class,Advert::class],
       version = 1, // version for the db
-      exportSchema = false
+      exportSchema = false,
+      views = [DeviceView::class]
 )
 @TypeConverters(ListToString::class,DateTimeToString::class)
 abstract class YoutisePlayerDatabase: RoomDatabase() {

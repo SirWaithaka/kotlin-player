@@ -62,7 +62,7 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
 
       liveData.observe(this, Observer<AdvertsViewModel.MergedData> {
          when (it) {
-            is AdvertsViewModel.MergedData.DownloadedInfo -> {
+            is AdvertsViewModel.MergedData.HasDownloadedStatus -> {
                if (it.hasDownloaded != null)
                   if (it.hasDownloaded) findNavController().navigate(R.id.destination_player)
             }

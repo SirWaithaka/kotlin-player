@@ -1,5 +1,6 @@
 package com.example.tvnavigation.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,12 @@ import kotlin.coroutines.CoroutineContext
 
 class LocationsViewModel(
       private val locationsRepository: LocationsRepository,
-      private val deviceRepository: DeviceRepository
+      deviceRepository: DeviceRepository
 ) : ViewModel(), CoroutineScope {
 
+   private val Tag = "LocationsViewModel"
    private val job = Job()
+   private val deviceModel = deviceRepository.getDeviceModel()
    private lateinit var mSelectedLocation: Location
    private lateinit var mPassword: String
    private var mLocations = MutableLiveData<List<Location>>()
@@ -30,6 +33,8 @@ class LocationsViewModel(
    init {
       deviceRepository.setOnAuthStatusChangedListener(object: DeviceRepository.AuthenticationStatusListener {
          override fun onStatusChanged(status: Boolean) {
+            Log.d(Tag, "has authenticated: $status")
+            deviceModel.authStatus = status
             mHasAuthenticated.postValue(status)
          }
       })
@@ -43,6 +48,7 @@ class LocationsViewModel(
    fun validateEmail(userEmail: String) {
       launch {
          locationsRepository.getLocationsByEmail(userEmail)
+         deviceModel.locationEmail = userEmail
       }
    }
    fun setSelectedLocation(selectedLocation: Location) {
@@ -52,23 +58,24 @@ class LocationsViewModel(
       mPassword = password
    }
    fun validateCredentials() {
+
+      Log.d(Tag, "login params: ${mSelectedLocation.id} and ${mSelectedLocation.placeName}")
+
       launch {
-         withContext(Dispatchers.Default) {
-            deviceRepository.setLocationId(mSelectedLocation.id)
-            locationsRepository.authenticate(
-               mSelectedLocation.id,
-               mPassword
-            )
-         }
+
+         val device = deviceModel.retrieve()
+         device.locationId = mSelectedLocation.id
+         device.locationName = mSelectedLocation.placeName
+         deviceModel.update(device)
+
+         locationsRepository.authenticate(
+            mSelectedLocation.id,
+            mPassword
+         )
       }
    }
 
-   fun setAuthenticationStatus(authStatus: Boolean) {
-      mHasAuthenticated.postValue(authStatus)
-   }
-
-   suspend fun getAuthenticationStatus(): Boolean {
-      val device = deviceRepository.getDeviceInfo()
-      return device.authStatus
+   fun getAuthenticationStatus(): Boolean {
+      return deviceModel.authStatus
    }
 }

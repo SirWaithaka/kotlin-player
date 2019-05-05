@@ -28,6 +28,6 @@ fun Advert.getLocalMediaPath(): String {
       .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
       .toString()
 
-   val stringBuilder = StringBuilder(mediaPath)
+   val stringBuilder = StringBuilder(mediaPath).append("/")
    return stringBuilder.append(this.fileName).toString()
 }

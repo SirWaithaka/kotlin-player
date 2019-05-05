@@ -3,6 +3,7 @@ package com.example.tvnavigation.data.repository
 import android.os.Build
 import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -11,13 +12,10 @@ import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 
 class DeviceRepositoryImpl(
-      private val deviceDao: DeviceDao,
+      private val deviceModel: DeviceModel,
       locationsDataSource: LocationsDataSource
 ) : DeviceRepository {
 
-//   private val TAG = "DeviceRepository"
-   private lateinit var device: Device
-   private var locationId: String = ""
    private var listener: DeviceRepository.AuthenticationStatusListener? = null
    private val serialNumber by lazy {
       try {
@@ -28,54 +26,26 @@ class DeviceRepositoryImpl(
    }
 
    init {
-      locationsDataSource.authToken.observeForever {
-         persistFetchedToken(it)
+      locationsDataSource.loginResponse.observeForever {
+         persistFetchedToken(it.token, it.playerId)
       }
    }
 
-   private fun persistFetchedToken(authToken: String) {
+   private fun persistFetchedToken(authToken: String, playerId: String) {
       GlobalScope.launch(Dispatchers.IO) {
-//         val device = deviceDao.getDeviceInfo()
-         device.authToken = authToken
-         device.authStatus = true
-         device.initialised = true
-         device.locationId = locationId
-         device.serialNumber = serialNumber
-         deviceDao.upsertDeviceInfo(device)
+         deviceModel.authToken = authToken
+         deviceModel.playerId = playerId
+         deviceModel.serialNumber = serialNumber
          listener?.onStatusChanged(true)
       }
    }
 
-   override fun setLocationId(id: String) {
-      locationId = id
+   override fun getDeviceModel(): DeviceModel {
+      return deviceModel
    }
-   override fun setLastUpdated(date: ZonedDateTime) {
-      GlobalScope.launch(Dispatchers.IO) {
-         device.lastUpdated = date
-         deviceDao.upsertDeviceInfo(device)
-      }
-   }
-
-   override suspend fun resetDevice() =
-      withContext(Dispatchers.IO) {
-         return@withContext deviceDao.deleteDeviceInfo()
-      }
 
    override suspend fun getDeviceInfo(): Device {
-      return withContext(Dispatchers.IO) {
-         // Get Device info
-         // On initial startup, could be null
-         var init: Device?  = deviceDao.getDeviceInfo()
-         if (init == null) {
-            init = Device("", serialNumber, "")
-            deviceDao.upsertDeviceInfo(init)
-            device = deviceDao.getDeviceInfo()
-            return@withContext device
-         }
-
-         device = init
-         return@withContext device
-      }
+      return deviceModel.retrieve()
    }
 
    override fun setOnAuthStatusChangedListener(authenticationStatusListener: DeviceRepository.AuthenticationStatusListener) {

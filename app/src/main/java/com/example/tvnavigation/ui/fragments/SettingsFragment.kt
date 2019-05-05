@@ -49,7 +49,7 @@ class SettingsFragment : Fragment(), KodeinAware {
       val settingsDataList = hashMapOf(
          Pair("Registered Email", settingsInformation.email),
          Pair("Location Name", settingsInformation.locationName),
-         Pair("Location ID", settingsInformation.locationId)
+         Pair("Player ID", settingsInformation.playerId)
       )
       recyclerViewAdapter.setInformationData(settingsDataList)
       recyclerView.adapter = recyclerViewAdapter

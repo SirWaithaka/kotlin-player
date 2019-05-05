@@ -3,6 +3,7 @@ package com.example.tvnavigation.ui.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +16,13 @@ import com.example.tvnavigation.ui.base.ScopedFragment
 import com.example.tvnavigation.ui.viewmodels.AdvertsViewModel
 import com.example.tvnavigation.ui.viewmodels.LocationsViewModel
 import com.example.tvnavigation.ui.viewmodels.ViewModelFactory
-import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 
 class HomeFragment: ScopedFragment(), KodeinAware {
-//   private val TAG = "HomeFragment"
+   private val TAG = "HomeFragment"
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var adViewModel: AdvertsViewModel
@@ -77,12 +77,10 @@ class HomeFragment: ScopedFragment(), KodeinAware {
 
    private fun launchApp() {
       // behind the scenes check if app already is authenticated
-      launch {
-         val hasAuthenticated = locViewModel.getAuthenticationStatus()
-         locViewModel.setAuthenticationStatus(hasAuthenticated)
-         if (hasAuthenticated) this@HomeFragment.findNavController().navigate(R.id.destination_downloader)
-         else this@HomeFragment.findNavController().navigate(R.id.destination_email)
-      }
+      val hasAuthenticated = locViewModel.getAuthenticationStatus()
+      Log.d(TAG, "checking auth status: $hasAuthenticated")
+      if (hasAuthenticated) this@HomeFragment.findNavController().navigate(R.id.destination_downloader)
+      else this@HomeFragment.findNavController().navigate(R.id.destination_email)
    }
 
    private fun checkAndRequestPermissions(activity: FragmentActivity): Boolean {

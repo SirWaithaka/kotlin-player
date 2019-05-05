@@ -6,6 +6,7 @@ package com.example.tvnavigation.data.repository
  */
 
 import android.os.Build
+import android.util.Log
 import com.example.tvnavigation.data.db.LocationDao
 import com.example.tvnavigation.data.db.entities.Location
 import com.example.tvnavigation.data.repository.datasources.LocationsDataSource
@@ -20,7 +21,7 @@ class LocationsRepositoryImpl(
       private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
-//   private val TAG = "LocationRepository"
+   private val Tag = "LocationRepository"
    private lateinit var userEmail: String
    private var isAuthenticated: Boolean = false
    private var listener: LocationsRepository.LocationsFetchedListener? = null
@@ -80,6 +81,7 @@ class LocationsRepositoryImpl(
    private fun persistFetchedLocationsList(fetchedLocationsList: List<Location>) {
       GlobalScope.launch(Dispatchers.IO) {
          locationDao.insertLocations(fetchedLocationsList)
+         Log.d(Tag, "Persisted locations")
       }
    }
 

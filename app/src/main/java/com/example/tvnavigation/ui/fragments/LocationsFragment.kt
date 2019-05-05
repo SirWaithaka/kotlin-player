@@ -64,18 +64,18 @@ class LocationsFragment : Fragment(), KodeinAware {
       super.onResume()
       val locationsLiveData = viewModel.locations
       locationsLiveData.observe(this, Observer {
-         if (it == null) {
-//            Log.d(TAG, "No data returned")
+
+         if (it == null)
             return@Observer
-         }
-//         Log.d(TAG, "Returned: $it")
+
          adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, it)
          locationsSpinner.adapter = adapter
       })
       viewModel.hasAuthenticated.observe(this, Observer {
-         if (it) {
+
+         if (it)
             this.findNavController().navigate(R.id.action_back_to_home)
-         }
+
       })
       passwordInput.onTextChanged {
          viewModel.setInputPassword(it)

@@ -1,13 +1,13 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.example.tvnavigation.data.db.entities.Advert
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.repository.AdvertsRepository
 import com.example.tvnavigation.data.repository.DeviceRepository
 import com.example.tvnavigation.internal.SingleEvent
@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
 
 class AdvertsViewModel(
    private val advertsRepository: AdvertsRepository,
-   private val deviceRepository: DeviceRepository
+   private val deviceModel: DeviceModel
 ) : ScopedViewModel() {
 
 //   private val TAG = "AdvertsViewModel"
@@ -58,8 +58,8 @@ class AdvertsViewModel(
 
             if (toDownload.isNotEmpty())
                downloadAdverts(toDownload)
-//          else
-//               _hasDownloaded.value = true
+             else
+               _hasDownloaded.value = SingleEvent(true)
             setPlayableAdverts(adverts)
 
             deleteStaleAdverts(sortedAdvertHashMap[toDeleteKey]!!)
@@ -118,7 +118,7 @@ class AdvertsViewModel(
                   count += 1
                   _downloadedCount.postValue(count)
                   if (count == adverts.size) {
-                     deviceRepository.setLastUpdated(currentTime)
+                     deviceModel.lastDownloadDate = currentTime
                      _hasDownloaded.postValue(SingleEvent(true))
                   }
                }
@@ -144,7 +144,7 @@ class AdvertsViewModel(
          downloadInfo.value = MergedData.CountInfo(it)
       }
       downloadInfo.addSource(_hasDownloaded) {
-         downloadInfo.value = MergedData.DownloadedInfo(it.getContent())
+         downloadInfo.value = MergedData.HasDownloadedStatus(it.getContent())
       }
       downloadInfo.addSource(_downloadedCount) {
          downloadInfo.value = MergedData.DownloadedCount(it)
@@ -161,8 +161,8 @@ class AdvertsViewModel(
       advertsRepository.fetchAdverts()
    }
 
-   suspend fun isStale(): Boolean {
-      val lastUpdatedTime = deviceRepository.getDeviceInfo().lastUpdated
+   fun isStale(): Boolean {
+      val lastUpdatedTime = deviceModel.lastDownloadDate
       var surpassedStaleThreshold = true
       if (lastUpdatedTime != null)
          surpassedStaleThreshold = (lastUpdatedTime.hour - currentTime.hour) > minimumStaleThreshold
@@ -172,7 +172,7 @@ class AdvertsViewModel(
 
    sealed class MergedData {
       data class CountInfo(val count: Int) : MergedData()
-      data class DownloadedInfo(val hasDownloaded: Boolean?) : MergedData()
+      data class HasDownloadedStatus(val hasDownloaded: Boolean?) : MergedData()
       data class DownloadedCount(val count: Int) : MergedData()
    }
 }

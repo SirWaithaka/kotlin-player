@@ -1,20 +1,22 @@
 package com.example.tvnavigation.data.network.interceptors
 
-import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.network.services.AuthorizationService
 import kotlinx.coroutines.*
 import okhttp3.*
 
 
 class AuthenticationInterceptor(
-      private val deviceDao: DeviceDao,
+      private val deviceModel: DeviceModel,
       private val authorizationService: AuthorizationService
 ): Authenticator, Interceptor {
 
    private var requestCount = 0
    private var authenticationToken = ""
-   private val device: Device by lazy { deviceDao.getDeviceInfo() }
+   private val device: Device by lazy {
+      runBlocking { deviceModel.retrieve() }
+   }
 
    override fun intercept(chain: Interceptor.Chain): Response {
       val original = chain.request()
@@ -57,10 +59,7 @@ class AuthenticationInterceptor(
     * the record with the new token
     */
    private fun persistToken(token: String) {
-      GlobalScope.launch(Dispatchers.IO) {
-         device.authToken = token
-         deviceDao.upsertDeviceInfo(device)
-      }
+         deviceModel.authToken = token
    }
 
    /*

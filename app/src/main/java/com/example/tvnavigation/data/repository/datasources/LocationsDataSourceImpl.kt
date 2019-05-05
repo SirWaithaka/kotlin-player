@@ -3,6 +3,7 @@ package com.example.tvnavigation.data.repository.datasources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tvnavigation.data.network.responses.LocationsResponse
+import com.example.tvnavigation.data.network.responses.LoginResponse
 import com.example.tvnavigation.data.network.services.AuthorizationService
 import com.example.tvnavigation.data.network.services.LocationsService
 import com.example.tvnavigation.internal.ClientErrorException
@@ -21,9 +22,9 @@ class LocationsDataSourceImpl(
    private val _httpErrorResponse = MutableLiveData<String>()
    override val httpErrorResponse: LiveData<String>
          get() = _httpErrorResponse
-   private val _authToken = MutableLiveData<String>()
-   override val authToken: LiveData<String>
-         get() = _authToken
+   private val _loginResponse = MutableLiveData<LoginResponse>()
+   override val loginResponse: LiveData<LoginResponse>
+         get() = _loginResponse
    private val _isAuthenticated = MutableLiveData<Boolean>()
    override val isAuthenticated: LiveData<Boolean>
       get() = _isAuthenticated
@@ -40,8 +41,8 @@ class LocationsDataSourceImpl(
 
    override suspend fun authenticate(id: String, serialNumber: String, password: String) {
       try {
-         val fetchedToken = authorizationService.authenticateUser(id, serialNumber, password)
-         _authToken.postValue(fetchedToken.token)
+         val response = authorizationService.authenticateUser(id, serialNumber, password)
+         _loginResponse.postValue(response)
          _isAuthenticated.postValue(true)
       } catch (e: Exception) {
          handleExceptions(e)

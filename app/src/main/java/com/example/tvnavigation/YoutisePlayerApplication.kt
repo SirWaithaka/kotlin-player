@@ -20,6 +20,7 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.network.services.AuthorizationService
 import com.example.tvnavigation.data.network.services.LocationsService
 
@@ -36,6 +37,9 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind() from singleton { instance<YoutisePlayerDatabase>().locationDao() }
       bind() from singleton { instance<YoutisePlayerDatabase>().advertDao() }
       bind() from singleton { instance<YoutisePlayerDatabase>().deviceDao() }
+
+      bind() from singleton { DeviceModel(instance()) }
+
       bind<ClientRequestInterceptor>() with singleton {
          // create instance and pass application context
          NetworkConnectionInterceptor(instance())
@@ -53,7 +57,7 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<AdvertsRepository>() with singleton { AdvertsRepositoryImpl(instance(), instance())}
       bind<DeviceRepository>() with singleton { DeviceRepositoryImpl(instance(), instance()) }
       bind() from singleton { ErrorsHandler(instance(), instance()) }
-      bind() from provider { ViewModelFactory(instance(), instance(), instance(), instance()) }
+      bind() from provider { ViewModelFactory(instance(), instance(), instance(), instance(), instance()) }
    }
 
    override fun onCreate() {
