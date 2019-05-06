@@ -45,7 +45,8 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
       // otherwise refresh the adverts from api
       launch {
          val adverts = viewModel.getAdverts()
-         if (adverts.isEmpty() || viewModel.isStale()) {
+         val isStale: Boolean = viewModel.isStale()
+         if (adverts.isEmpty() || isStale) {
             viewModel.fetchAdverts()
             textView.text = getString(R.string.downloading)
          } else {

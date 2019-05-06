@@ -1,6 +1,7 @@
 package com.example.tvnavigation.ui.viewmodels
 
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.downloader.Error
@@ -9,7 +10,7 @@ import com.downloader.PRDownloader
 import com.example.tvnavigation.data.db.entities.Advert
 import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.repository.AdvertsRepository
-import com.example.tvnavigation.data.repository.DeviceRepository
+import com.example.tvnavigation.internal.MINIMUM_STALE_THRESHOLD
 import com.example.tvnavigation.internal.SingleEvent
 import com.example.tvnavigation.internal.getLocalMediaPath
 import kotlinx.coroutines.runBlocking
@@ -23,8 +24,7 @@ class AdvertsViewModel(
    private val deviceModel: DeviceModel
 ) : ScopedViewModel() {
 
-//   private val TAG = "AdvertsViewModel"
-   private val minimumStaleThreshold = 23
+   private val Tag = "AdvertsViewModel"
    private val zonedId = ZoneId.systemDefault()
    private val currentTime: ZonedDateTime
       get() = ZonedDateTime.ofInstant(Instant.now(), zonedId)
@@ -163,11 +163,11 @@ class AdvertsViewModel(
 
    fun isStale(): Boolean {
       val lastUpdatedTime = deviceModel.lastDownloadDate
-      var surpassedStaleThreshold = true
-      if (lastUpdatedTime != null)
-         surpassedStaleThreshold = (lastUpdatedTime.hour - currentTime.hour) > minimumStaleThreshold
-//      return (currentTime.hour - startOfDay.hour) >  || lastUpdatedTime == null
-      return surpassedStaleThreshold || lastUpdatedTime == null
+      val surpassedStaleThreshold: Boolean
+      surpassedStaleThreshold = if (lastUpdatedTime != null)
+         (lastUpdatedTime.hour - currentTime.hour) > MINIMUM_STALE_THRESHOLD
+      else true
+      return surpassedStaleThreshold
    }
 
    sealed class MergedData {

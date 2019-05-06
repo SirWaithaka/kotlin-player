@@ -3,9 +3,9 @@ package com.example.tvnavigation.data.db.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.example.tvnavigation.internal.DEVICE_UID
 import java.time.ZonedDateTime
 
-const val REGISTERED_USER_ID = 0
 
 @Entity(tableName = "device")
 data class Device (
@@ -15,7 +15,7 @@ data class Device (
 ) {
 
    @PrimaryKey(autoGenerate = false)
-   var uid: Int = REGISTERED_USER_ID
+   var uid: Int = DEVICE_UID
    var authStatus: Boolean = false
    var locationId: String = ""
    var locationName: String = ""
