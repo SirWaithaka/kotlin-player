@@ -1,7 +1,6 @@
 package com.example.tvnavigation.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import org.kodein.di.generic.instance
 
 class SettingsFragment : Fragment(), KodeinAware {
 
-   private val TAG = "SettingsFragment"
+//   private val TAG = "SettingsFragment"
    override val kodein: Kodein by kodein()
 
    private lateinit var recyclerViewAdapter: SettingsRecyclerViewAdapter

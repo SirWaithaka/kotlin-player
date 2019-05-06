@@ -40,14 +40,6 @@ class DeviceRepositoryImpl(
       }
    }
 
-   override fun getDeviceModel(): DeviceModel {
-      return deviceModel
-   }
-
-   override suspend fun getDeviceInfo(): Device {
-      return deviceModel.retrieve()
-   }
-
    override fun setOnAuthStatusChangedListener(authenticationStatusListener: DeviceRepository.AuthenticationStatusListener) {
       this.listener = authenticationStatusListener
    }

@@ -10,7 +10,6 @@ package com.example.tvnavigation.data.db.models
  * TODO("Find a way to incorporate into repository and/or DAO")
  */
 
-import android.util.Log
 import com.example.tvnavigation.data.db.DeviceDao
 import com.example.tvnavigation.data.db.entities.Device
 import kotlinx.coroutines.*
@@ -19,28 +18,10 @@ import kotlin.coroutines.CoroutineContext
 
 class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
 
-   private val Tag = "DeviceModel"
+//   private val Tag = "DeviceModel"
    private val job = Job()
    override val coroutineContext: CoroutineContext
       get() = job + Dispatchers.IO
-
-//   enum class COLUMNS(var columnName: String) {
-//
-//      UID("uid"),
-//
-//      AUTH_STATUS("authStatus"),
-//      AUTH_TOKEN("authToken"),
-//
-//      LOCATION_ID("locationId"),
-//      LOCATION_NAME("locationName"),
-//      LOCATION_EMAIL("locationEmail"),
-//
-//      PLAYER_ID("playerId"),
-//
-//      SERIAL_NUMBER("serialNumber"),
-//
-//      LAST_UPDATED("lastUpdated")
-//   }
 
    init {
       GlobalScope.launch {
@@ -56,7 +37,6 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
       }
       set(value) = runBlocking(coroutineContext) {
          withContext(this.coroutineContext) {
-            Log.d(Tag, "authStatus property called with $value")
             deviceDao.updateAuthStatus(value)
             return@withContext
          }
@@ -84,10 +64,8 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
          }
       }
       set(value) = runBlocking(coroutineContext) {
-         Log.d(Tag, "updating locationID")
          withContext(this.coroutineContext) {
             deviceDao.updateLocationID(value)
-            Log.d(Tag, "updated locationID")
             return@withContext
          }
       }
@@ -100,10 +78,8 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
          }
       }
       set(value) = runBlocking(coroutineContext) {
-         Log.d(Tag, "updating locationName")
          withContext(this.coroutineContext) {
             deviceDao.updateLocationName(value)
-            Log.d(Tag, "updating locationName")
             return@withContext
          }
       }
@@ -117,9 +93,7 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
       }
       set(value) = runBlocking(coroutineContext) {
          withContext(this.coroutineContext) {
-            Log.d(Tag, "updating email address")
             deviceDao.updateLocationEmail(value)
-            Log.d(Tag, "email address updated")
             return@withContext
          }
       }
@@ -179,16 +153,13 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
 
    suspend fun retrieve(): Device {
       return withContext(coroutineContext) {
-         Log.d(Tag, "Retrieving device")
          return@withContext deviceDao.get()
       }
    }
 
    suspend fun update(device: Device) {
       withContext(coroutineContext) {
-         Log.d(Tag, "Updating device")
          deviceDao.upsert(device)
-         Log.d(Tag, "Device updated")
       }
    }
 
@@ -201,12 +172,4 @@ class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {
             )
       }
    }
-
-//   private fun <T> sqlUpdateQueryBuilder(columnName: String, value: T): SimpleSQLiteQuery =
-//      SimpleSQLiteQuery("""
-//          BEGIN;
-//            UPDATE device SET $columnName = $value WHERE uid = 0;
-//            SELECT uid FROM device WHERE $columnName = $value;
-//          COMMIT;
-//      """.trimIndent())
 }

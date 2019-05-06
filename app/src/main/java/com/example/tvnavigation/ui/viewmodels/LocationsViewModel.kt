@@ -1,10 +1,10 @@
 package com.example.tvnavigation.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tvnavigation.data.db.entities.Location
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.repository.DeviceRepository
 import com.example.tvnavigation.data.repository.LocationsRepository
 import kotlinx.coroutines.*
@@ -12,12 +12,12 @@ import kotlin.coroutines.CoroutineContext
 
 class LocationsViewModel(
       private val locationsRepository: LocationsRepository,
+      private val deviceModel: DeviceModel,
       deviceRepository: DeviceRepository
 ) : ViewModel(), CoroutineScope {
 
-   private val Tag = "LocationsViewModel"
+//   private val Tag = "LocationsViewModel"
    private val job = Job()
-   private val deviceModel = deviceRepository.getDeviceModel()
    private lateinit var mSelectedLocation: Location
    private lateinit var mPassword: String
    private var mLocations = MutableLiveData<List<Location>>()
@@ -33,7 +33,6 @@ class LocationsViewModel(
    init {
       deviceRepository.setOnAuthStatusChangedListener(object: DeviceRepository.AuthenticationStatusListener {
          override fun onStatusChanged(status: Boolean) {
-            Log.d(Tag, "has authenticated: $status")
             deviceModel.authStatus = status
             mHasAuthenticated.postValue(status)
          }
@@ -58,8 +57,6 @@ class LocationsViewModel(
       mPassword = password
    }
    fun validateCredentials() {
-
-      Log.d(Tag, "login params: ${mSelectedLocation.id} and ${mSelectedLocation.placeName}")
 
       launch {
 

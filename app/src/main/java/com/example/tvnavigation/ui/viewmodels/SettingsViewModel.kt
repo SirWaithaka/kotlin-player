@@ -1,7 +1,7 @@
 package com.example.tvnavigation.ui.viewmodels
 
+import com.example.tvnavigation.data.db.models.DeviceModel
 import com.example.tvnavigation.data.repository.AdvertsRepository
-import com.example.tvnavigation.data.repository.DeviceRepository
 import com.example.tvnavigation.internal.getLocalMediaPath
 import com.example.tvnavigation.ui.models.MediaModel
 import kotlinx.coroutines.*
@@ -9,7 +9,7 @@ import java.io.File
 
 class SettingsViewModel(
    private val advertsRepository: AdvertsRepository,
-   private val deviceRepository: DeviceRepository
+   private val deviceModel: DeviceModel
 ): ScopedViewModel() {
 
    private var currentPlaylist = listOf<MediaInformation>()
@@ -23,7 +23,7 @@ class SettingsViewModel(
 
    fun getPlayerInformation(): PlayerInformation = runBlocking {
       withContext(super.coroutineContext) {
-         val device = deviceRepository.getDeviceInfo()
+         val device = deviceModel.retrieve()
          return@withContext PlayerInformation(
             device.locationEmail,
             device.playerId,
@@ -56,7 +56,7 @@ class SettingsViewModel(
    }
 
    fun invalidateSession() = runBlocking {
-      val resetDeferred = async { deviceRepository.getDeviceModel().clear() }
+      val resetDeferred = async { deviceModel.clear() }
       val resetAdDeferred = async { advertsRepository.resetAdverts() }
       val deleteMedia = async { deleteLocalMedia(getCurrentPlaylist()) }
 
