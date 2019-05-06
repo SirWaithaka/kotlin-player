@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.player.R
 import com.example.player.ui.adapters.PlaylistRecyclerViewAdapter
+import com.example.player.data.db.models.MediaModel
 import com.example.player.ui.viewmodels.SettingsViewModel
 import com.example.player.ui.viewmodels.ViewModelFactory
 import org.kodein.di.Kodein
@@ -22,7 +23,7 @@ class PlaylistFragment: Fragment(), KodeinAware {
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: SettingsViewModel
-   private lateinit var mediaPlaylist: List<SettingsViewModel.MediaInformation>
+   private lateinit var mediaPlaylist: List<MediaModel>
    private val recyclerView by lazy { view!!.findViewById<RecyclerView>(R.id.playlistRecyclerView) }
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.player.R
-import com.example.player.ui.viewmodels.SettingsViewModel
+import com.example.player.data.db.models.MediaModel
 
 class PlaylistRecyclerViewAdapter(
-      private val mediaList: List<SettingsViewModel.MediaInformation>
+      private val mediaList: List<MediaModel>
 ): RecyclerView.Adapter<PlaylistRecyclerViewAdapter.ViewHolder>() {
 
 //   private val TAG = "PlaylistRecyclerViewAdapter"

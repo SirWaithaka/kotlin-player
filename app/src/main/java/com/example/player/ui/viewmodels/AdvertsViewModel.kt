@@ -8,27 +8,21 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.example.player.data.db.entities.Advert
 import com.example.player.data.db.models.DeviceModel
+import com.example.player.data.db.models.MediaModel
 import com.example.player.data.repository.AdvertsRepository
-import com.example.player.internal.MINIMUM_STALE_THRESHOLD
-import com.example.player.internal.SingleEvent
-import com.example.player.internal.getLocalMediaPath
+import com.example.player.internal.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class AdvertsViewModel(
    private val advertsRepository: AdvertsRepository,
    private val deviceModel: DeviceModel
 ) : ScopedViewModel() {
 
-   private val Tag = "AdvertsViewModel"
-   private val zonedId = ZoneId.systemDefault()
-   private val currentTime: ZonedDateTime
-      get() = ZonedDateTime.ofInstant(Instant.now(), zonedId)
+//   private val Tag = "AdvertsViewModel"
+
    private var advertsCount = 0
-   private var playableAdverts = listOf<Advert>()
+   private var playableAdverts: List<MediaModel> = listOf()
    private val mediaPath = Environment
       .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
       .toString()
@@ -117,7 +111,7 @@ class AdvertsViewModel(
                   count += 1
                   _downloadedCount.postValue(count)
                   if (count == adverts.size) {
-                     deviceModel.lastDownloadDate = currentTime
+                     deviceModel.lastDownloadDate = CURRENT_TIME
                      _hasDownloaded.postValue(SingleEvent(true))
                   }
                }
@@ -129,13 +123,6 @@ class AdvertsViewModel(
       }
    }
 
-   fun getPlayableAdverts(): List<Advert> {
-      return playableAdverts
-   }
-
-   fun setPlayableAdverts(toPlay: List<Advert>) {
-      playableAdverts = toPlay
-   }
 
    fun getDownloadInfo(): MediatorLiveData<MergedData> {
       val downloadInfo = MediatorLiveData<MergedData>()
@@ -160,11 +147,31 @@ class AdvertsViewModel(
       advertsRepository.fetchAdverts()
    }
 
+   fun getPlayableAdverts(): List<MediaModel> {
+      return playableAdverts
+   }
+
+   fun setPlayableAdverts(adverts: List<Advert>) {
+      val mediaList = mutableListOf<MediaModel>()
+      for (ad in adverts) {
+         mediaList.add(
+            MediaModel(
+               id = ad.id,
+               name = ad.adName,
+               type = ad.mediaType,
+               timesOfDay = ad.timeOfDay,
+               localMediaPath = ad.getLocalMediaPath()
+            )
+         )
+      }
+      playableAdverts = mediaList
+   }
+
    fun isStale(): Boolean {
       val lastUpdatedTime = deviceModel.lastDownloadDate
       val surpassedStaleThreshold: Boolean
       surpassedStaleThreshold = if (lastUpdatedTime != null)
-         (lastUpdatedTime.hour - currentTime.hour) > MINIMUM_STALE_THRESHOLD
+         (lastUpdatedTime.hour - CURRENT_TIME.hour) > MINIMUM_STALE_THRESHOLD
       else true
       return surpassedStaleThreshold
    }

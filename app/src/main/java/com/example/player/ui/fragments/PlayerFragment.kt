@@ -43,7 +43,7 @@ class PlayerFragment : Fragment(), KodeinAware {
       val mediaToPlay = playerViewModel.getMediaToPlay()
       playerViewModel.setMediaToPlay(mediaToPlay)
 
-      when(mediaToPlay.mediaType.toLowerCase()) {
+      when(mediaToPlay.type.toLowerCase()) {
          "video" -> findNavController().navigate(R.id.destination_video)
          "image" -> findNavController().navigate(R.id.destination_image)
       }

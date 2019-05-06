@@ -9,7 +9,7 @@ import com.example.player.data.db.entities.*
 import com.example.player.data.db.views.DeviceView
 
 
-const val DATABASE_NAME = "youtise_player_v10.16.db"
+const val DATABASE_NAME = "youtise_player_v10.17.db"
 
 @Database(
       entities = [Location::class,Device::class,Advert::class],

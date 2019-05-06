@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.player.R
+import com.example.player.internal.CURRENT_TIME
 import com.example.player.ui.viewmodels.PlayerViewModel
 import com.example.player.ui.viewmodels.ViewModelFactory
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -23,15 +24,10 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class VideoFragment : Fragment(), KodeinAware {
-   private val TAG = "VideoFragment"
-
+//   private val TAG = "VideoFragment"
    override val kodein: Kodein by kodein()
-   private val zonedId = ZoneId.systemDefault()
 
    private lateinit var player: SimpleExoPlayer
    private lateinit var playerView: PlayerView
@@ -68,7 +64,7 @@ class VideoFragment : Fragment(), KodeinAware {
       player.addListener(PlayBackStateChanged(this))
       player.playWhenReady = true
 
-      val startTime = ZonedDateTime.ofInstant(Instant.now(), zonedId)
+      val startTime = CURRENT_TIME
       viewModel.setStartTime(startTime)
    }
 
@@ -84,7 +80,7 @@ class VideoFragment : Fragment(), KodeinAware {
          when (playbackState) {
             Player.STATE_ENDED -> {
                // video has finished playing
-               viewModel.setStopTime(now = ZonedDateTime.ofInstant(Instant.now(), zonedId))
+               viewModel.setStopTime(now = CURRENT_TIME)
                viewModel.mediaHasPlayedEvent()
                fragment.findNavController().popBackStack()
             }

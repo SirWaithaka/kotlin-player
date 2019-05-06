@@ -3,7 +3,7 @@ package com.example.player.ui.viewmodels
 import com.example.player.data.db.models.DeviceModel
 import com.example.player.data.repository.AdvertsRepository
 import com.example.player.internal.getLocalMediaPath
-import com.example.player.ui.models.MediaModel
+import com.example.player.data.db.models.MediaModel
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -12,11 +12,11 @@ class SettingsViewModel(
    private val deviceModel: DeviceModel
 ): ScopedViewModel() {
 
-   private var currentPlaylist = listOf<MediaInformation>()
+   private var currentPlaylist = listOf<MediaModel>()
 
-   private fun deleteLocalMedia(mediaList: List<MediaInformation>) {
+   private fun deleteLocalMedia(mediaList: List<MediaModel>) {
       for (media in mediaList) {
-         val file = File(media.mediaLocalPath)
+         val file = File(media.localMediaPath)
          file.delete()
       }
    }
@@ -32,17 +32,18 @@ class SettingsViewModel(
       }
    }
 
-   fun getCurrentPlaylist(): List<MediaInformation> = runBlocking {
+   fun getCurrentPlaylist(): List<MediaModel> = runBlocking {
 
       if (currentPlaylist.isNotEmpty()) return@runBlocking currentPlaylist
 
       withContext(super.coroutineContext) {
          val adverts = advertsRepository.retrieveAdverts()
-         val mediaPlaylist = mutableListOf<MediaInformation>()
+         val mediaPlaylist = mutableListOf<MediaModel>()
          for (advert in adverts) {
 
             mediaPlaylist.add(
-               MediaInformation(
+               MediaModel(
+                  advert.id,
                   advert.adName,
                   advert.mediaType,
                   advert.timeOfDay,
@@ -71,13 +72,6 @@ class SettingsViewModel(
 
       resetAdDeferred.await()
    }
-
-   data class MediaInformation(
-      override val name: String,
-      override val type: String,
-      override val timesOfDay: List<String>,
-      override val mediaLocalPath: String
-   ): MediaModel()
 
    data class PlayerInformation (
       val email: String,

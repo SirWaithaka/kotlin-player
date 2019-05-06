@@ -1,8 +1,7 @@
 package com.example.player.ui.viewmodels
 
-import android.os.Environment
 import androidx.lifecycle.ViewModel
-import com.example.player.data.db.entities.Advert
+import com.example.player.data.db.models.MediaModel
 import com.example.player.data.network.AdvertLog
 import com.example.player.data.repository.AdvertsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -18,27 +17,21 @@ class PlayerViewModel(
 ): ViewModel(), CoroutineScope {
 
    private var job = Job()
-   private var mediaToPlayPath = ""
-   private var mediaStack: Stack<Advert>? = null
+   private var mediaStack: Stack<MediaModel>? = null
    private lateinit var startTime: ZonedDateTime
    private lateinit var stopTime: ZonedDateTime
-   private lateinit var mediaToPlay: Advert
+   private lateinit var mediaToPlay: MediaModel
 
-   private val mediaPath = Environment
-      .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-      .toString()
 
    override val coroutineContext: CoroutineContext
       get() = job + Dispatchers.IO
 
    fun getMediaToPlayPath(): String {
-      return mediaToPlayPath
+      return mediaToPlay.localMediaPath
    }
 
-   fun setMediaToPlay(media: Advert) {
+   fun setMediaToPlay(media: MediaModel) {
       mediaToPlay = media
-      val fileName = media.mediaKey.split("/")[1]
-      mediaToPlayPath = "$mediaPath/$fileName"
    }
 
    fun mediaAboutToPlayEvent() {
@@ -67,13 +60,17 @@ class PlayerViewModel(
       stopTime = now
    }
 
-   fun initStack(mediaList: List<Advert>) {
+   fun initStack(mediaList: List<MediaModel>) {
       if (mediaStack == null || isMediaStackEmpty())
          mediaStack = Stack(mediaList)
    }
 
-   fun getMediaToPlay(): Advert {
-      return mediaStack!!.pop()
+   fun getMediaToPlay(): MediaModel {
+      val media = mediaStack!!.pop()
+      return when (media.isPlayable) {
+         true -> media
+         else -> getMediaToPlay()
+      }
    }
 
    fun isMediaStackEmpty(): Boolean {
@@ -102,7 +99,7 @@ class PlayerViewModel(
          return item
       }
 
-      fun peek(): Any? = elements.lastOrNull()
+      fun peek(): A? = elements.lastOrNull()
 
       override fun toString(): String = elements.toString()
    }

@@ -11,20 +11,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.player.R
+import com.example.player.internal.CURRENT_TIME
+import com.example.player.internal.PLAY_DURATION_MILLIS
 import com.example.player.ui.viewmodels.PlayerViewModel
 import com.example.player.ui.viewmodels.ViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+
 
 class ImageFragment : Fragment(), KodeinAware {
 //   private val TAG = "ImageFragment"
 
-   private val zonedId = ZoneId.systemDefault()
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: PlayerViewModel
@@ -44,17 +43,18 @@ class ImageFragment : Fragment(), KodeinAware {
          .load(imagePath)
          .into(imageView)
 
-      val startTime = ZonedDateTime.ofInstant(Instant.now(), zonedId)
+      val startTime = CURRENT_TIME
       viewModel.setStartTime(startTime)
+      viewModel.mediaAboutToPlayEvent()
    }
 
    override fun onResume() {
       super.onResume()
 
       Handler().postDelayed({
-         viewModel.setStopTime(now = ZonedDateTime.ofInstant(Instant.now(), zonedId))
+         viewModel.setStopTime(now = CURRENT_TIME)
          viewModel.mediaHasPlayedEvent()
          this.findNavController().popBackStack()
-      }, 10000)
+      }, PLAY_DURATION_MILLIS)
    }
 }
