@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.player.data.db.YoutisePlayerDatabase
 import com.example.player.data.network.ErrorsHandler
 import com.example.player.data.network.interceptors.*
-import com.example.player.data.network.services.PlayerService
+import com.example.player.data.network.apiservices.PlayerApiService
 import com.example.player.data.repository.*
 import com.example.player.data.repository.datasources.AdvertsNetworkDataSource
 import com.example.player.data.repository.datasources.AdvertsNetworkDataSourceImpl
@@ -21,8 +21,8 @@ import org.kodein.di.generic.singleton
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
 import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.network.services.AuthorizationService
-import com.example.player.data.network.services.LocationsService
+import com.example.player.data.network.apiservices.AuthorizationApiService
+import com.example.player.data.network.apiservices.LocationsApiService
 
 class YoutisePlayerApplication: Application(), KodeinAware {
    override val kodein: Kodein = Kodein.lazy {
@@ -48,9 +48,9 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       bind<ServerResponseInterceptor>() with singleton {
          HttpErrorInterceptor()
       }
-      bind() from singleton { LocationsService(instance()) }
-      bind() from singleton { AuthorizationService(instance()) }
-      bind() from singleton { PlayerService(instance(), instance()) }
+      bind() from singleton { LocationsApiService(instance()) }
+      bind() from singleton { AuthorizationApiService(instance()) }
+      bind() from singleton { PlayerApiService(instance(), instance()) }
       bind<LocationsDataSource>() with singleton { LocationsDataSourceImpl(instance(), instance()) }
       bind<AdvertsNetworkDataSource>() with singleton { AdvertsNetworkDataSourceImpl(instance()) }
       bind<LocationsRepository>() with singleton { LocationsRepositoryImpl(instance(), instance()) }

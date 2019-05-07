@@ -2,14 +2,14 @@ package com.example.player.data.network.interceptors
 
 import com.example.player.data.db.entities.Device
 import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.network.services.AuthorizationService
+import com.example.player.data.network.apiservices.AuthorizationApiService
 import kotlinx.coroutines.*
 import okhttp3.*
 
 
 class AuthenticationInterceptor(
       private val deviceModel: DeviceModel,
-      private val authorizationService: AuthorizationService
+      private val authorizationApiService: AuthorizationApiService
 ): Authenticator, Interceptor {
 
    private var requestCount = 0
@@ -64,11 +64,11 @@ class AuthenticationInterceptor(
 
    /*
     * Mundane implementation of refresh token functionality
-    * Calls the authorizationService </api/login> gives it the required params
+    * Calls the authorizationApiService </api/login> gives it the required params
     * And gets a token from the endpoint
     */
    private suspend fun requestToken(id: String, serial: String, otpCode: Int = 1234): String {
-      val response = authorizationService.authenticateUser(id, serial, otpCode.toString())
+      val response = authorizationApiService.authenticateUser(id, serial, otpCode.toString())
       return response.token
    }
 }

@@ -1,4 +1,4 @@
-package com.example.player.data.network.services
+package com.example.player.data.network.apiservices
 
 import com.example.player.data.network.interceptors.AuthenticationInterceptor
 import com.example.player.data.network.interceptors.ClientRequestInterceptor
@@ -7,7 +7,7 @@ import com.example.player.data.network.responses.AdvertisementsResponse
 import okhttp3.OkHttpClient
 import retrofit2.http.*
 
-interface PlayerService {
+interface PlayerApiService {
 
    @GET("location/adverts")
    suspend fun fetchCurrentAdverts(): AdvertisementsResponse
@@ -35,12 +35,12 @@ interface PlayerService {
        * status and handles all exceptions
        *
        * @param networkConnectionInterceptor
-       * @return LocationsService - Instance that calls api to get locations list
+       * @return LocationsApiService - Instance that calls api to get locations list
        */
       operator fun invoke(
             networkConnectionInterceptor: ClientRequestInterceptor,
             authenticationInterceptor: AuthenticationInterceptor
-      ): PlayerService {
+      ): PlayerApiService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
                .addInterceptor(networkConnectionInterceptor)
@@ -54,7 +54,7 @@ interface PlayerService {
          return retrofit.newBuilder()
             .client(okHttpClient)
             .build()
-            .create(PlayerService::class.java)
+            .create(PlayerApiService::class.java)
       }
    }
 }

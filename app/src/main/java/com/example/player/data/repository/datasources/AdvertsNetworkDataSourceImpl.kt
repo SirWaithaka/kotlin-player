@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.player.data.network.AdvertLog
 import com.example.player.data.network.responses.AdvertisementsResponse
-import com.example.player.data.network.services.PlayerService
+import com.example.player.data.network.apiservices.PlayerApiService
 import com.example.player.internal.ClientErrorException
 import com.example.player.internal.NoConnectivityException
 import com.example.player.internal.ServerErrorException
 
 class AdvertsNetworkDataSourceImpl(
-   private val playerApiService: PlayerService
+   private val playerApiService: PlayerApiService
 ) : AdvertsNetworkDataSource {
 
    private val _downloadedAdverts = MutableLiveData<AdvertisementsResponse>()

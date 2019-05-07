@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.player.data.network.responses.LocationsResponse
 import com.example.player.data.network.responses.LoginResponse
-import com.example.player.data.network.services.AuthorizationService
-import com.example.player.data.network.services.LocationsService
+import com.example.player.data.network.apiservices.AuthorizationApiService
+import com.example.player.data.network.apiservices.LocationsApiService
 import com.example.player.internal.ClientErrorException
 import com.example.player.internal.NoConnectivityException
 import com.example.player.internal.ServerErrorException
 import java.lang.Exception
 
 class LocationsDataSourceImpl(
-      private val locationsService: LocationsService,
-      private val authorizationService: AuthorizationService
+   private val locationsApiService: LocationsApiService,
+   private val authorizationApiService: AuthorizationApiService
 ) : LocationsDataSource {
 
    private val _downloadedLocations = MutableLiveData<LocationsResponse>()
@@ -32,7 +32,7 @@ class LocationsDataSourceImpl(
 
    override suspend fun fetchLocations(email: String) {
       try {
-         val fetchedLocations = locationsService.getLocationsByEmail(email)
+         val fetchedLocations = locationsApiService.getLocationsByEmail(email)
          _downloadedLocations.postValue(fetchedLocations)
       } catch (e: Exception) {
          handleExceptions(e)
@@ -41,7 +41,7 @@ class LocationsDataSourceImpl(
 
    override suspend fun authenticate(id: String, serialNumber: String, password: String) {
       try {
-         val response = authorizationService.authenticateUser(id, serialNumber, password)
+         val response = authorizationApiService.authenticateUser(id, serialNumber, password)
          _loginResponse.postValue(response)
          _isAuthenticated.postValue(true)
       } catch (e: Exception) {

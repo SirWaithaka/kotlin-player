@@ -1,22 +1,18 @@
-package com.example.player.data.network.services
+package com.example.player.data.network.apiservices
 
 import com.example.player.data.network.interceptors.ClientRequestInterceptor
 import com.example.player.data.network.interceptors.HttpErrorInterceptor
-import com.example.player.data.network.responses.LoginResponse
+import com.example.player.data.network.responses.LocationsResponse
 import okhttp3.OkHttpClient
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
-interface AuthorizationService {
+interface LocationsApiService {
 
-   @FormUrlEncoded
-   @POST("location/login")
-   suspend fun authenticateUser(
-      @Field("id") id: String,
-      @Field("serialNumber") serial: String,
-      @Field("password") password: String
-   ): LoginResponse
+   // Example - /api/location/kennwaithaka@gmail.com
+   @GET("location/{email}")
+   suspend fun getLocationsByEmail(
+      @Path("email") email: String
+   ): LocationsResponse
 
    companion object {
 
@@ -25,11 +21,11 @@ interface AuthorizationService {
        * status and handles all exceptions
        *
        * @param networkConnectionInterceptor
-       * @return AuthorizationService - Instance that calls api to get locations list
+       * @return LocationsApiService - Instance that calls api to get locations list
        */
       operator fun invoke(
          networkConnectionInterceptor: ClientRequestInterceptor
-      ): AuthorizationService {
+      ) : LocationsApiService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(networkConnectionInterceptor)
@@ -41,8 +37,7 @@ interface AuthorizationService {
          return retrofit.newBuilder()
             .client(okHttpClient)
             .build()
-            .create(AuthorizationService::class.java)
+            .create(LocationsApiService::class.java)
       }
    }
-
 }
