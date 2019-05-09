@@ -21,6 +21,7 @@ class PlayerViewModel(
    private lateinit var startTime: ZonedDateTime
    private lateinit var stopTime: ZonedDateTime
    private lateinit var mediaToPlay: MediaModel
+   var mediaPlaylist: List<MediaModel>? = null
 
 
    override val coroutineContext: CoroutineContext
@@ -60,12 +61,15 @@ class PlayerViewModel(
       stopTime = now
    }
 
-   fun initStack(mediaList: List<MediaModel>) {
-      if (mediaStack == null || isMediaStackEmpty())
-         mediaStack = Stack(mediaList)
+   private fun initStack() {
+      mediaStack = Stack(mediaPlaylist!!)
    }
 
    fun getMediaToPlay(): MediaModel {
+
+      if (mediaStack == null || isMediaStackEmpty())
+         initStack()
+
       val media = mediaStack!!.pop()
       return when (media.isPlayable) {
          true -> media
@@ -73,7 +77,7 @@ class PlayerViewModel(
       }
    }
 
-   fun isMediaStackEmpty(): Boolean {
+   private fun isMediaStackEmpty(): Boolean {
       return mediaStack!!.isEmpty()
    }
 

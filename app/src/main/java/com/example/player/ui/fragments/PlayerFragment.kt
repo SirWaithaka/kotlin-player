@@ -34,11 +34,9 @@ class PlayerFragment : Fragment(), KodeinAware {
       adViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(AdvertsViewModel::class.java)
       playerViewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PlayerViewModel::class.java)
 
-      playerViewModel.initStack(playableMedia)
+      if (playerViewModel.mediaPlaylist == null)
+         playerViewModel.mediaPlaylist = playableMedia
 
-      if (playerViewModel.isMediaStackEmpty()) {
-         playerViewModel.initStack(playableMedia)
-      }
 
       val mediaToPlay = playerViewModel.getMediaToPlay()
       playerViewModel.setMediaToPlay(mediaToPlay)
