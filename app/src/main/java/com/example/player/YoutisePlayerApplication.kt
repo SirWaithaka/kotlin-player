@@ -1,6 +1,9 @@
 package com.example.player
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import com.example.player.data.db.YoutisePlayerDatabase
 import com.example.player.data.network.ErrorsHandler
 import com.example.player.data.network.interceptors.*
@@ -23,6 +26,8 @@ import com.downloader.PRDownloaderConfig
 import com.example.player.data.db.models.DeviceModel
 import com.example.player.data.network.apiservices.AuthorizationApiService
 import com.example.player.data.network.apiservices.LocationsApiService
+import com.example.player.internal.CHANNEL_ID
+import com.example.player.internal.IMAGE_CAPTURE_SERVICE_NAME
 
 class YoutisePlayerApplication: Application(), KodeinAware {
    override val kodein: Kodein = Kodein.lazy {
@@ -67,5 +72,20 @@ class YoutisePlayerApplication: Application(), KodeinAware {
          .setDatabaseEnabled(true)
          .build()
       PRDownloader.initialize(this, config)
+
+      createNotificationChannel()
+   }
+
+   private fun createNotificationChannel() {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+         val serviceChannel = NotificationChannel(
+            CHANNEL_ID,
+            IMAGE_CAPTURE_SERVICE_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+         )
+
+         val notifManager = getSystemService(NotificationManager::class.java)
+         notifManager.createNotificationChannel(serviceChannel)
+      }
    }
 }
