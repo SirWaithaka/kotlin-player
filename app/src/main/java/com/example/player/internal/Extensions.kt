@@ -1,6 +1,5 @@
 package com.example.player.internal
 
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
@@ -24,9 +23,7 @@ fun EditText.onTextChanged(onTextChanged: (String) -> Unit) {
 }
 
 fun Advert.getLocalMediaPath(): String {
-   val mediaPath = Environment
-      .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-      .toString()
+   val mediaPath = DOWNLOADS_DIR
 
    val stringBuilder = StringBuilder(mediaPath).append("/")
    return stringBuilder.append(this.fileName).toString()

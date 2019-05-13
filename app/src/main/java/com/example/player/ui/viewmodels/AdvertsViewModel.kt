@@ -1,6 +1,5 @@
 package com.example.player.ui.viewmodels
 
-import android.os.Environment
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.downloader.Error
@@ -23,9 +22,6 @@ class AdvertsViewModel(
 
    private var advertsCount = 0
    private var playableAdverts: List<MediaModel> = listOf()
-   private val mediaPath = Environment
-      .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-      .toString()
 
    private val _downloadProgress = MutableLiveData<Int>()
    private val _hasDownloaded = MutableLiveData<SingleEvent<Boolean>>()
@@ -95,7 +91,7 @@ class AdvertsViewModel(
       var totalProgress = 0
       for (ad in adverts) {
 
-         PRDownloader.download(ad.mediaURL, mediaPath, ad.fileName)
+         PRDownloader.download(ad.mediaURL, DOWNLOADS_DIR, ad.fileName)
             .build()
             .setOnProgressListener { progress ->
                val progressPercent: Long = progress.currentBytes * 100 / progress.totalBytes
