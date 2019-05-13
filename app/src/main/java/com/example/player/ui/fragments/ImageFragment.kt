@@ -45,7 +45,7 @@ class ImageFragment : Fragment(), KodeinAware {
 
       val startTime = CURRENT_TIME
       viewModel.setStartTime(startTime)
-      viewModel.mediaAboutToPlayEvent()
+      viewModel.mediaAboutToPlayEvent(activity!!)
    }
 
    override fun onResume() {

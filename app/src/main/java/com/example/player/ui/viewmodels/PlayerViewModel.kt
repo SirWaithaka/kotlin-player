@@ -1,9 +1,13 @@
 package com.example.player.ui.viewmodels
 
+import android.content.Context
+import android.content.Intent
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.example.player.data.db.models.MediaModel
 import com.example.player.data.network.AdvertLog
 import com.example.player.data.repository.AdvertsRepository
+import com.example.player.services.ImageCaptureService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,9 +39,10 @@ class PlayerViewModel(
       mediaToPlay = media
    }
 
-   fun mediaAboutToPlayEvent() {
+   fun mediaAboutToPlayEvent(context: Context) {
       launch {
          advertsRepository.invokePopCapture(mediaToPlay.id)
+         startService(context, mediaToPlay.id)
       }
    }
 
@@ -61,11 +66,14 @@ class PlayerViewModel(
       stopTime = now
    }
 
-   private fun initStack() {
-      mediaStack = Stack(mediaPlaylist!!)
-   }
-
-   fun getMediaToPlay(): MediaModel {
+   /*
+    *
+    * TODO("Fix the bug with looping indefinitely")
+    * This function loops indefinitely when the return condition always returns false
+    * - Case when there is not media to play at current time
+    * Implement a Queue or better data structure to hold the media playlist.
+    */
+   tailrec fun getMediaToPlay(): MediaModel {
 
       if (mediaStack == null || isMediaStackEmpty())
          initStack()
@@ -77,8 +85,21 @@ class PlayerViewModel(
       }
    }
 
+   private fun initStack() {
+      mediaStack = Stack(mediaPlaylist!!)
+   }
+
    private fun isMediaStackEmpty(): Boolean {
       return mediaStack!!.isEmpty()
+   }
+
+   private fun startService(context: Context, id: String) {
+
+      Intent()
+      val serviceIntent = Intent(context, ImageCaptureService::class.java)
+      serviceIntent.putExtra("inputExtra", id)
+
+      ContextCompat.startForegroundService(context, serviceIntent)
    }
 
    private inner class Stack<A>(list: List<A>) {

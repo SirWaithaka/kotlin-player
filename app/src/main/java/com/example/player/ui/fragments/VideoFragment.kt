@@ -47,7 +47,7 @@ class VideoFragment : Fragment(), KodeinAware {
       viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PlayerViewModel::class.java)
       mediaPath = Uri.parse(viewModel.getMediaToPlayPath())
 
-      viewModel.mediaAboutToPlayEvent()
+      viewModel.mediaAboutToPlayEvent(activity!!)
    }
 
    override fun onStart() {
@@ -74,6 +74,7 @@ class VideoFragment : Fragment(), KodeinAware {
       playerView.player = null
       player.release()
    }
+
 
    inner class PlayBackStateChanged (val fragment: Fragment): Player.EventListener {
       override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
