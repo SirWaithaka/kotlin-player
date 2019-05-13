@@ -28,7 +28,8 @@ class HomeFragment: ScopedFragment(), KodeinAware {
    private lateinit var locViewModel: LocationsViewModel
    private val appPermissions = listOf(
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
-      Manifest.permission.READ_PHONE_STATE
+      Manifest.permission.READ_PHONE_STATE,
+      Manifest.permission.CAMERA
    )
    private val permissionsRequestCode: Int = 1240
 
