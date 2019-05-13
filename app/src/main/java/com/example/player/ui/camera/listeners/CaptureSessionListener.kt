@@ -1,42 +1,33 @@
-package com.example.player.ui.hardware
+package com.example.player.ui.camera.listeners
 
+import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CaptureRequest
-import android.hardware.camera2.TotalCaptureResult
+import android.util.Log
+import android.view.Surface
 
-class CameraSessionStateListener(private val captureRequest: CaptureRequest) : CameraCaptureSession.StateCallback() {
+class CaptureSessionListener(
+   private val captureRequest: CaptureRequest
+) : CameraCaptureSession.StateCallback() {
+
+   private val Tag = "CaptureSessionListener"
 
    // TODO("Implement other functions")
    override fun onConfigured(session: CameraCaptureSession) {
       try {
-          session.capture(captureRequest, )
-      } catch ()
+          session.capture(captureRequest, null, null)
+      } catch (e: CameraAccessException) {
+         Log.d(Tag, "Could not access camera")
+      }
    }
 
    override fun onConfigureFailed(session: CameraCaptureSession) {
-
+      Log.d(Tag, "Could not configure session")
    }
 
-   private val captureListener = object : CameraCaptureSession.CaptureCallback() {
-      override fun onCaptureCompleted(
-         session: CameraCaptureSession,
-         request: CaptureRequest,
-         result: TotalCaptureResult
-      ) {
-         super.onCaptureCompleted(session, request, result)
+   override fun onSurfacePrepared(session: CameraCaptureSession, surface: Surface) {
+      super.onSurfacePrepared(session, surface)
 
-
-      }
+      Log.d(Tag, "Surface prepared")
    }
 }
-
-//      override fun onCaptureCompleted(
-//         session: CameraCaptureSession, request: CaptureRequest,
-//         @NonNull result: TotalCaptureResult
-//      ) {
-//         super.onCaptureCompleted(session, request, result)
-//         if (picturesTaken.lastEntry() != null) {
-//            capturingListener.onCaptureDone(picturesTaken.lastEntry().key, picturesTaken.lastEntry().value)
-//         }
-//         closeCamera()
-//      }

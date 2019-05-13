@@ -1,10 +1,25 @@
-package com.example.player.ui.hardware
+package com.example.player.ui.camera.listeners
 
 import android.hardware.camera2.CameraDevice
+import android.view.Surface
+import com.example.player.ui.camera.Camera
+import android.graphics.SurfaceTexture
+import android.util.Log
+import com.example.player.internal.IMAGE_HEIGHT
+import com.example.player.internal.IMAGE_WIDTH
 
-class CameraStateListener(private val camera: Camera) : CameraDevice.StateCallback() {
 
-   private val surface = camera.reader.surface
+class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallback() {
+
+   private val Tag = "DeviceStateListener"
+
+   private val surface: Surface get() = camera.reader.surface
+
+   private val imposedSurface: Surface get() {
+      val surfaceTexture = SurfaceTexture(0)
+      surfaceTexture.setDefaultBufferSize(IMAGE_WIDTH, IMAGE_HEIGHT)
+      return Surface(surfaceTexture)
+   }
 
 
    /*
@@ -13,21 +28,25 @@ class CameraStateListener(private val camera: Camera) : CameraDevice.StateCallba
     * 2. take the picture
     */
    override fun onOpened(cameraDevice: CameraDevice) {
-      val sessionRequest = camera.buildCaptureRequest(cameraDevice, camera.reader.surface)
-      cameraDevice.createCaptureSession(listOf(surface), CameraSessionStateListener(sessionRequest), null)
-   }
+      val sessionRequest = camera.buildCaptureRequest(cameraDevice)
 
-   override fun onClosed(cameraDevice: CameraDevice) {
-      super.onClosed(cameraDevice)
-
-
+      Log.d(Tag, "Camera opened")
+      cameraDevice.createCaptureSession(listOf(surface),
+         CaptureSessionListener(sessionRequest), camera.handler)
    }
 
    override fun onDisconnected(cameraDevice: CameraDevice) {
-
+      cameraDevice.close()
    }
 
    override fun onError(cameraDevice: CameraDevice, error: Int) {
+      cameraDevice.close()
+      Log.d(Tag, "Error opening camera: $error")
+   }
 
+   override fun onClosed(camera: CameraDevice) {
+      super.onClosed(camera)
+
+      Log.d(Tag, "Device closed")
    }
 }
