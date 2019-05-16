@@ -44,13 +44,11 @@ class DownloadFragment: ScopedFragment(), KodeinAware {
       // check if there are ads already fetched and if stale
       // otherwise refresh the adverts from api
       launch {
-         val adverts = viewModel.getAdverts()
-         val isStale: Boolean = viewModel.isStale()
-         if (adverts.isEmpty() || isStale) {
+         viewModel.getAdvertsState()
+         if (viewModel.isStale()) {
             viewModel.fetchAdverts()
             textView.text = getString(R.string.downloading)
          } else {
-            viewModel.setPlayableAdverts(adverts)
             findNavController().navigate(R.id.destination_player)
          }
       }
