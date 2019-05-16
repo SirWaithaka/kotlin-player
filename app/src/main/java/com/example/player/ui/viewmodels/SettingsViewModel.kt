@@ -1,5 +1,6 @@
 package com.example.player.ui.viewmodels
 
+import android.util.Log
 import com.example.player.data.db.models.DeviceModel
 import com.example.player.data.repository.AdvertsRepository
 import com.example.player.internal.getLocalMediaPath
@@ -11,6 +12,8 @@ class SettingsViewModel(
    private val advertsRepository: AdvertsRepository,
    private val deviceModel: DeviceModel
 ): ScopedViewModel() {
+
+   private val Tag = "SettingsViewModel"
 
    private fun deleteLocalMedia(mediaList: List<MediaModel>) {
       for (media in mediaList) {
@@ -62,10 +65,10 @@ class SettingsViewModel(
    }
 
    fun invalidateAdverts() = runBlocking {
-      val resetAdDeferred = async { advertsRepository.resetAdverts() }
+      advertsRepository.resetAdverts()
       deleteLocalMedia(getCurrentPlaylist())
 
-      resetAdDeferred.await()
+      Log.d(Tag, "${advertsRepository.retrieveAdverts().size}")
    }
 
    data class PlayerInformation (

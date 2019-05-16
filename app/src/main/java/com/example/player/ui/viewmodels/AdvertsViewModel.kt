@@ -137,6 +137,7 @@ class AdvertsViewModel(
    fun isStale(): Boolean {
       val lastUpdatedTime = deviceModel.lastDownloadDate ?: return true
       if (lastUpdatedTime.toEpochSecond() < START_OF_DAY.toEpochSecond()) return true
+      if (retrievedAdverts.isEmpty()) return true
       return (lastUpdatedTime.hour - CURRENT_TIME.hour) > MINIMUM_STALE_THRESHOLD
    }
 
