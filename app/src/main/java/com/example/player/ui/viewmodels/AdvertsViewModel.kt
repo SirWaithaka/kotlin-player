@@ -7,11 +7,10 @@ import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.example.player.data.db.entities.Advert
 import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.db.models.MediaModel
 import com.example.player.data.repository.AdvertsRepository
 import com.example.player.internal.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import java.io.File
 
 class AdvertsViewModel(
    private val advertsRepository: AdvertsRepository,
@@ -20,43 +19,21 @@ class AdvertsViewModel(
 
 //   private val Tag = "AdvertsViewModel"
 
-   private var advertsCount = 0
-   private var playableAdverts: List<MediaModel> = listOf()
-
    private val _downloadProgress = MutableLiveData<Int>()
    private val _hasDownloaded = MutableLiveData<SingleEvent<Boolean>>()
    private val _downloadedCount = MutableLiveData<Int>()
 
-   private val toDownloadKey = "TO_DOWNLOAD"
-   private val toDeleteKey = "TO_DELETE"
-
    private val retrievedAdverts: List<Advert>
       get() = runBlocking {
          withContext(super.coroutineContext) {
-            return@withContext getAdverts()
+            return@withContext advertsRepository.retrieveAdverts()
          }
       }
 
    init {
-      advertsRepository.setAdvertsFetchedListener(object : AdvertsRepository.AdvertsFetchedListener {
-         override fun onAdvertsFetched(adverts: List<Advert>) {
-            advertsCount = adverts.size
-
-            val sortedAdvertHashMap = compareAdverts(adverts, retrievedAdverts)
-            val toDownload: List<Advert>  = sortedAdvertHashMap[toDownloadKey]!!
-
-            if (toDownload.isNotEmpty())
-               downloadAdverts(toDownload)
-             else
-               _hasDownloaded.value = SingleEvent(true)
-            setPlayableAdverts(adverts)
-
-            deleteStaleAdverts(sortedAdvertHashMap[toDeleteKey]!!)
-         }
-
-         override fun onAdvertsPersisted(status: Boolean) = Unit
-      })
+      advertsRepository.setAdvertsFetchedListener(AdvertsFetchedListener())
    }
+
 
    /*
     * Compares list of adverts fetched from api with
@@ -67,21 +44,17 @@ class AdvertsViewModel(
    private fun compareAdverts(
       fetchedAdverts: List<Advert>,
       retrievedAdverts: List<Advert>
-   ): HashMap<String, List<Advert>> {
+   ): Pair<List<Advert>, List<Advert>> {
       val toDownload = fetchedAdverts.minus(retrievedAdverts)
       val toDelete = retrievedAdverts.minus(fetchedAdverts)
 
-      return hashMapOf(
-         Pair(toDeleteKey, toDelete),
-         Pair(toDownloadKey, toDownload)
-      )
+      return toDownload to toDelete
    }
 
    private fun deleteStaleAdverts(staleAdverts: List<Advert>) {
       if (staleAdverts.isNotEmpty()) {
-         val filePaths = mutableListOf<String>()
          for (staleAd in staleAdverts) {
-            filePaths.add(staleAd.getLocalMediaPath())
+            File(staleAd.getLocalMediaPath()).delete()
          }
       }
    }
@@ -112,13 +85,10 @@ class AdvertsViewModel(
                   }
                }
 
-               override fun onError(error: Error?) {
-//                  Log.d(TAG, "Error occured: ${error?.isConnectionError}")
-               }
+               override fun onError(error: Error?) = Unit
             })
       }
    }
-
 
    fun getDownloadInfo(): MediatorLiveData<MergedData> {
       val downloadInfo = MediatorLiveData<MergedData>()
@@ -135,41 +105,55 @@ class AdvertsViewModel(
       return downloadInfo
    }
 
-   suspend fun getAdverts(): List<Advert> {
-      return advertsRepository.retrieveAdverts()
+   suspend fun getAdvertsState() {
+
+//      if (isStale()) return AdvertsState.StaleStatus(true)
+
+      val mediaDirectory = File(DOWNLOADS_DIR)
+      val mediaFileNames = mutableListOf<String>().also {
+         for (file in mediaDirectory.listFiles()) {
+            it.add(file.name)
+         }
+      }
+
+      advertsRepository.retrieveAdverts().also { retrieved ->
+         val keys = mutableListOf<String>()
+         for (ad in retrieved) {
+            keys.add(ad.fileName)
+         }
+
+         keys.minus(mediaFileNames).also { diff ->
+            for (ad in diff) {
+//               Log.d(Tag, ad)
+            }
+         }
+      }
    }
 
    suspend fun fetchAdverts() {
       advertsRepository.fetchAdverts()
    }
 
-   fun getPlayableAdverts(): List<MediaModel> {
-      return playableAdverts
-   }
-
-   fun setPlayableAdverts(adverts: List<Advert>) {
-      val mediaList = mutableListOf<MediaModel>()
-      for (ad in adverts) {
-         mediaList.add(
-            MediaModel(
-               id = ad.id,
-               name = ad.adName,
-               type = ad.mediaType,
-               timesOfDay = ad.timeOfDay,
-               localMediaPath = ad.getLocalMediaPath()
-            )
-         )
-      }
-      playableAdverts = mediaList
-   }
-
    fun isStale(): Boolean {
-      val lastUpdatedTime = deviceModel.lastDownloadDate
-      val surpassedStaleThreshold: Boolean
-      surpassedStaleThreshold = if (lastUpdatedTime != null)
-         (lastUpdatedTime.hour - CURRENT_TIME.hour) > MINIMUM_STALE_THRESHOLD
-      else true
-      return surpassedStaleThreshold
+      val lastUpdatedTime = deviceModel.lastDownloadDate ?: return true
+      if (lastUpdatedTime.toEpochSecond() < START_OF_DAY.toEpochSecond()) return true
+      return (lastUpdatedTime.hour - CURRENT_TIME.hour) > MINIMUM_STALE_THRESHOLD
+   }
+
+   private inner class AdvertsFetchedListener : AdvertsRepository.AdvertsFetchedListener {
+      override fun onAdvertsFetched(adverts: List<Advert>) {
+
+         val (incomingAdverts,toDelete) = compareAdverts(adverts, retrievedAdverts)
+
+         if (incomingAdverts.isNotEmpty())
+            downloadAdverts(incomingAdverts)
+         else
+            _hasDownloaded.value = SingleEvent(true)
+
+         deleteStaleAdverts(toDelete)
+      }
+
+      override fun onAdvertsPersisted(status: Boolean) = Unit
    }
 
    sealed class MergedData {

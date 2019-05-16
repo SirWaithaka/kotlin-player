@@ -4,14 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
+import com.example.player.data.db.entities.Advert
 import com.example.player.data.db.models.MediaModel
 import com.example.player.data.network.AdvertLog
 import com.example.player.data.repository.AdvertsRepository
+import com.example.player.internal.getLocalMediaPath
 import com.example.player.services.ImageCaptureService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.time.ZonedDateTime
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -30,6 +29,26 @@ class PlayerViewModel(
 
    override val coroutineContext: CoroutineContext
       get() = job + Dispatchers.IO
+
+   private fun buildMediaPlaylist(adverts: List<Advert>): List<MediaModel> {
+      val mediaList = mutableListOf<MediaModel>()
+      for (ad in adverts) {
+         mediaList.add(
+            MediaModel(
+               id = ad.id,
+               name = ad.adName,
+               type = ad.mediaType,
+               timesOfDay = ad.timeOfDay,
+               localMediaPath = ad.getLocalMediaPath()
+            )
+         )
+      }
+      return mediaList
+   }
+
+   fun getPlayableAdverts() : List<MediaModel> = runBlocking {
+      buildMediaPlaylist(advertsRepository.retrieveAdverts())
+   }
 
    fun getMediaToPlayPath(): String {
       return mediaToPlay.localMediaPath

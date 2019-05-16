@@ -12,8 +12,6 @@ class SettingsViewModel(
    private val deviceModel: DeviceModel
 ): ScopedViewModel() {
 
-   private var currentPlaylist = listOf<MediaModel>()
-
    private fun deleteLocalMedia(mediaList: List<MediaModel>) {
       for (media in mediaList) {
          val file = File(media.localMediaPath)
@@ -34,8 +32,6 @@ class SettingsViewModel(
 
    fun getCurrentPlaylist(): List<MediaModel> = runBlocking {
 
-      if (currentPlaylist.isNotEmpty()) return@runBlocking currentPlaylist
-
       withContext(super.coroutineContext) {
          val adverts = advertsRepository.retrieveAdverts()
          val mediaPlaylist = mutableListOf<MediaModel>()
@@ -51,7 +47,6 @@ class SettingsViewModel(
                )
             )
          }
-         currentPlaylist = mediaPlaylist
          return@withContext mediaPlaylist
       }
    }
