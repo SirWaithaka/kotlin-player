@@ -3,6 +3,7 @@ package com.example.player.ui
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
@@ -36,6 +37,17 @@ class MainActivity : AppCompatActivity(), KodeinAware {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
+
+      // hide navigation and status bars
+      window.decorView.apply {
+         systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE or
+                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                     View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                     View.SYSTEM_UI_FLAG_FULLSCREEN)
+      }
+
       errorsViewModel = ViewModelProviders.of(this, viewModelFactory).get(ErrorsViewModel::class.java)
       settingsViewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingsViewModel::class.java)
 

@@ -3,28 +3,32 @@ package com.example.player.services
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
-import android.media.ImageReader
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import android.util.Log
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.example.player.R
+import com.example.player.data.network.apiservices.PlayerApiService
 import com.example.player.internal.CHANNEL_ID
 import com.example.player.ui.camera.Camera
 import com.example.player.ui.camera.listeners.ImageCapturedListener
 import kotlinx.coroutines.*
-import java.lang.Runnable
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-class ImageCaptureService : IntentService("Image Capture") {
+class ImageCaptureService : IntentService("Image Capture"), KodeinAware {
 
    private val Tag = "ImageCaptureService"
 
+   override val kodein: Kodein by kodein()
    private var handler: Handler? = null
+   private var cameraInstance: Camera? = null
    private lateinit var windowManager: WindowManager
+   private val service: PlayerApiService by instance()
 
    init {
        setIntentRedelivery(true)
@@ -52,12 +56,16 @@ class ImageCaptureService : IntentService("Image Capture") {
    override fun onHandleIntent(intent: Intent?) = runBlocking {
       Log.d(Tag, "onHandleIntent")
 
-      val input = intent?.getStringExtra("inputExtra")
+      val id = intent?.getStringExtra("advertId")
 
-      Log.d(Tag, "Instantiating camera instance")
-      val cameraInstance = Camera.create(applicationContext, windowManager.defaultDisplay.rotation, handler!!)
-      cameraInstance.reader.setOnImageAvailableListener(ImageCapturedListener(), handler)
-      cameraInstance.openCameraAndCaptureImage()
+      try {
+         Log.d(Tag, "Instantiating camera instance")
+         cameraInstance = Camera.create(applicationContext, windowManager.defaultDisplay.rotation, handler!!)
+         cameraInstance?.reader?.setOnImageAvailableListener(ImageCapturedListener(id!!, service), handler)
+         cameraInstance?.openCameraAndCaptureImage()
+      } catch (e: Exception) {
+         Log.e(Tag, "Camera access exception: ${e.message} : ${e.printStackTrace()}")
+      }
 
       delay(10000)
    }
@@ -65,6 +73,8 @@ class ImageCaptureService : IntentService("Image Capture") {
    override fun onDestroy() {
       super.onDestroy()
 
+      cameraInstance?.cameraDevice?.close()
+      cameraInstance = null
       handler = null
       Log.d(Tag, "serviceFinished")
    }

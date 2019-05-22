@@ -15,12 +15,6 @@ class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallba
 
    private val surface: Surface get() = camera.reader.surface
 
-   private val imposedSurface: Surface get() {
-      val surfaceTexture = SurfaceTexture(0)
-      surfaceTexture.setDefaultBufferSize(IMAGE_WIDTH, IMAGE_HEIGHT)
-      return Surface(surfaceTexture)
-   }
-
 
    /*
     * When the camera is opened
@@ -28,11 +22,12 @@ class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallba
     * 2. take the picture
     */
    override fun onOpened(cameraDevice: CameraDevice) {
+      camera.cameraDevice = cameraDevice
       val sessionRequest = camera.buildCaptureRequest(cameraDevice)
 
       Log.d(Tag, "Camera opened")
       cameraDevice.createCaptureSession(listOf(surface),
-         CaptureSessionListener(sessionRequest), camera.handler)
+         CaptureSessionListener(sessionRequest, cameraDevice), camera.handler)
    }
 
    override fun onDisconnected(cameraDevice: CameraDevice) {

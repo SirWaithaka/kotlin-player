@@ -10,26 +10,30 @@ import android.util.Log
 import android.view.Surface
 import com.example.player.ui.camera.listeners.DeviceStateListener
 
+
 abstract class Camera(
    context: Context,
-   windowRotation: Int,
+   override val windowRotation: Int,
    val handler: Handler
 ) : DefaultCamera(context) {
 
    private val Tag = "Camera"
 
-   override val rotation: Int = windowRotation
    override var deviceListener: CameraDevice.StateCallback? = null
+   override var cameraDevice: CameraDevice? = null
+   final override val cameraId: String
    final override val reader: ImageReader
 
    init {
+      val cameraIds: Array<String> = this.cameraManager.cameraIdList
+      cameraId = if (cameraIds.isNotEmpty()) cameraIds[0] else ""
       val (width, height) = this.getSurfaceDimensions(this.cameraId)
       reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
    }
 
    @SuppressLint("MissingPermission")
    fun openCameraAndCaptureImage(cameraId: String = this.cameraId) {
-
+      if (cameraId.isEmpty()) return
       if (deviceListener != null) {
          Log.d(Tag, "opening camera with Id: $cameraId")
          cameraManager.openCamera(cameraId,
@@ -56,10 +60,21 @@ abstract class Camera(
    companion object Instance {
 
       fun create(context: Context, windowRotation: Int, handler: Handler) : Camera {
-         val cameraInstance = object: Camera(context, windowRotation, handler) {}
+         val cameraInstance = object: Camera(context, windowRotation, handler) { }
          cameraInstance.deviceListener = DeviceStateListener(cameraInstance)
 
          return cameraInstance
+      }
+
+      private fun initCameraId(cameraManager: CameraManager): String {
+         return try {
+            val cameraIds: Array<String> = cameraManager.cameraIdList
+            if (cameraIds.isNotEmpty()) cameraIds[0]
+            else ""
+     //            else throw CameraAccessException(CameraAccessException.CAMERA_DISCONNECTED)
+         } catch (e: CameraAccessException) {
+            throw e
+         }
       }
    }
 }
