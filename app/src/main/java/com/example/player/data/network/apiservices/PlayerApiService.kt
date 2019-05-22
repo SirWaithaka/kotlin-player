@@ -4,8 +4,12 @@ import com.example.player.data.network.interceptors.AuthenticationInterceptor
 import com.example.player.data.network.interceptors.ClientRequestInterceptor
 import com.example.player.data.network.interceptors.HttpErrorInterceptor
 import com.example.player.data.network.responses.AdvertisementsResponse
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
 
 interface PlayerApiService {
 
@@ -28,6 +32,15 @@ interface PlayerApiService {
       @Field("advertId") id: String
    )
 
+   @Multipart
+   @POST("analytics/record-ad-analytic")
+   suspend fun uploadFile(
+      @Part("adId") advertId: RequestBody,
+      @Part file: MultipartBody.Part
+   ): ResponseBody
+
+
+
    companion object {
 
       /**
@@ -43,6 +56,8 @@ interface PlayerApiService {
       ): PlayerApiService {
          val httpErrorInterceptor = HttpErrorInterceptor()
          val okHttpClient = OkHttpClient.Builder()
+               .readTimeout(180, TimeUnit.SECONDS)
+               .writeTimeout(180, TimeUnit.SECONDS)
                .addInterceptor(networkConnectionInterceptor)
                .addInterceptor(authenticationInterceptor)
                .authenticator(authenticationInterceptor)
