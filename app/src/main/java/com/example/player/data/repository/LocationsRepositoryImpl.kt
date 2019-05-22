@@ -10,6 +10,7 @@ import android.util.Log
 import com.example.player.data.db.LocationDao
 import com.example.player.data.db.entities.Location
 import com.example.player.data.repository.datasources.LocationsDataSource
+import com.example.player.internal.CURRENT_TIME
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,9 +22,7 @@ class LocationsRepositoryImpl(
       private val locationsDataSource: LocationsDataSource
 ) : LocationsRepository {
 
-   private val Tag = "LocationRepository"
-   private lateinit var userEmail: String
-   private var isAuthenticated: Boolean = false
+   private val Tag = "LocationsRepository"
    private var listener: LocationsRepository.LocationsFetchedListener? = null
    private val serialNumber by lazy {
       try {
@@ -40,7 +39,7 @@ class LocationsRepositoryImpl(
     *    1. Call the network datasource and observe for new data
     *       - If null do nothing
     *       - when data is updated persist it to local db
-    *    2. When user has called the @getLocations method,
+    *    2. When user has called the @retrieveLocations method,
     *       - Calls init that checks if data is stale by more than an hour
     *       which then proceeds if true
     *       - Fetch locations calls the network datasource to refresh the data
@@ -54,48 +53,53 @@ class LocationsRepositoryImpl(
       }
    }
 
-   override fun getAuthenticationStatus(): Boolean {
-      return isAuthenticated
+   override suspend fun authenticate(id: String, password: String) {
+      locationsDataSource.authenticate(id, serialNumber, password)
    }
 
-   override suspend fun getLocations(): List<Location> {
+   override suspend fun retrieveLocations(): List<Location> {
       return withContext(Dispatchers.IO) {
          return@withContext locationDao.getAllLocations()
       }
    }
 
-   override suspend fun getLocationsByEmail(email: String) {
-      this.userEmail = email
-      val retrievedLocations = getLocations()
-      if (retrievedLocations.isNotEmpty())
-         listener?.onLocationsFetched(retrievedLocations)
-      else {
-         initLocations()
-      }
+   override suspend fun validateEmail(userEmail: String) {
+      fetchLocations(userEmail)
    }
 
-   override suspend fun authenticate(id: String, password: String) {
-      locationsDataSource.authenticate(id, serialNumber, password)
+   override suspend fun getLocations(email: String) {
+      Log.d(Tag, "Getting Locations")
+
+      // if cache has expired -> fetch locations
+      if (hasCacheExpired(CURRENT_TIME.minusHours(1)))
+         return this.fetchLocations(email)
+
+      // if no locations in local db -> fetch locations
+      val retrievedLocations = retrieveLocations()
+      if (retrievedLocations.isNotEmpty())
+         listener?.onLocationsFetched(retrievedLocations)
+      else
+         this.fetchLocations(email)
    }
 
    private fun persistFetchedLocationsList(fetchedLocationsList: List<Location>) {
       GlobalScope.launch(Dispatchers.IO) {
          locationDao.insertLocations(fetchedLocationsList)
-         Log.d(Tag, "Persisted locations")
       }
    }
 
-   private suspend fun initLocations() {
-      if (isFetchLocationsNeeded(ZonedDateTime.now().minusHours(1)))
-         this.fetchLocations(userEmail)
-   }
-
+   /*
+    * Fetch locations through api service
+    */
    private suspend fun fetchLocations(email: String) {
       locationsDataSource.fetchLocations(email)
    }
 
-   private fun isFetchLocationsNeeded(lastTimeFetched: ZonedDateTime): Boolean {
-      val thirtyMinutesAgo = ZonedDateTime.now().minusMinutes(30)
+   /*
+    * Function to check if cache is more than 30MINUTES old
+    */
+   private fun hasCacheExpired(lastTimeFetched: ZonedDateTime): Boolean {
+      val thirtyMinutesAgo = CURRENT_TIME.minusMinutes(30)
       return lastTimeFetched.isBefore(thirtyMinutesAgo)
    }
 

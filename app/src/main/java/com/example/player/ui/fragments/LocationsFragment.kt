@@ -30,7 +30,9 @@ class LocationsFragment : Fragment(), KodeinAware {
 
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
+
    private var hasSelectedLocation: Boolean = false
+   private val credentials: Credentials = Credentials()
    private lateinit var viewModel: LocationsViewModel
 
    // select drop down for locations
@@ -38,10 +40,6 @@ class LocationsFragment : Fragment(), KodeinAware {
    private lateinit var adapter: ArrayAdapter<Location>
    private lateinit var passwordInput: TextInputEditText
    private lateinit var loginButton: MaterialButton
-
-   private val onCredentialsSubmitListener = View.OnClickListener {
-      viewModel.validateCredentials()
-   }
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       return inflater.inflate(R.layout.fragment_locations, container, false)
@@ -51,10 +49,13 @@ class LocationsFragment : Fragment(), KodeinAware {
       super.onActivityCreated(savedInstanceState)
 
       viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(LocationsViewModel::class.java)
+
       adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, ArrayList<Location>())
       locationsSpinner = view!!.findViewById(R.id.spinner_locations)
+
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
       locationsSpinner.onItemSelectedListener = SpinnerItemSelectedListener()
+
       passwordInput = view!!.findViewById(R.id.text_input_password)
       loginButton = view!!.findViewById(R.id.mButton_login)
    }
@@ -72,22 +73,42 @@ class LocationsFragment : Fragment(), KodeinAware {
       })
       viewModel.hasAuthenticated.observe(this, Observer {
 
-         if (it)
+         if (it.getContent() == true)
             this.findNavController().navigate(R.id.action_back_to_home)
 
       })
       passwordInput.onTextChanged {
-         viewModel.setInputPassword(it)
+         credentials.password = it
          loginButton.isEnabled = it.isNotEmpty() && hasSelectedLocation
+         loginButton.text = getString(R.string.login)
       }
-      mButton_login.setOnClickListener(onCredentialsSubmitListener)
+      mButton_login.setOnClickListener(OnCredentialsSubmitListener())
    }
+
+
+   private class Credentials(
+      var location: Location? = null,
+      var password: String = ""
+   )
+
+
+
+   inner class OnCredentialsSubmitListener: View.OnClickListener {
+      override fun onClick(v : View) {
+         viewModel.validateCredentials(credentials.location!!, credentials.password)
+         v as MaterialButton
+         v.isEnabled = false
+         v.text = getString(R.string.loading)
+      }
+   }
+
+
 
    inner class SpinnerItemSelectedListener: AdapterView.OnItemSelectedListener {
       override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
          val location = parent.selectedItem as Location
          hasSelectedLocation = true
-         viewModel.setSelectedLocation(location)
+         credentials.location = location
       }
 
       override fun onNothingSelected(parent: AdapterView<*>?) {

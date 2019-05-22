@@ -3,14 +3,12 @@ package com.example.player.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.player.data.db.entities.Location
 import com.example.player.data.db.models.DeviceModel
 import com.example.player.data.repository.DeviceRepository
 import com.example.player.data.repository.LocationsRepository
 import com.example.player.internal.SingleEvent
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 class LocationsViewModel(
       private val locationsRepository: LocationsRepository,
@@ -20,14 +18,10 @@ class LocationsViewModel(
 
    private val Tag = "LocationsViewModel"
 
-   private val credentials: Credentials = Credentials()
-   private lateinit var mSelectedLocation: Location
-   private lateinit var mPassword: String
-
    private var mLocations = MutableLiveData<List<Location>>()
    val locations: LiveData<List<Location>> get() = mLocations
-   private val mHasAuthenticated = MutableLiveData<Boolean>()
-   val hasAuthenticated: LiveData<Boolean> get() = mHasAuthenticated
+   private val mHasAuthenticated = MutableLiveData<SingleEvent<Boolean>>()
+   val hasAuthenticated: LiveData<SingleEvent<Boolean>> get() = mHasAuthenticated
    private val mHasValidatedEmail = MutableLiveData<SingleEvent<Boolean>>()
    val hasValidatedEmail: LiveData<SingleEvent<Boolean>> get() = mHasValidatedEmail
 
@@ -35,7 +29,7 @@ class LocationsViewModel(
       deviceRepository.setOnAuthStatusChangedListener(object: DeviceRepository.AuthenticationStatusListener {
          override fun onStatusChanged(status: Boolean) {
             deviceModel.authStatus = status
-            mHasAuthenticated.postValue(status)
+            mHasAuthenticated.postValue(SingleEvent(status))
          }
       })
       locationsRepository.setOnLocationsFetchedListener(object: LocationsRepository.LocationsFetchedListener {
@@ -48,7 +42,6 @@ class LocationsViewModel(
    }
 
    fun submitEmail(userEmail: String) {
-      credentials.email = userEmail
       launch {
          if (userEmail != deviceModel.locationEmail)
             locationsRepository.validateEmail(userEmail)
@@ -58,24 +51,19 @@ class LocationsViewModel(
          }
       }
    }
-   fun setSelectedLocation(selectedLocation: Location) {
-      mSelectedLocation = selectedLocation
-   }
-   fun setInputPassword(password: String) {
-      mPassword = password
-   }
-   fun validateCredentials() {
+
+   fun validateCredentials(location: Location, password: String) {
 
       launch {
 
          val device = deviceModel.retrieve()
-         device.locationId = mSelectedLocation.id
-         device.locationName = mSelectedLocation.placeName
+         device.locationId = location.id
+         device.locationName = location.placeName
          deviceModel.update(device)
 
          locationsRepository.authenticate(
-            mSelectedLocation.id,
-            mPassword
+            location.id,
+            password
          )
       }
    }
@@ -83,10 +71,4 @@ class LocationsViewModel(
    fun getAuthenticationStatus(): Boolean {
       return deviceModel.authStatus
    }
-
-   data class Credentials(
-      var email: String = "",
-      var locationId: String = "",
-      var password: String = ""
-   )
 }
