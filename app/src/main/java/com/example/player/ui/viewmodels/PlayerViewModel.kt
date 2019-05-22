@@ -114,9 +114,8 @@ class PlayerViewModel(
 
    private fun startService(context: Context, id: String) {
 
-      Intent()
       val serviceIntent = Intent(context, ImageCaptureService::class.java)
-      serviceIntent.putExtra("inputExtra", id)
+      serviceIntent.putExtra("advertId", id)
 
       ContextCompat.startForegroundService(context, serviceIntent)
    }
@@ -124,12 +123,6 @@ class PlayerViewModel(
    private inner class Stack<A>(list: List<A>) {
 
       private val elements: MutableList<A> = list.toMutableList()
-
-      init {
-         if (list.isEmpty()) {
-            // do something when list is empty
-         }
-      }
 
       fun isEmpty() = elements.isEmpty()
 
