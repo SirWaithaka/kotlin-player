@@ -28,11 +28,11 @@ val TIME_OF_DAY: String
    get() {
       return (CURRENT_TIME.hour - START_OF_DAY.hour).let {
          when  {
-            it < 6 -> PLAYTIME.Q1.time
-            it < 12 -> PLAYTIME.Q2.time
-            it < 18 -> PLAYTIME.Q3.time
-            it < 24 -> PLAYTIME.Q4.time
-            else -> PLAYTIME.Q1.time
+            it < 6 -> PLAYTIME.Q4.time
+            it < 12 -> PLAYTIME.Q1.time
+            it < 18 -> PLAYTIME.Q2.time
+            it < 24 -> PLAYTIME.Q3.time
+            else -> PLAYTIME.Q4.time
          }
       }
    }
@@ -54,7 +54,7 @@ enum class PLAYTIME(val time: String) {
    Q4("latenight")
 }
 
-val DOWNLOADS_DIR = Environment
+val DOWNLOADS_DIR: String = Environment
    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
    .toString()
 val PICTURES_DIR = Environment
