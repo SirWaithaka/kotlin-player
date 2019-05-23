@@ -3,16 +3,15 @@ package com.example.player.internal
 import android.os.Environment
 import android.util.SparseIntArray
 import android.view.Surface
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
+
 
 const val DEVICE_UID = 0
 const val MINIMUM_STALE_THRESHOLD = 23
 const val PLAY_DURATION_MILLIS: Long = 60 * 1000
 
-const val IMAGE_HEIGHT: Int = 1080
-const val IMAGE_WIDTH: Int = 1920
 const val CHANNEL_ID = "imageCaptureService"
 const val IMAGE_CAPTURE_SERVICE_NAME = "Image Capture Service"
 

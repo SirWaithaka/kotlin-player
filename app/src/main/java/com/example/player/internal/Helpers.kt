@@ -1,9 +1,11 @@
 package com.example.player.internal
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Size
+import org.threeten.bp.format.DateTimeFormatter
 import java.lang.Long.signum
 import java.lang.StringBuilder
-import java.time.format.DateTimeFormatter
 
 const val TIME_FORMAT_PATTERN = "yyyyMMddHHmmss"
 val DEFAULT_STORAGE_DIR = PICTURES_DIR
@@ -24,6 +26,18 @@ fun timeStampedFileName(
       .append(CURRENT_TIME.format(dateTimeFormatter))
       .append(extension)
       .toString()
+}
+
+@Suppress("DEPRECATION")
+@SuppressLint("HardwareIds")
+fun getDeviceSerialNumber(): String {
+
+   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      try { Build.getSerial() }
+      catch (e: SecurityException) { "" }
+   }
+   else
+      Build.SERIAL
 }
 
 internal object CompareSizesByArea : Comparator<Size> {
