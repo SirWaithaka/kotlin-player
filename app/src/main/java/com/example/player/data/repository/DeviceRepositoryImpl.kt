@@ -1,8 +1,8 @@
 package com.example.player.data.repository
 
-import android.os.Build
 import com.example.player.data.db.models.DeviceModel
 import com.example.player.data.repository.datasources.LocationsDataSource
+import com.example.player.internal.getDeviceSerialNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,13 +13,7 @@ class DeviceRepositoryImpl(
 ) : DeviceRepository {
 
    private var listener: DeviceRepository.AuthenticationStatusListener? = null
-   private val serialNumber by lazy {
-      try {
-         return@lazy Build.getSerial()
-      } catch (e: SecurityException) {
-         return@lazy ""
-      }
-   }
+   private val serialNumber by lazy { getDeviceSerialNumber() }
 
    init {
       locationsDataSource.loginResponse.observeForever {

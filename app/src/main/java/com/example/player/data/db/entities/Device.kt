@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.example.player.internal.DEVICE_UID
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime
 
 
 @Entity(tableName = "device")

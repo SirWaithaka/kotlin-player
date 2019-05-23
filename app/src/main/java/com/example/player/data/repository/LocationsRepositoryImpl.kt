@@ -5,17 +5,18 @@ package com.example.player.data.repository
  * It implements the DAOs and the DataSource handlers.
  */
 
-import android.os.Build
 import android.util.Log
 import com.example.player.data.db.LocationDao
 import com.example.player.data.db.entities.Location
 import com.example.player.data.repository.datasources.LocationsDataSource
 import com.example.player.internal.CURRENT_TIME
+import com.example.player.internal.getDeviceSerialNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime
+
 
 class LocationsRepositoryImpl(
       private val locationDao: LocationDao,
@@ -24,13 +25,7 @@ class LocationsRepositoryImpl(
 
    private val Tag = "LocationsRepository"
    private var listener: LocationsRepository.LocationsFetchedListener? = null
-   private val serialNumber by lazy {
-      try {
-         return@lazy Build.getSerial()
-      } catch (e: SecurityException) {
-         return@lazy ""
-      }
-   }
+   private val serialNumber by lazy { getDeviceSerialNumber() }
 
    /**
     * Described is the process of getting data from the api and storing it to db
@@ -54,6 +49,7 @@ class LocationsRepositoryImpl(
    }
 
    override suspend fun authenticate(id: String, password: String) {
+      Log.d(Tag, "serial: $serialNumber")
       locationsDataSource.authenticate(id, serialNumber, password)
    }
 

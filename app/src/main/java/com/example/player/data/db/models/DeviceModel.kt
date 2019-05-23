@@ -13,7 +13,7 @@ package com.example.player.data.db.models
 import com.example.player.data.db.DeviceDao
 import com.example.player.data.db.entities.Device
 import kotlinx.coroutines.*
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime
 import kotlin.coroutines.CoroutineContext
 
 class DeviceModel(private val deviceDao: DeviceDao): CoroutineScope {

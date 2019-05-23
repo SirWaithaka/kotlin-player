@@ -2,7 +2,7 @@ package com.example.player.data.db
 
 import androidx.room.*
 import com.example.player.data.db.entities.Device
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime
 
 
 /**
