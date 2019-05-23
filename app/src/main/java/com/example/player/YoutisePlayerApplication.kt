@@ -28,6 +28,7 @@ import com.example.player.data.network.apiservices.AuthorizationApiService
 import com.example.player.data.network.apiservices.LocationsApiService
 import com.example.player.internal.CHANNEL_ID
 import com.example.player.internal.IMAGE_CAPTURE_SERVICE_NAME
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 class YoutisePlayerApplication: Application(), KodeinAware {
    override val kodein: Kodein = Kodein.lazy {
@@ -74,6 +75,9 @@ class YoutisePlayerApplication: Application(), KodeinAware {
       PRDownloader.initialize(this, config)
 
       createNotificationChannel()
+
+      // initialize Threeten Module
+      AndroidThreeTen.init(this)
    }
 
    private fun createNotificationChannel() {
