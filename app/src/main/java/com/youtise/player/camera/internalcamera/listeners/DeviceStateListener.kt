@@ -1,8 +1,8 @@
-package com.example.player.ui.camera.internalcamera.listeners
+package com.example.player.camera.internalcamera.listeners
 
 import android.hardware.camera2.CameraDevice
 import android.view.Surface
-import com.example.player.ui.camera.internalcamera.Camera
+import com.example.player.camera.internalcamera.Camera
 import android.util.Log
 
 
@@ -32,7 +32,6 @@ class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallba
    }
 
    override fun onError(cameraDevice: CameraDevice, error: Int) {
-      cameraDevice.close()
       Log.d(Tag, "Error opening camera: $error")
    }
 

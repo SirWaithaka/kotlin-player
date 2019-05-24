@@ -1,4 +1,4 @@
-package com.example.player.ui.camera.internalcamera.listeners
+package com.example.player.camera.internalcamera.listeners
 
 import android.media.ImageReader
 import com.example.player.data.network.apiservices.PlayerApiService

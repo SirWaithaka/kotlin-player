@@ -1,4 +1,4 @@
-package com.example.player.ui.camera.internalcamera
+package com.example.player.camera.internalcamera
 
 import android.content.Context
 import android.graphics.ImageFormat

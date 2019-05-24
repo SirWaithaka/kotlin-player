@@ -1,4 +1,4 @@
-package com.example.player.ui.camera.internalcamera.listeners
+package com.example.player.camera.internalcamera.listeners
 
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice

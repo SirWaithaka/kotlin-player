@@ -12,8 +12,8 @@ import androidx.core.app.NotificationCompat
 import com.example.player.R
 import com.example.player.data.network.apiservices.PlayerApiService
 import com.example.player.internal.CHANNEL_ID
-import com.example.player.ui.camera.Camera
-import com.example.player.ui.camera.listeners.ImageCapturedListener
+import com.example.player.camera.internalcamera.Camera
+import com.example.player.camera.internalcamera.listeners.ImageCapturedListener
 import kotlinx.coroutines.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -53,8 +53,8 @@ class ImageCaptureService : IntentService("Image Capture"), KodeinAware {
          startForeground(1, notification)
       }
    }
+
    override fun onHandleIntent(intent: Intent?) = runBlocking {
-      Log.d(Tag, "onHandleIntent")
 
       val id = intent?.getStringExtra("advertId")
 

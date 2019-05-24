@@ -11,8 +11,8 @@ import com.example.player.data.repository.AdvertsRepository
 import com.example.player.internal.getLocalMediaPath
 import com.example.player.services.ImageCaptureService
 import kotlinx.coroutines.*
-import java.time.ZonedDateTime
-import java.util.*
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.ZonedDateTime
 import kotlin.coroutines.CoroutineContext
 
 class PlayerViewModel(
@@ -68,8 +68,8 @@ class PlayerViewModel(
    fun mediaHasPlayedEvent() {
       launch {
          val log = AdvertLog(
-            start = Date.from(startTime.toInstant()).toString(),
-            end = Date.from(stopTime.toInstant()).toString(),
+            start = DateTimeUtils.toDate(startTime.toInstant()).toString(),
+            end = DateTimeUtils.toDate(stopTime.toInstant()).toString(),
             result = "SUCCEED",
             id = mediaToPlay.id
          )
