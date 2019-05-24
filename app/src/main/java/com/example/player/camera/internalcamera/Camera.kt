@@ -1,4 +1,4 @@
-package com.example.player.ui.camera
+package com.example.player.ui.camera.internalcamera
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.media.ImageReader
 import android.os.Handler
 import android.util.Log
 import android.view.Surface
-import com.example.player.ui.camera.listeners.DeviceStateListener
+import com.example.player.ui.camera.internalcamera.listeners.DeviceStateListener
 
 
 abstract class Camera(
@@ -26,6 +26,9 @@ abstract class Camera(
 
    init {
       val cameraIds: Array<String> = this.cameraManager.cameraIdList
+      for (id in cameraIds) {
+         Log.d(Tag, "cameras found: ${id.toInt()}")
+      }
       cameraId = if (cameraIds.isNotEmpty()) cameraIds[0] else ""
       val (width, height) = this.getSurfaceDimensions(this.cameraId)
       reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)

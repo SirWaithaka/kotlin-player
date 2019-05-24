@@ -1,12 +1,9 @@
-package com.example.player.ui.camera.listeners
+package com.example.player.ui.camera.internalcamera.listeners
 
 import android.hardware.camera2.CameraDevice
 import android.view.Surface
-import com.example.player.ui.camera.Camera
-import android.graphics.SurfaceTexture
+import com.example.player.ui.camera.internalcamera.Camera
 import android.util.Log
-import com.example.player.internal.IMAGE_HEIGHT
-import com.example.player.internal.IMAGE_WIDTH
 
 
 class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallback() {
