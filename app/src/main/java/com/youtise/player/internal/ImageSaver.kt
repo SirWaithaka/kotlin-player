@@ -50,6 +50,8 @@ object ImageSaver {
          Log.d(Tag, response.string())
       } catch (e: Exception) {
          Log.d(Tag, "Error: ${e.message}")
+      } finally {
+          file.delete()
       }
    }
 }
