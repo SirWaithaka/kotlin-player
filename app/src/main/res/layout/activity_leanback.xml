@@ -6,9 +6,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer_layout"
-        android:fitsSystemWindows="false"
+        android:fitsSystemWindows="true"
         android:keepScreenOn="true"
-        tools:context=".ui.MainActivity">
+        tools:context=".ui.LeanbackActivity">
 
     <fragment
             android:id="@+id/nav_host_fragment"
