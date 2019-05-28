@@ -1,9 +1,9 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.repository.AdvertsRepository
-import com.example.player.internal.getLocalMediaPath
-import com.example.player.data.db.models.MediaModel
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.repository.AdvertsRepository
+import com.youtise.player.internal.getLocalMediaPath
+import com.youtise.player.data.db.models.MediaModel
 import kotlinx.coroutines.*
 import java.io.File
 

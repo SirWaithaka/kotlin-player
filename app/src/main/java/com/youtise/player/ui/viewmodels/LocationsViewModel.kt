@@ -1,13 +1,13 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.player.data.db.entities.Location
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.repository.DeviceRepository
-import com.example.player.data.repository.LocationsRepository
-import com.example.player.internal.SingleEvent
+import com.youtise.player.data.db.entities.Location
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.repository.DeviceRepository
+import com.youtise.player.data.repository.LocationsRepository
+import com.youtise.player.internal.SingleEvent
 import kotlinx.coroutines.*
 
 class LocationsViewModel(

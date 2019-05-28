@@ -1,9 +1,9 @@
-package com.example.player.data.db.entities
+package com.youtise.player.data.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.player.data.interfaces.LocationInterface
+import com.youtise.player.data.interfaces.LocationInterface
 
 
 @Entity(tableName = "locations")

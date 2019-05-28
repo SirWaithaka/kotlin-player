@@ -1,4 +1,4 @@
-package com.example.player.data.network.responses
+package com.youtise.player.data.network.responses
 
 data class LoginResponse(
    val locationName: String,

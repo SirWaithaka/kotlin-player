@@ -1,8 +1,8 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.repository.datasources.LocationsDataSource
-import com.example.player.internal.getDeviceSerialNumber
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.repository.datasources.LocationsDataSource
+import com.youtise.player.internal.getDeviceSerialNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

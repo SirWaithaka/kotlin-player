@@ -1,14 +1,14 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
-import com.example.player.data.db.entities.Advert
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.repository.AdvertsRepository
-import com.example.player.internal.*
+import com.youtise.player.data.db.entities.Advert
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.repository.AdvertsRepository
+import com.youtise.player.internal.*
 import kotlinx.coroutines.*
 import java.io.File
 

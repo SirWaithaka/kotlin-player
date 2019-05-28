@@ -1,4 +1,4 @@
-package com.example.player.data.db.entities
+package com.youtise.player.data.db.entities
 
 import androidx.room.*
 

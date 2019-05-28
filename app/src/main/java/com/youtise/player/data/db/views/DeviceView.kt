@@ -1,4 +1,4 @@
-package com.example.player.data.db.views
+package com.youtise.player.data.db.views
 
 import androidx.room.DatabaseView
 

@@ -1,8 +1,8 @@
-package com.example.player.internal
+package com.youtise.player.internal
 
 import android.media.Image
 import android.util.Log
-import com.example.player.data.network.apiservices.PlayerApiService
+import com.youtise.player.data.network.apiservices.PlayerApiService
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
 import okhttp3.MultipartBody

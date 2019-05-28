@@ -1,4 +1,4 @@
-package com.example.player.camera.internalcamera
+package com.youtise.player.camera.internalcamera
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.media.ImageReader
 import android.os.Handler
 import android.util.Log
 import android.view.Surface
-import com.example.player.camera.internalcamera.listeners.DeviceStateListener
+import com.youtise.player.camera.internalcamera.listeners.DeviceStateListener
 
 
 abstract class Camera(

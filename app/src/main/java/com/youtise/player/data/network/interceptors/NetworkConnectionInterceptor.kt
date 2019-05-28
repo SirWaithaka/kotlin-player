@@ -1,8 +1,8 @@
-package com.example.player.data.network.interceptors
+package com.youtise.player.data.network.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.example.player.internal.NoConnectivityException
+import com.youtise.player.internal.NoConnectivityException
 import okhttp3.Interceptor
 import okhttp3.Response
 

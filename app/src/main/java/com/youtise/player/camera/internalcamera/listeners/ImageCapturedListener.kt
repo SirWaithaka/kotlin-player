@@ -1,9 +1,9 @@
-package com.example.player.camera.internalcamera.listeners
+package com.youtise.player.camera.internalcamera.listeners
 
 import android.media.ImageReader
-import com.example.player.data.network.apiservices.PlayerApiService
-import com.example.player.internal.ImageSaver
-import com.example.player.internal.timeStampedFileName
+import com.youtise.player.data.network.apiservices.PlayerApiService
+import com.youtise.player.internal.ImageSaver
+import com.youtise.player.internal.timeStampedFileName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

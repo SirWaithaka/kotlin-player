@@ -1,4 +1,4 @@
-package com.example.player.ui.base
+package com.youtise.player.ui.base
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

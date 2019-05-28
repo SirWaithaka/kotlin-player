@@ -1,9 +1,9 @@
-package com.example.player.data.db.entities
+package com.youtise.player.data.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.example.player.internal.DEVICE_UID
+import com.youtise.player.internal.DEVICE_UID
 import org.threeten.bp.ZonedDateTime
 
 

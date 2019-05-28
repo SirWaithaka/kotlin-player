@@ -1,19 +1,19 @@
-package com.example.player
+package com.youtise.player
 
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import com.example.player.data.db.YoutisePlayerDatabase
-import com.example.player.data.network.ErrorsHandler
-import com.example.player.data.network.interceptors.*
-import com.example.player.data.network.apiservices.PlayerApiService
-import com.example.player.data.repository.*
-import com.example.player.data.repository.datasources.AdvertsNetworkDataSource
-import com.example.player.data.repository.datasources.AdvertsNetworkDataSourceImpl
-import com.example.player.data.repository.datasources.LocationsDataSource
-import com.example.player.data.repository.datasources.LocationsDataSourceImpl
-import com.example.player.ui.viewmodels.ViewModelFactory
+import com.youtise.player.data.db.YoutisePlayerDatabase
+import com.youtise.player.data.network.ErrorsHandler
+import com.youtise.player.data.network.interceptors.*
+import com.youtise.player.data.network.apiservices.PlayerApiService
+import com.youtise.player.data.repository.*
+import com.youtise.player.data.repository.datasources.AdvertsNetworkDataSource
+import com.youtise.player.data.repository.datasources.AdvertsNetworkDataSourceImpl
+import com.youtise.player.data.repository.datasources.LocationsDataSource
+import com.youtise.player.data.repository.datasources.LocationsDataSourceImpl
+import com.youtise.player.ui.viewmodels.ViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -23,11 +23,11 @@ import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
 import com.downloader.PRDownloader
 import com.downloader.PRDownloaderConfig
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.network.apiservices.AuthorizationApiService
-import com.example.player.data.network.apiservices.LocationsApiService
-import com.example.player.internal.CHANNEL_ID
-import com.example.player.internal.IMAGE_CAPTURE_SERVICE_NAME
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.network.apiservices.AuthorizationApiService
+import com.youtise.player.data.network.apiservices.LocationsApiService
+import com.youtise.player.internal.CHANNEL_ID
+import com.youtise.player.internal.IMAGE_CAPTURE_SERVICE_NAME
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 class YoutisePlayerApplication: Application(), KodeinAware {

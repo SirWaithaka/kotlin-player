@@ -1,4 +1,4 @@
-package com.example.player.data.network.interceptors
+package com.youtise.player.data.network.interceptors
 
 /**
  * Interface to define methods and logic to check internet

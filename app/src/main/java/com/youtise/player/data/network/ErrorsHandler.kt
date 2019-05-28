@@ -1,9 +1,9 @@
-package com.example.player.data.network
+package com.youtise.player.data.network
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.player.data.repository.datasources.AdvertsNetworkDataSource
-import com.example.player.data.repository.datasources.LocationsDataSource
+import com.youtise.player.data.repository.datasources.AdvertsNetworkDataSource
+import com.youtise.player.data.repository.datasources.LocationsDataSource
 
 class ErrorsHandler(
       locationsDataSource: LocationsDataSource,

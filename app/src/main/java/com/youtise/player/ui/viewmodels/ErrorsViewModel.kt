@@ -1,8 +1,8 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.player.data.network.ErrorsHandler
+import com.youtise.player.data.network.ErrorsHandler
 
 
 /**

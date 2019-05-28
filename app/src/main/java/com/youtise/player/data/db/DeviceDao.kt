@@ -1,7 +1,7 @@
-package com.example.player.data.db
+package com.youtise.player.data.db
 
 import androidx.room.*
-import com.example.player.data.db.entities.Device
+import com.youtise.player.data.db.entities.Device
 import org.threeten.bp.ZonedDateTime
 
 

@@ -1,12 +1,12 @@
-package com.example.player.data.db
+package com.youtise.player.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.player.data.db.entities.*
-import com.example.player.data.db.views.DeviceView
+import com.youtise.player.data.db.entities.*
+import com.youtise.player.data.db.views.DeviceView
 
 
 const val DATABASE_NAME = "youtise_player_v10.18.db"

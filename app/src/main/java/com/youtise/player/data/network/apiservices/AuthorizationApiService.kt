@@ -1,8 +1,8 @@
-package com.example.player.data.network.apiservices
+package com.youtise.player.data.network.apiservices
 
-import com.example.player.data.network.interceptors.ClientRequestInterceptor
-import com.example.player.data.network.interceptors.HttpErrorInterceptor
-import com.example.player.data.network.responses.LoginResponse
+import com.youtise.player.data.network.interceptors.ClientRequestInterceptor
+import com.youtise.player.data.network.interceptors.HttpErrorInterceptor
+import com.youtise.player.data.network.responses.LoginResponse
 import okhttp3.OkHttpClient
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

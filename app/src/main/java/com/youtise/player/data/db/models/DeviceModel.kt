@@ -1,4 +1,4 @@
-package com.example.player.data.db.models
+package com.youtise.player.data.db.models
 
 
 /*
@@ -10,8 +10,8 @@ package com.example.player.data.db.models
  * TODO("Find a way to incorporate into repository and/or DAO")
  */
 
-import com.example.player.data.db.DeviceDao
-import com.example.player.data.db.entities.Device
+import com.youtise.player.data.db.DeviceDao
+import com.youtise.player.data.db.entities.Device
 import kotlinx.coroutines.*
 import org.threeten.bp.ZonedDateTime
 import kotlin.coroutines.CoroutineContext

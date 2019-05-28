@@ -1,7 +1,7 @@
-package com.example.player.data.db
+package com.youtise.player.data.db
 
 import androidx.room.*
-import com.example.player.data.db.entities.Location
+import com.youtise.player.data.db.entities.Location
 
 /**
  * Defines the data access functions for the locations entity

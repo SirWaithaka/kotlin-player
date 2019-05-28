@@ -1,7 +1,7 @@
-package com.example.player.data.db
+package com.youtise.player.data.db
 
 import androidx.room.*
-import com.example.player.data.db.entities.Advert
+import com.youtise.player.data.db.entities.Advert
 
 /**
  * Operations on the adverts table

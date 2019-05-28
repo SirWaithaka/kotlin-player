@@ -1,8 +1,8 @@
-package com.example.player.camera.internalcamera.listeners
+package com.youtise.player.camera.internalcamera.listeners
 
 import android.hardware.camera2.CameraDevice
 import android.view.Surface
-import com.example.player.camera.internalcamera.Camera
+import com.youtise.player.camera.internalcamera.Camera
 import android.util.Log
 
 

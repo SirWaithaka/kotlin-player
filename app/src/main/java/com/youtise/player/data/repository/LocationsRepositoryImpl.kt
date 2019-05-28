@@ -1,4 +1,4 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
 /**
  * In this Repository we handle fetching of data and persisting it on the db
@@ -6,11 +6,11 @@ package com.example.player.data.repository
  */
 
 import android.util.Log
-import com.example.player.data.db.LocationDao
-import com.example.player.data.db.entities.Location
-import com.example.player.data.repository.datasources.LocationsDataSource
-import com.example.player.internal.CURRENT_TIME
-import com.example.player.internal.getDeviceSerialNumber
+import com.youtise.player.data.db.LocationDao
+import com.youtise.player.data.db.entities.Location
+import com.youtise.player.data.repository.datasources.LocationsDataSource
+import com.youtise.player.internal.CURRENT_TIME
+import com.youtise.player.internal.getDeviceSerialNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

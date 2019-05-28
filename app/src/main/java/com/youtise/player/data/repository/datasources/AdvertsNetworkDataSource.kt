@@ -1,8 +1,8 @@
-package com.example.player.data.repository.datasources
+package com.youtise.player.data.repository.datasources
 
 import androidx.lifecycle.LiveData
-import com.example.player.data.network.AdvertLog
-import com.example.player.data.network.responses.AdvertisementsResponse
+import com.youtise.player.data.network.AdvertLog
+import com.youtise.player.data.network.responses.AdvertisementsResponse
 
 interface AdvertsNetworkDataSource {
    val downloadedAdverts: LiveData<AdvertisementsResponse>

@@ -1,4 +1,4 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

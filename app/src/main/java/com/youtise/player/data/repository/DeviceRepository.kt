@@ -1,4 +1,4 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
 
 interface DeviceRepository {

@@ -1,4 +1,4 @@
-package com.example.player.services
+package com.youtise.player.services
 
 import android.app.IntentService
 import android.content.Context
@@ -9,11 +9,11 @@ import android.os.Looper
 import android.util.Log
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import com.example.player.R
-import com.example.player.data.network.apiservices.PlayerApiService
-import com.example.player.internal.CHANNEL_ID
-import com.example.player.camera.internalcamera.Camera
-import com.example.player.camera.internalcamera.listeners.ImageCapturedListener
+import com.youtise.player.R
+import com.youtise.player.data.network.apiservices.PlayerApiService
+import com.youtise.player.internal.CHANNEL_ID
+import com.youtise.player.camera.internalcamera.Camera
+import com.youtise.player.camera.internalcamera.listeners.ImageCapturedListener
 import kotlinx.coroutines.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware

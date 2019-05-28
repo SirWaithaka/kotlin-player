@@ -1,6 +1,6 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
-import com.example.player.data.db.entities.Location
+import com.youtise.player.data.db.entities.Location
 
 interface LocationsRepository {
    suspend fun retrieveLocations(): List<Location>

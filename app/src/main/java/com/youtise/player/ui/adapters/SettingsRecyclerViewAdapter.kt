@@ -1,11 +1,11 @@
-package com.example.player.ui.adapters
+package com.youtise.player.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.player.R
+import com.youtise.player.R
 
 class SettingsRecyclerViewAdapter : RecyclerView.Adapter<SettingsRecyclerViewAdapter.ViewHolder>() {
 

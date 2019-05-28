@@ -1,8 +1,8 @@
-package com.example.player.data.network.interceptors
+package com.youtise.player.data.network.interceptors
 
-import com.example.player.data.db.entities.Device
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.network.apiservices.AuthorizationApiService
+import com.youtise.player.data.db.entities.Device
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.network.apiservices.AuthorizationApiService
 import kotlinx.coroutines.*
 import okhttp3.*
 

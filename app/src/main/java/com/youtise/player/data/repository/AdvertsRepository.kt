@@ -1,8 +1,8 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.player.data.db.entities.Advert
-import com.example.player.data.network.AdvertLog
+import com.youtise.player.data.db.entities.Advert
+import com.youtise.player.data.network.AdvertLog
 
 interface AdvertsRepository {
    suspend fun fetchAdverts()

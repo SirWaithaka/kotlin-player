@@ -1,4 +1,4 @@
-package com.example.player.ui.fragments
+package com.youtise.player.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.example.player.R
-import com.example.player.internal.CURRENT_TIME
-import com.example.player.ui.viewmodels.PlayerViewModel
-import com.example.player.ui.viewmodels.ViewModelFactory
+import com.youtise.player.R
+import com.youtise.player.internal.CURRENT_TIME
+import com.youtise.player.ui.viewmodels.PlayerViewModel
+import com.youtise.player.ui.viewmodels.ViewModelFactory
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer

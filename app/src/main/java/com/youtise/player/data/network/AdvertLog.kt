@@ -1,4 +1,4 @@
-package com.example.player.data.network
+package com.youtise.player.data.network
 
 data class AdvertLog(
    val start: String,

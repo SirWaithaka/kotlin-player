@@ -1,4 +1,4 @@
-package com.example.player.ui.fragments
+package com.youtise.player.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.example.player.R
-import com.example.player.ui.base.ScopedFragment
-import com.example.player.ui.viewmodels.AdvertsViewModel
-import com.example.player.ui.viewmodels.ViewModelFactory
+import com.youtise.player.R
+import com.youtise.player.ui.base.ScopedFragment
+import com.youtise.player.ui.viewmodels.AdvertsViewModel
+import com.youtise.player.ui.viewmodels.ViewModelFactory
 import kotlinx.coroutines.launch
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware

@@ -1,6 +1,6 @@
-package com.example.player.data.db.models
+package com.youtise.player.data.db.models
 
-import com.example.player.internal.TIME_OF_DAY
+import com.youtise.player.internal.TIME_OF_DAY
 
 
 class MediaModel(

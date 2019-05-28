@@ -1,10 +1,10 @@
-package com.example.player.internal
+package com.youtise.player.internal
 
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.EditText
-import com.example.player.data.db.entities.Advert
+import com.youtise.player.data.db.entities.Advert
 
 // STRING EXTENSIONS
 fun String.isValidEmail(): Boolean {

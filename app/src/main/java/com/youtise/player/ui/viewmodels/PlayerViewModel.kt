@@ -1,15 +1,15 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.example.player.data.db.entities.Advert
-import com.example.player.data.db.models.MediaModel
-import com.example.player.data.network.AdvertLog
-import com.example.player.data.repository.AdvertsRepository
-import com.example.player.internal.getLocalMediaPath
-import com.example.player.services.ImageCaptureService
+import com.youtise.player.data.db.entities.Advert
+import com.youtise.player.data.db.models.MediaModel
+import com.youtise.player.data.network.AdvertLog
+import com.youtise.player.data.repository.AdvertsRepository
+import com.youtise.player.internal.getLocalMediaPath
+import com.youtise.player.services.ImageCaptureService
 import kotlinx.coroutines.*
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.ZonedDateTime

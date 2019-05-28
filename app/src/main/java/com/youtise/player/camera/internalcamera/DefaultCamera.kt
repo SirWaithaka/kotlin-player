@@ -1,4 +1,4 @@
-package com.example.player.camera.internalcamera
+package com.youtise.player.camera.internalcamera
 
 import android.content.Context
 import android.graphics.ImageFormat
@@ -7,8 +7,8 @@ import android.media.ImageReader
 import android.util.Log
 import android.util.Size
 import android.view.Surface
-import com.example.player.internal.CompareSizesByArea
-import com.example.player.internal.ORIENTATIONS
+import com.youtise.player.internal.CompareSizesByArea
+import com.youtise.player.internal.ORIENTATIONS
 import java.util.*
 
 abstract class DefaultCamera(protected val context: Context)  {

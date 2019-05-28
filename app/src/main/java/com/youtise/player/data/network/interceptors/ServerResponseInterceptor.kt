@@ -1,4 +1,4 @@
-package com.example.player.data.network.interceptors
+package com.youtise.player.data.network.interceptors
 
 import okhttp3.Interceptor
 

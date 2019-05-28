@@ -1,4 +1,4 @@
-package com.example.player.internal
+package com.youtise.player.internal
 
 open class SingleEvent<out T>(private val content: T) {
 

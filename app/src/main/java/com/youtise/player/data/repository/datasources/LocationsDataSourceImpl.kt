@@ -1,14 +1,14 @@
-package com.example.player.data.repository.datasources
+package com.youtise.player.data.repository.datasources
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.player.data.network.responses.LocationsResponse
-import com.example.player.data.network.responses.LoginResponse
-import com.example.player.data.network.apiservices.AuthorizationApiService
-import com.example.player.data.network.apiservices.LocationsApiService
-import com.example.player.internal.ClientErrorException
-import com.example.player.internal.NoConnectivityException
-import com.example.player.internal.ServerErrorException
+import com.youtise.player.data.network.responses.LocationsResponse
+import com.youtise.player.data.network.responses.LoginResponse
+import com.youtise.player.data.network.apiservices.AuthorizationApiService
+import com.youtise.player.data.network.apiservices.LocationsApiService
+import com.youtise.player.internal.ClientErrorException
+import com.youtise.player.internal.NoConnectivityException
+import com.youtise.player.internal.ServerErrorException
 import java.lang.Exception
 
 class LocationsDataSourceImpl(

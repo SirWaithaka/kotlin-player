@@ -1,4 +1,4 @@
-package com.example.player.camera.internalcamera
+package com.youtise.player.camera.internalcamera
 
 import android.app.Activity
 

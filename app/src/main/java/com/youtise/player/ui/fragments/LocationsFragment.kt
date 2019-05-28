@@ -1,4 +1,4 @@
-package com.example.player.ui.fragments
+package com.youtise.player.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.example.player.R
-import com.example.player.data.db.entities.Location
-import com.example.player.internal.onTextChanged
-import com.example.player.ui.viewmodels.LocationsViewModel
-import com.example.player.ui.viewmodels.ViewModelFactory
+import com.youtise.player.R
+import com.youtise.player.data.db.entities.Location
+import com.youtise.player.internal.onTextChanged
+import com.youtise.player.ui.viewmodels.LocationsViewModel
+import com.youtise.player.ui.viewmodels.ViewModelFactory
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_locations.*

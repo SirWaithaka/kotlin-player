@@ -1,4 +1,4 @@
-package com.example.player.data.interfaces
+package com.youtise.player.data.interfaces
 
 interface LocationInterface {
    val id: String

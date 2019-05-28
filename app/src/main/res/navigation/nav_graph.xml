@@ -8,19 +8,19 @@
 
     <fragment
             android:id="@+id/destination_image"
-            android:name="com.example.player.ui.fragments.ImageFragment"
+            android:name="com.youtise.player.ui.fragments.ImageFragment"
             android:label="Image"
             tools:layout="@layout/fragment_image"/>
 
     <fragment
             android:id="@+id/destination_video"
-            android:name="com.example.player.ui.fragments.VideoFragment"
+            android:name="com.youtise.player.ui.fragments.VideoFragment"
             android:label="Video"
             tools:layout="@layout/fragment_video"/>
 
     <fragment
             android:id="@+id/destination_player"
-            android:name="com.example.player.ui.fragments.PlayerFragment"
+            android:name="com.youtise.player.ui.fragments.PlayerFragment"
             android:label="Player"
             tools:layout="@layout/fragment_player">
         <action
@@ -33,7 +33,7 @@
 
     <fragment
             android:id="@+id/destination_locations"
-            android:name="com.example.player.ui.fragments.LocationsFragment"
+            android:name="com.youtise.player.ui.fragments.LocationsFragment"
             android:label="Locations"
             tools:layout="@layout/fragment_locations">
         <action
@@ -45,7 +45,7 @@
 
     <fragment
             android:id="@+id/destination_email"
-            android:name="com.example.player.ui.fragments.EmailFragment"
+            android:name="com.youtise.player.ui.fragments.EmailFragment"
             android:label="Email"
             tools:layout="@layout/fragment_email">
         <action
@@ -53,13 +53,13 @@
                 app:destination="@id/destination_locations"/>
     </fragment>
     <fragment android:id="@+id/destination_downloader"
-              android:name="com.example.player.ui.fragments.DownloadFragment"
+              android:name="com.youtise.player.ui.fragments.DownloadFragment"
               android:label="Downloader" tools:layout="@layout/fragment_download">
         <action android:id="@+id/action_destination_downloader_to_destination_player"
                 app:destination="@id/destination_player"/>
     </fragment>
     <fragment android:id="@+id/destination_home"
-              android:name="com.example.player.ui.fragments.HomeFragment"
+              android:name="com.youtise.player.ui.fragments.HomeFragment"
               android:label="Home"
               tools:layout="@layout/fragment_home">
         <action
@@ -70,8 +70,8 @@
                 app:destination="@id/destination_downloader"/>
     </fragment>
     <fragment android:id="@+id/destination_settings"
-              android:name="com.example.player.ui.fragments.SettingsFragment"
+              android:name="com.youtise.player.ui.fragments.SettingsFragment"
               android:label="Settings" tools:layout="@layout/fragment_settings"/>
-    <fragment android:id="@+id/destination_playlist" android:name="com.example.player.ui.fragments.PlaylistFragment"
+    <fragment android:id="@+id/destination_playlist" android:name="com.youtise.player.ui.fragments.PlaylistFragment"
               android:label="Playlist" tools:layout="@layout/fragment_playlist"/>
 </navigation>

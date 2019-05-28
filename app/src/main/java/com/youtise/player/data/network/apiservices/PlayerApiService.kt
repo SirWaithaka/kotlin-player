@@ -1,9 +1,9 @@
-package com.example.player.data.network.apiservices
+package com.youtise.player.data.network.apiservices
 
-import com.example.player.data.network.interceptors.AuthenticationInterceptor
-import com.example.player.data.network.interceptors.ClientRequestInterceptor
-import com.example.player.data.network.interceptors.HttpErrorInterceptor
-import com.example.player.data.network.responses.AdvertisementsResponse
+import com.youtise.player.data.network.interceptors.AuthenticationInterceptor
+import com.youtise.player.data.network.interceptors.ClientRequestInterceptor
+import com.youtise.player.data.network.interceptors.HttpErrorInterceptor
+import com.youtise.player.data.network.responses.AdvertisementsResponse
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody

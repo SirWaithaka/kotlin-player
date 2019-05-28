@@ -1,8 +1,8 @@
-package com.example.player.data.repository.datasources
+package com.youtise.player.data.repository.datasources
 
 import androidx.lifecycle.LiveData
-import com.example.player.data.network.responses.LocationsResponse
-import com.example.player.data.network.responses.LoginResponse
+import com.youtise.player.data.network.responses.LocationsResponse
+import com.youtise.player.data.network.responses.LoginResponse
 
 interface LocationsDataSource {
    val downloadedLocations: LiveData<LocationsResponse>

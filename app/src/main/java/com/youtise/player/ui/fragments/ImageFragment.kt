@@ -1,4 +1,4 @@
-package com.example.player.ui.fragments
+package com.youtise.player.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.player.R
-import com.example.player.internal.CURRENT_TIME
-import com.example.player.internal.PLAY_DURATION_MILLIS
-import com.example.player.ui.viewmodels.PlayerViewModel
-import com.example.player.ui.viewmodels.ViewModelFactory
+import com.youtise.player.R
+import com.youtise.player.internal.CURRENT_TIME
+import com.youtise.player.internal.PLAY_DURATION_MILLIS
+import com.youtise.player.ui.viewmodels.PlayerViewModel
+import com.youtise.player.ui.viewmodels.ViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein

@@ -1,12 +1,12 @@
-package com.example.player.ui.viewmodels
+package com.youtise.player.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.player.data.db.models.DeviceModel
-import com.example.player.data.network.ErrorsHandler
-import com.example.player.data.repository.AdvertsRepository
-import com.example.player.data.repository.DeviceRepository
-import com.example.player.data.repository.LocationsRepository
+import com.youtise.player.data.db.models.DeviceModel
+import com.youtise.player.data.network.ErrorsHandler
+import com.youtise.player.data.repository.AdvertsRepository
+import com.youtise.player.data.repository.DeviceRepository
+import com.youtise.player.data.repository.LocationsRepository
 import java.lang.IllegalArgumentException
 
 class ViewModelFactory(

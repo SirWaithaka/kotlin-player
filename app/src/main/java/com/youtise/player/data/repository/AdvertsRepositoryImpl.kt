@@ -1,10 +1,10 @@
-package com.example.player.data.repository
+package com.youtise.player.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.player.data.db.AdvertDao
-import com.example.player.data.db.entities.Advert
-import com.example.player.data.network.AdvertLog
-import com.example.player.data.repository.datasources.AdvertsNetworkDataSource
+import com.youtise.player.data.db.AdvertDao
+import com.youtise.player.data.db.entities.Advert
+import com.youtise.player.data.network.AdvertLog
+import com.youtise.player.data.repository.datasources.AdvertsNetworkDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
