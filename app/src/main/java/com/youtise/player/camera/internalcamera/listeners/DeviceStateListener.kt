@@ -23,8 +23,10 @@ class DeviceStateListener(private val camera: Camera) : CameraDevice.StateCallba
       val sessionRequest = camera.buildCaptureRequest(cameraDevice)
 
       Log.d(Tag, "Camera opened")
-      cameraDevice.createCaptureSession(listOf(surface),
-         CaptureSessionListener(sessionRequest, cameraDevice), camera.handler)
+      cameraDevice.createCaptureSession(
+         listOf(surface),
+         CaptureSessionListener(sessionRequest, cameraDevice),
+         camera.handler)
    }
 
    override fun onDisconnected(cameraDevice: CameraDevice) {

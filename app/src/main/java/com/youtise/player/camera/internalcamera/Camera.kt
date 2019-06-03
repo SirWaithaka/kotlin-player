@@ -26,9 +26,7 @@ abstract class Camera(
 
    init {
       val cameraIds: Array<String> = this.cameraManager.cameraIdList
-      for (id in cameraIds) {
-         Log.d(Tag, "cameras found: ${id.toInt()}")
-      }
+      // TODO("Handle case when there is no Camera ID found")
       cameraId = if (cameraIds.isNotEmpty()) cameraIds[0] else ""
       val (width, height) = this.getSurfaceDimensions(this.cameraId)
       reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
@@ -39,8 +37,11 @@ abstract class Camera(
       if (cameraId.isEmpty()) return
       if (deviceListener != null) {
          Log.d(Tag, "opening camera with Id: $cameraId")
-         cameraManager.openCamera(cameraId,
-            deviceListener!!, handler)
+         cameraManager.openCamera(
+            cameraId,
+            deviceListener!!,
+            handler
+         )
       }
    }
 
@@ -67,17 +68,6 @@ abstract class Camera(
          cameraInstance.deviceListener = DeviceStateListener(cameraInstance)
 
          return cameraInstance
-      }
-
-      private fun initCameraId(cameraManager: CameraManager): String {
-         return try {
-            val cameraIds: Array<String> = cameraManager.cameraIdList
-            if (cameraIds.isNotEmpty()) cameraIds[0]
-            else ""
-     //            else throw CameraAccessException(CameraAccessException.CAMERA_DISCONNECTED)
-         } catch (e: CameraAccessException) {
-            throw e
-         }
       }
    }
 }

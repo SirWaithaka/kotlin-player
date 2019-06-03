@@ -9,6 +9,7 @@ import com.youtise.player.data.db.models.MediaModel
 import com.youtise.player.data.network.AdvertLog
 import com.youtise.player.data.repository.AdvertsRepository
 import com.youtise.player.internal.getLocalMediaPath
+import com.youtise.player.services.CaptureImage
 import com.youtise.player.services.ImageCaptureService
 import kotlinx.coroutines.*
 import org.threeten.bp.DateTimeUtils
@@ -112,12 +113,14 @@ class PlayerViewModel(
       return mediaStack!!.isEmpty()
    }
 
-   private fun startService(context: Context, id: String) {
+   private fun startService(context: Context, id: String) = runBlocking(this.coroutineContext) {
 
-      val serviceIntent = Intent(context, ImageCaptureService::class.java)
-      serviceIntent.putExtra("advertId", id)
+//      val serviceIntent = Intent(context, ImageCaptureService::class.java)
+//      serviceIntent.putExtra("advertId", id)
 
-      ContextCompat.startForegroundService(context, serviceIntent)
+//      ContextCompat.startForegroundService(context, serviceIntent)
+
+      CaptureImage(context).invoke(id)
    }
 
    private inner class Stack<A>(list: List<A>) {

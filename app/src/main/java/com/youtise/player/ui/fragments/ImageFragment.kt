@@ -27,6 +27,7 @@ class ImageFragment : Fragment(), KodeinAware {
    override val kodein: Kodein by kodein()
    private val viewModelFactory: ViewModelFactory by instance()
    private lateinit var viewModel: PlayerViewModel
+   private val handler = Handler()
 
    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
       return inflater.inflate(R.layout.fragment_image, container, false)
@@ -51,10 +52,15 @@ class ImageFragment : Fragment(), KodeinAware {
    override fun onResume() {
       super.onResume()
 
-      Handler().postDelayed({
+      handler.postDelayed({
          viewModel.setStopTime(now = CURRENT_TIME)
          viewModel.mediaHasPlayedEvent()
          this.findNavController().popBackStack()
       }, PLAY_DURATION_MILLIS)
+   }
+
+   override fun onStop() {
+      super.onStop()
+      handler.removeCallbacks(null)
    }
 }

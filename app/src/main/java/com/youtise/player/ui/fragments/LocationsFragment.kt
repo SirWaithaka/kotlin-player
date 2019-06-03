@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
@@ -99,6 +100,7 @@ class LocationsFragment : Fragment(), KodeinAware {
          v as MaterialButton
          v.isEnabled = false
          v.text = getString(R.string.loading)
+         passwordInput.onEditorAction(EditorInfo.IME_ACTION_DONE)
       }
    }
 

@@ -61,7 +61,7 @@ class ImageCaptureService : IntentService("Image Capture"), KodeinAware {
       try {
          Log.d(Tag, "Instantiating camera instance")
          cameraInstance = Camera.create(applicationContext, windowManager.defaultDisplay.rotation, handler!!)
-         cameraInstance?.reader?.setOnImageAvailableListener(ImageCapturedListener(id!!, service), handler)
+//         cameraInstance?.reader?.setOnImageAvailableListener(ImageCapturedListener(id!!, service), handler)
          cameraInstance?.openCameraAndCaptureImage()
       } catch (e: Exception) {
          Log.e(Tag, "Camera access exception: ${e.message} : ${e.printStackTrace()}")

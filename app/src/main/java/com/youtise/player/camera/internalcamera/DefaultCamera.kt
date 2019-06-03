@@ -61,44 +61,4 @@ abstract class DefaultCamera(protected val context: Context)  {
 
       return ORIENTATIONS[180]
    }
-
-//   companion object {
-//
-//      private val Tag = "DefaultCamera"
-//
-//      fun chooseOptimalSize(
-//         choices: Array<Size>, textureViewWidth: Int,
-//         textureViewHeight: Int, maxWidth: Int, maxHeight: Int, aspectRatio: Size
-//      ): Size {
-//
-//         // Collect the supported resolutions that are at least as big as the preview Surface
-//         val bigEnough = mutableListOf<Size>()
-//         // Collect the supported resolutions that are smaller than the preview Surface
-//         val notBigEnough = mutableListOf<Size>()
-//         val w = aspectRatio.width
-//         val h = aspectRatio.height
-//         for (option in choices) {
-//            if (option.width <= maxWidth && option.height <= maxHeight &&
-//               option.height == option.width * h / w
-//            ) {
-//               if (option.width >= textureViewWidth && option.height >= textureViewHeight) {
-//                  bigEnough.add(option)
-//               } else {
-//                  notBigEnough.add(option)
-//               }
-//            }
-//         }
-//
-//         // Pick the smallest of those big enough. If there is no one big enough, pick the
-//         // largest of those not big enough.
-//         if (bigEnough.size > 0) {
-//            return Collections.min(bigEnough, CompareSizesByArea())
-//         } else if (notBigEnough.size > 0) {
-//            return Collections.max(notBigEnough, CompareSizesByArea())
-//         } else {
-//            Log.e(Tag, "Couldn't find any suitable preview size")
-//            return choices[0]
-//         }
-//      }
-//   }
 }

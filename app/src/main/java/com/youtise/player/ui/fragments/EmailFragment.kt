@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -70,6 +71,7 @@ class EmailFragment : Fragment(), KodeinAware {
          this@EmailFragment.viewModel.submitEmail(userEmail)
          this@EmailFragment.submitButton.isEnabled = false
          this@EmailFragment.submitButton.text = getString(R.string.loading)
+         this@EmailFragment.emailInput.onEditorAction(EditorInfo.IME_ACTION_DONE)
       }
    }
 }
